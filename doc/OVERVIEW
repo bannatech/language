@@ -1,0 +1,78 @@
+                   Python-like Interpreted Language Proposal
+                       by Paul Longtine (paul@nanner.co)
+
+
+INTRODUCTION
+
+    During my time in Computer Programming and Web Development I learned to use
+Python  and  along  with  that,  I learned a lot about software development and
+programming  concepts.  Python  built  a  bridge between ideas and reality when
+learning  programming  concepts  because  of  the ease of prototyping ideas and
+architectures.  Going  from  python to a language where implementing ideas takes
+much more time and effort is a big wall in my growth as a  programmer. The main
+issue with this wall is that most ideas I came up with needed much more thought
+if the idea was even worth the effort. Why not take the knowledge I learned in
+and re-create my own version of a Python-like interpreted language? And, because
+of that thought I wrote this paragraph explaining my reasoning.
+
+GOALS
+
+    The goal of this project will be to not make the best, fastest, most awesome
+interpreted  language that has ever graced planet Earth,  but to provide a great
+project to learn more about taking a decently complex design, and bring it into
+reality using tools and languages I have yet to initiate a complex project with.
+To be more detailed,  I  plan  to  implement this project using the programming
+language C, using a fluent and comprehensive use of a canonical Git workflow and
+implementing Continuous Integration keep track of stable branches.
+
+IMPLEMENTATION
+
+    This project will have several components that will work together to provide
+the working product. These components are as follows:
+
+    * Interpreter
+      - The interpreter will parse and convert code into bytecode to be executed
+        by the VM runtime
+
+    * Virtual Machine Runtime
+      - This will be a stack-based VM providing the runtime for working code
+
+    * Standard Library
+      - Provide a library of tools to make the language somewhat usable
+
+SPECIFICATION
+
+    Put in fancy words, this will be an imperative type-sensitive language that
+will provide the basic functions of programming languages.
+
+    Look into the SPECIFICATION file for more detail.
+
+PLAN
+
+    When do I expect this to be done? What parts will be done when?
+    
+    I plan on 'finishing' this project at the end of the year (by May 2016)
+
+    +-----------------+-----------------------------------+------+
+    |SHOP WEEK        | DESCRIPTION                       | Done |
+    +-----------------+-----------------------------------+------+
+    |1st week:        | Finish this document.             |(*)   |
+    +-----------------+-----------------------------------+------+
+    |2nd week:        | Finish SPECIFICATION document     |( )   |
+    +-----------------+-----------------------------------+------+
+    |3rd-6th week:    | Finish VM/rudimentary interpreter |( )   |
+    +-----------------+-----------------------------------+------+
+    |7th-13th week:   | Finish interpreter                |( )   |
+    +-----------------+-----------------------------------+------+
+    |13th-17th week:  | Start work on stdlib/other libs   |( )   |
+    +-----------------+-----------------------------------+------+
+    
+CONCLUSION
+
+    In conclusion, this project will be for self-growth and strictly selifsh
+reasoning only. Any delusions of this ever being useful will be expunged with
+out hesitation.
+
+    Comedy aside this project will try to be a functioning programming language
+with what anyone would expect out of a language.
+
