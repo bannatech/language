@@ -1,0 +1,64 @@
+                             Detailed Specification for
+                                  Various Componets
+
+                           Paul Longtine (paul@nanner.co)
+
+OVERVIEW
+    This language will look and feel like any other normal, ordinary language.
+The goal is not to innovate, but to see if _I_ can. This is a personal refuge
+before my inevitable contributions to large group projects where individuals
+are deemed inferior.
+
+ SYNTAX
+    #TO BE DETERMINED#
+
+ TYPES
+    Providing basic types, such as:
+ * integer
+ * float
+ * character
+ * boolean
+    Will be elaborated on as thoughts progress.
+
+STACK MACHINE
+
+
+LEXICAL ANALYSIS
+
+    Going from code to bytecode is what this section is all about. First off an
+abstract notation for the code will be broken down into a binary tree as so:
+
+                                    <node>
+                                      /\
+                                     /  \
+                                    /    \
+                                  <arg> <next>
+
+    <node> can be an argument of its parent node, or the next instruction.
+Instruction nodes are nodes that will produce an instruction, or multiple based
+on the bytecode interpretation of its function. For example, this line of code:
+
+                                   int x = 3
+
+    would translate into:
+                                      def
+                                       /\
+                                      /  \
+                                     /    \
+                                    /      \
+                                   /        \
+                                 int        set
+                                 /\          /\
+                                /  \        /  \
+                              null 'x'    'x'  null
+                                          /\
+                                         /  \
+                                       null  3
+
+    The various instruction nodes are as follows:
+
+ * def <type> <name>
+   - Define a named space in memory with the type specified
+   - See the 'TYPES' section under 'OVERVIEW'
+ * set <name> <value>
+   - Set a named space in memory with value specified

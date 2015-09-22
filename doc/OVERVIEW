@@ -1,4 +1,4 @@
-                   Python-like Interpreted Language Proposal
+                         Interpreted Language Proposal
                        by Paul Longtine (paul@nanner.co)
 
 
@@ -8,11 +8,11 @@ INTRODUCTION
 Python  and  along  with  that,  I learned a lot about software development and
 programming  concepts.  Python  built  a  bridge between ideas and reality when
 learning  programming  concepts  because  of  the ease of prototyping ideas and
-architectures.  Going  from  python to a language where implementing ideas takes
+architectures. Going  from  python to a language where implementing ideas takes
 much more time and effort is a big wall in my growth as a  programmer. The main
 issue with this wall is that most ideas I came up with needed much more thought
 if the idea was even worth the effort. Why not take the knowledge I learned in
-and re-create my own version of a Python-like interpreted language? And, because
+and re-create my own version of a Python-like interpreted language? And because
 of that thought I wrote this paragraph explaining my reasoning.
 
 GOALS
@@ -58,7 +58,7 @@ PLAN
     +-----------------+-----------------------------------+------+
     |1st week:        | Finish this document.             |(*)   |
     +-----------------+-----------------------------------+------+
-    |2nd week:        | Finish SPECIFICATION document     |( )   |
+    |2nd week:        | Outline SPECIFICATION document    |( )   |
     +-----------------+-----------------------------------+------+
     |3rd-6th week:    | Finish VM/rudimentary interpreter |( )   |
     +-----------------+-----------------------------------+------+
