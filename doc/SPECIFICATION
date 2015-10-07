@@ -20,8 +20,24 @@ are deemed inferior.
  * boolean
     Will be elaborated on as thoughts progress.
 
-STACK MACHINE
+RUNTIME
+    The runtime will execute bytecode produced by the parser of a given 
 
+Keywords:
+ TOS - 'Top Of Stack' The top element
+-------------------------------------------------------------------------------
+Stack manipulation
+-------------------------------------------------------------------------------
+ ROT       - rotates top of stack
+ ROT_THREE - rotates top three elements of stack
+ DUP       - duplicates the top of the stack
+-------------------------------------------------------------------------------
+Variable management
+-------------------------------------------------------------------------------
+ DEC <type> <ref> - declare variable of type
+ LOV <ref>        - loads reference variable on to stack
+ STV <ref>        - stores TOS to reference variable
+ LOC <ref>        - loads constant
 
 LEXICAL ANALYSIS
 
