@@ -21,23 +21,45 @@ are deemed inferior.
     Will be elaborated on as thoughts progress.
 
 RUNTIME
-    The runtime will execute bytecode produced by the parser of a given 
 
 Keywords:
  TOS - 'Top Of Stack' The top element
 -------------------------------------------------------------------------------
 Stack manipulation
+
+    The 'stack' is the tool used to preform operations. Values are loaded on to
+the stack and are operated upon, and the configuration of elements on the stack
+is critical to the function of this machine. These instructions provide methods
+to manipulate the arragement, composition, and handling of the stack.
 -------------------------------------------------------------------------------
+ POP <n>   - pops the stack n times.
  ROT       - rotates top of stack
  ROT_THREE - rotates top three elements of stack
  DUP       - duplicates the top of the stack
 -------------------------------------------------------------------------------
 Variable management
+
+    Variables are a critical part of any machine that deals with computation.
+In this architecture, variables will exist as references. References will point
+to a location in a data structure in the runtime. Some references will have
+different data structures depending on whether a variable is declared as a
+persistent, persistent local, or temporary. Persistent variables will be seen
+in any scope at runtime, while persistent local variables are only visable in
+the scope it was declared in, but will not be discarded after exiting the scope
 -------------------------------------------------------------------------------
  DEC <type> <ref> - declare variable of type
  LOV <ref>        - loads reference variable on to stack
  STV <ref>        - stores TOS to reference variable
  LOC <ref>        - loads constant
+-------------------------------------------------------------------------------
+Arithmetic Operations
+-------------------------------------------------------------------------------
+ ADD  - adds the two top elements of the stack and pushes the result
+ SUB  - subtracts the two top elements of the stack and pushes the result
+ MULT - multiplies the two top elements of the stack and pushes the result
+ DIV  - divides the two top elements of the stack and pushes the result
+-------------------------------------------------------------------------------
+
 
 LEXICAL ANALYSIS
 
