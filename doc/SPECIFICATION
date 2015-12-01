@@ -22,15 +22,39 @@ are deemed inferior.
 
 RUNTIME
 
+    Code in the runtime is organized on a per-function basis.
+
+'Function' in this case means a callable block of code which may or may not retu
+rn a value.
+
+ +---------+
+ |Function | -> Function is 'defined', when called with reference a new scope is
+ +---------+    formed, along with arguements being supplied. Can support object
+                oriented behaviour with preserving scopes, and providing access
+                methods to member functions.
+
+    Variables (and functions) exist under various scopes. The scopes are as 
+follows:
+  * Temporary Scope
+  * Local Scope
+  * Global Scope
+
+    Temporary scope variables are variables declared outside the Root method.
+The Root method is the code that is ran any time a 'module' of code is evaluated
+and/or imported. A 'module' is any file containing code. Local Scope variables
+are variables in which are visible to the module, and only the module. Global
+scope variables are visible anywhere within the runtime.
+
+    A stack is used to keep a local group of values to manipulate. Values are
+pushed on to the stack and are operated upon, and the values in the stack can
+but assigned or re-assigned to variables.
+
+ Bytecode Instructions
+
 Keywords:
  TOS - 'Top Of Stack' The top element
 -------------------------------------------------------------------------------
 Stack manipulation
-
-    The 'stack' is the tool used to preform operations. Values are loaded on to
-the stack and are operated upon, and the configuration of elements on the stack
-is critical to the function of this machine. These instructions provide methods
-to manipulate the arragement, composition, and handling of the stack.
 -------------------------------------------------------------------------------
  POP <n>   - pops the stack n times.
  ROT       - rotates top of stack
@@ -38,28 +62,65 @@ to manipulate the arragement, composition, and handling of the stack.
  DUP       - duplicates the top of the stack
 -------------------------------------------------------------------------------
 Variable management
-
-    Variables are a critical part of any machine that deals with computation.
-In this architecture, variables will exist as references. References will point
-to a location in a data structure in the runtime. Some references will have
-different data structures depending on whether a variable is declared as a
-persistent, persistent local, or temporary. Persistent variables will be seen
-in any scope at runtime, while persistent local variables are only visable in
-the scope it was declared in, but will not be discarded after exiting the scope
 -------------------------------------------------------------------------------
  DEC <type> <ref> - declare variable of type
  LOV <ref>        - loads reference variable on to stack
  STV <ref>        - stores TOS to reference variable
  LOC <ref>        - loads constant
 -------------------------------------------------------------------------------
-Arithmetic Operations
+Type management
+
+   Types are in the air at this moment. I'll detail what types there are when
+the time comes
+-------------------------------------------------------------------------------
+ TYPEOF <ref>      - returns type structure on TOS (used for comparing types)
+ CAST <ref> <type> - Tries to cast <ref> to <type>
+-------------------------------------------------------------------------------
+Arithmetic
+    OPS take the two top elements of the stack, preform an operation and push
+the result on the stack.
 -------------------------------------------------------------------------------
  ADD  - adds the two top elements of the stack and pushes the result
  SUB  - subtracts the two top elements of the stack and pushes the result
  MULT - multiplies the two top elements of the stack and pushes the result
  DIV  - divides the two top elements of the stack and pushes the result
 -------------------------------------------------------------------------------
+Conditional Expressions
 
+    Things for booleans, < > = ! and so on and so forth.
+Behaves like Arithmetic instructions
+-------------------------------------------------------------------------------
+ GTHAN - Greather than
+ LTHAN - Less than
+ EQ    - Equal to
+ NOT   - Not this.
+-------------------------------------------------------------------------------
+Loops
+-------------------------------------------------------------------------------
+ STARTL - Start of loop
+ CLOOP  - Conditional loop. If TOS is true, continue looping, else break
+ BREAK  - Breaks out of loop
+ DONE   - End of loop
+-------------------------------------------------------------------------------
+Code flow
+
+    These instructions dictate code flow.
+-------------------------------------------------------------------------------
+ GOTO <addr> - Goes to address
+ JUMPF <n>   - Goes forward <n> lines
+ CALL <ref>  - Calls function, pushes return value on to STACK. Expects array
+               on TOS to be used for arguements
+-------------------------------------------------------------------------------
+Manipulating High-order Object Variables
+
+    For arrays, key-value arrays, etc
+-------------------------------------------------------------------------------
+ PUSH <ref>        - Push TOS on to <ref>, expects <ref> to be an object
+                     that supports the scheme.
+ AT <ref>          - Push element in structure at TOS (assumes it's an index of
+                     sorts) for <ref> object. Assumes <ref> supports the scheme.
+ DEL <ref> <index> - Delete element in structure at TOS (assumes it's an index
+                     of sorts) for <ref> object.
 
 LEXICAL ANALYSIS
 
@@ -74,7 +135,8 @@ abstract notation for the code will be broken down into a binary tree as so:
 
     <node> can be an argument of its parent node, or the next instruction.
 Instruction nodes are nodes that will produce an instruction, or multiple based
-on the bytecode interpretation of its function. For example, this line of code:
+on the bytecode interpretation of its instruction. For example, this line of
+code:
 
                                    int x = 3
 
@@ -93,6 +155,9 @@ on the bytecode interpretation of its function. For example, this line of code:
                                          /  \
                                        null  3
 
+    Functions are expressed as individual binary trees. The root of any file is
+treated as an individual binary tree, as this is also a function.
+
     The various instruction nodes are as follows:
 
  * def <type> <name>
@@ -100,3 +165,9 @@ on the bytecode interpretation of its function. For example, this line of code:
    - See the 'TYPES' section under 'OVERVIEW'
  * set <name> <value>
    - Set a named space in memory with value specified
+
+                    Going from Binary Trees to Bytecode
+
+    The various instruction nodes within the tree will call specific functions
+that will take arguemets specified and lookahead and lookbehind to formulate the
+correct bytecode equivilent.

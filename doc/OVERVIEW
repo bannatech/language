@@ -58,15 +58,15 @@ PLAN
     +-----------------+-----------------------------------+------+
     |1st week:        | Finish this document.             |(*)   |
     +-----------------+-----------------------------------+------+
-    |2nd week:        | Outline SPECIFICATION document    |( )   |
+    |2nd-3rd week:    | Outline SPECIFICATION document    |(*)   |
     +-----------------+-----------------------------------+------+
-    |3rd-6th week:    | Finish VM/rudimentary interpreter |( )   |
+    |4rd-6th week:    | Finish VM                         |( )   |
     +-----------------+-----------------------------------+------+
     |7th-13th week:   | Finish interpreter                |( )   |
     +-----------------+-----------------------------------+------+
     |13th-17th week:  | Start work on stdlib/other libs   |( )   |
     +-----------------+-----------------------------------+------+
-    
+
 CONCLUSION
 
     In conclusion, this project will be for self-growth and strictly selifsh
