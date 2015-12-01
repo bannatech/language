@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "fh.h"
 
@@ -55,7 +54,7 @@ long read_size(FILE** f, char* fname)
 	return fsize;
 }
 
-int init(FILE** f)
+int init(char* fname)
 {
 	/* initialize datastructures for instructionstuffs,
 	   begin to read file byte-by-byte */

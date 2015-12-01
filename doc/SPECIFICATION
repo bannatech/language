@@ -51,30 +51,47 @@ but assigned or re-assigned to variables.
 
  Bytecode Instructions
 
+  Interpreting Bytecode Instructions
+
+   Bytecode arguements - After the opcode byte, set-length bytes are used as
+                         arguements for the opcode.
+
+   Dynamic Bytecode args - After the opcode byte, a series of bytes terminated
+                           by NULL defines a single dynamic-length arguement.
+                           NULL can be escaped using the escape byte (encoded)
+
+   Function identifier - 0xFF initiates the beginning of a function, followed by
+                         a single dynamic arguement.
+
 Keywords:
- TOS - 'Top Of Stack' The top element
+ TOS           - 'Top Of Stack' The top element
+ S<[variable]> - Static Arguement. Default 1 byte.
+ A<[variable]> - Address Arguement. Address width will vary on file size,
+                 decided on compile time.
+ D<[variable]> - Dynamic bytecode arguement. Arguements terminated with NULL
+                 byte.
 -------------------------------------------------------------------------------
 Stack manipulation
 -------------------------------------------------------------------------------
- POP <n>   - pops the stack n times.
+ POP S<n>  - pops the stack n times.
  ROT       - rotates top of stack
  ROT_THREE - rotates top three elements of stack
  DUP       - duplicates the top of the stack
 -------------------------------------------------------------------------------
 Variable management
 -------------------------------------------------------------------------------
- DEC <type> <ref> - declare variable of type
- LOV <ref>        - loads reference variable on to stack
- STV <ref>        - stores TOS to reference variable
- LOC <ref>        - loads constant
+ DEC S<type> D<ref> - declare variable of type
+ LOV D<ref>         - loads reference variable on to stack
+ STV D<ref>         - stores TOS to reference variable
+ LOC D<ref>         - loads constant
 -------------------------------------------------------------------------------
 Type management
 
    Types are in the air at this moment. I'll detail what types there are when
 the time comes
 -------------------------------------------------------------------------------
- TYPEOF <ref>      - returns type structure on TOS (used for comparing types)
- CAST <ref> <type> - Tries to cast <ref> to <type>
+ TYPEOF D<ref>      - returns type structure on TOS (used for comparing types)
+ CAST D<ref> S<type> - Tries to cast <ref> to <type>
 -------------------------------------------------------------------------------
 Arithmetic
     OPS take the two top elements of the stack, preform an operation and push
@@ -106,21 +123,23 @@ Code flow
 
     These instructions dictate code flow.
 -------------------------------------------------------------------------------
- GOTO <addr> - Goes to address
- JUMPF <n>   - Goes forward <n> lines
- CALL <ref>  - Calls function, pushes return value on to STACK. Expects array
-               on TOS to be used for arguements
+ GOTO A<addr> - Goes to address
+ JUMPF S<n>   - Goes forward <n> lines
+ CALL D<ref>  - Calls function, pushes return value on to STACK. Expects array
+                on TOS to be used for arguements
 -------------------------------------------------------------------------------
 Manipulating High-order Object Variables
 
     For arrays, key-value arrays, etc
 -------------------------------------------------------------------------------
- PUSH <ref>        - Push TOS on to <ref>, expects <ref> to be an object
-                     that supports the scheme.
- AT <ref>          - Push element in structure at TOS (assumes it's an index of
-                     sorts) for <ref> object. Assumes <ref> supports the scheme.
- DEL <ref> <index> - Delete element in structure at TOS (assumes it's an index
-                     of sorts) for <ref> object.
+ PUSH D<ref>         - Push TOS on to <ref>, expects <ref> to be an object that
+                       supports the scheme.
+ AT D<ref>           - Push element in structure at TOS (assumes index of sorts)
+                       for <ref> object. Assumes <ref> supports the scheme.
+ DEL D<ref> D<index> - Delete element in structure at TOS (assumes index of
+                       sorts) for <ref> object.
+-------------------------------------------------------------------------------
+
 
 LEXICAL ANALYSIS
 
