@@ -83,7 +83,7 @@ Variable management
  DEC S<type> D<ref> - declare variable of type
  LOV D<ref>         - loads reference variable on to stack
  STV D<ref>         - stores TOS to reference variable
- LOC D<ref>         - loads constant
+ LOC D<ref> D<data> - loads constant
 -------------------------------------------------------------------------------
 Type management
 
@@ -139,7 +139,6 @@ Manipulating High-order Object Variables
  DEL D<ref> D<index> - Delete element in structure at TOS (assumes index of
                        sorts) for <ref> object.
 -------------------------------------------------------------------------------
-
 
 LEXICAL ANALYSIS
 

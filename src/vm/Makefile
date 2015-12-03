@@ -4,10 +4,12 @@ INC_DIR = inc
 CC      = gcc
 CFLAGS  = -Wall -I$(INC_DIR)
 
-DEPS    = $(INC_DIR)/fh.h
+DEPS    = $(INC_DIR)/bc.h \
+                     is.h
 
 OBJ     = $(SRC_DIR)/main.o \
-          $(SRC_DIR)/fh.o
+          $(SRC_DIR)/bc.o   \
+          $(SRC_DIR)/is.o
 
 OUT     = main
 
