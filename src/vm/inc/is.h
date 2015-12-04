@@ -15,7 +15,13 @@
 #define A_NULL 0
 #define A_BYTE 1
 #define A_WORD 2
-#define A_DYNM 3
+#define A_DYNC 3
+
+#define encode(n, a0, a1, a2) \
+	( n << 6 | a0 << 4 | a1 << 2 | a2 );
+
+// This array is populated by inc/is_mdata
+unsigned char INS_MDATA[256];
 
 /*
  Takes an opcode, fills metadata about that opcode (given that it exists) in the
@@ -23,5 +29,10 @@
 */
 void get_opcode(char, bc_cont**);
 
+void get_mdata(char, int*, int*);
+
+void init(void);
+
+void init_mdata(void);
 
 #endif // IS_H

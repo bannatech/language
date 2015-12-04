@@ -12,9 +12,9 @@
  'Bytecode Container'
 */
 typedef struct bc_cont {
-	char op;
-	char* args[2];
-	int* mdata;
+	unsigned char   op;
+	unsigned char*  args[3];
+	unsigned char   mdata;
 	struct bc_cont* next;
 } bc_cont;
 
@@ -33,6 +33,10 @@ void bc_cont_del(bc_cont*);
  function will read arguements 
 */
 void get_args(FILE**, long*, bc_cont**);
+// meta-functions
+unsigned char get_byte_arg(FILE**, long*);
+unsigned char get_word_arg(FILE**, long*);
+unsigned char get_dync_arg(FILE**, long*);
 
 /*
  Takes a FILE arguement, reads, returns size of file.

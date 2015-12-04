@@ -2,7 +2,7 @@ SRC_DIR = src
 INC_DIR = inc
 
 CC      = gcc
-CFLAGS  = -Wall -I$(INC_DIR)
+CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
 
 DEPS    = $(INC_DIR)/bc.h \
                      is.h
