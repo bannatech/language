@@ -3,6 +3,7 @@
 
 #include "bc.h"
 #include "is.h"
+#include "fh.h"
 
 bc_cont* bc_cont_new(void)
 {
@@ -33,52 +34,36 @@ void get_args(FILE** f, long* f_pos, bc_cont** ins)
 
 	get_mdata((*ins)->mdata, &num_args, arg_types);
 
-	for (int x = 0; x <= num_args; x++)
+	for (int x = 0; x < num_args; x++)
 	{
-		unsigned char arg;
 		if (arg_types[x] == A_BYTE)
 		{
-			arg = get_byte_arg(f, f_pos);
+			get_byte_arg(f, f_pos, &(*ins)->args[x]);
 		} else
 		if (arg_types[x] == A_WORD)
 		{
-			arg = get_word_arg(f, f_pos);
+			get_word_arg(f, f_pos, &(*ins)->args[x]);
 		} else
 		if (arg_types[x] == A_DYNC)
 		{
-			arg = get_dync_arg(f, f_pos);
+			get_dync_arg(f, f_pos, &(*ins)->args[x]);
 		}
 	}
 }
 
-unsigned char get_byte_arg(FILE** f, long* f_pos)
+void get_byte_arg(FILE** f, long* f_pos, byte_t** arg)
 {
-	unsigned char arg;
-	return arg;
+	read_bytes(f, f_pos, 1, arg);
 }
 
-unsigned char get_word_arg(FILE** f, long* f_pos)
+void get_word_arg(FILE** f, long* f_pos, byte_t** arg)
 {
-	unsigned char arg;
-	return arg;
+	read_bytes(f, f_pos, 2, arg);
 }
 
-unsigned char get_dync_arg(FILE** f, long* f_pos)
+void get_dync_arg(FILE** f, long* f_pos, byte_t** arg)
 {
-	unsigned char arg;
-	return arg;
-}
-
-long read_size(FILE** f, char* fname)
-{
-	*f = fopen(fname, "rb");
-	fseek(*f, 0, SEEK_END);
-
-	long fsize = 0;
-	fsize = ftell(*f);
-	rewind(*f);
-
-	return fsize;
+	read_until_null(f, f_pos, arg);
 }
 
 bc_cont* bc_read(char* fname)

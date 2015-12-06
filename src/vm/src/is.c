@@ -2,14 +2,15 @@
 
 #include "is.h"
 #include "bc.h"
+#include "fh.h"
 
-void get_opcode(char byte, bc_cont** ins)
+void get_opcode(byte_t byte, bc_cont** ins)
 {
 	(*ins)->op    = byte;
 	(*ins)->mdata = INS_MDATA[byte];
 }
 
-void get_mdata(char byte, int* n, int* at)
+void get_mdata(byte_t byte, int* n, int* at)
 {
 	*n    = (byte & (3 << 6)) >> 6;
 	at[0] = (byte & (3 << 4)) >> 4;
