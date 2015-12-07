@@ -28,7 +28,7 @@ byte_t INS_MDATA[256];
  Takes an opcode, fills metadata about that opcode (given that it exists) in the
  `bc_cont` structure
 */
-void get_opcode(byte_t, bc_cont**);
+void get_opcode(byte_t, bc_cont*);
 
 void get_mdata(byte_t, int*, int*);
 

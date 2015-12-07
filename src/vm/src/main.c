@@ -11,24 +11,27 @@ int main(int argc, char** argv)
 
 	// start testing
 	bc_cont* bc = bc_read(argv[1]);
-	bc_cont** ptr;
-	bc_cont* thing;
-
-	for (ptr = &bc; (*ptr)->next != NULL; ptr = &((*ptr)->next))
+	bc_cont* ptr;
+	
+	for (ptr = bc; ptr->next != NULL; ptr = ptr->next)
 	{
-		thing = *ptr;
-		if (thing->op == 2)
+		if (ptr->op == 1)
 		{
-			printf("%x\n", thing->args[0][0]);
+			printf("%x:\n", ptr->op);
 		}
-		if (thing->op == 3)
+		if (ptr->op == 2)
 		{
-			printf("%x, %x %x\n", thing->args[0][0], thing->args[1][0], thing->args[1][1]);
+			printf("%x: %x\n", ptr->op, ptr->args[0][0]);
 		}
-		if (thing->op == 4)
+		if (ptr->op == 3)
 		{
-			int len = sizeof(thing->args[0]);
-			for (int i = 0; i < len; i++) printf("%x ", thing->args[0][i]);
+			printf("%x: %x, %x %x\n", ptr->op, ptr->args[0][0], ptr->args[1][0], ptr->args[1][1]);
+		}
+		if (ptr->op == 4)
+		{
+			printf("%x: ", ptr->op);
+			int len = sizeof(ptr->args[0]);
+			for (int i = 0; i < len; i++) printf("%x ", ptr->args[0][i]);
 			printf("\n");
 		}
 	}

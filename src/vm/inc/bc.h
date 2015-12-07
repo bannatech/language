@@ -27,7 +27,7 @@ typedef struct bc_cont {
 */
 bc_cont* bc_cont_new(void);
 
-bc_cont** bc_cont_push(bc_cont**);
+bc_cont* bc_cont_push(bc_cont*);
 
 /*
  Deallocates all the things, assuming the arguement is the root.
@@ -38,20 +38,10 @@ void bc_cont_del(bc_cont*);
  Given a file object, and an instance of `bc_cont` with proper metadata, this
  function will read arguements 
 */
-void get_args(FILE**, long*, bc_cont**);
-void get_byte_arg(FILE**, long*, byte_t**);
-void get_word_arg(FILE**, long*, byte_t**);
-void get_dync_arg(FILE**, long*, byte_t**);
-
-/*
- Takes a FILE arguement, reads, returns size of file.
- Useful \w loops.
-*/
-long read_size(FILE**, char*);
-
-void read_until_null(FILE**, long*, byte_t**);
-
-void read_bytes(FILE**, long*, int, byte_t**);
+void get_args(FILE*, long*, bc_cont*);
+byte_t* get_byte_arg(FILE*, long*);
+byte_t* get_word_arg(FILE*, long*);
+byte_t* get_dync_arg(FILE*, long*);
 
 /*
  Initiates the first pass to take a raw binary file and translate it into a

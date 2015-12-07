@@ -15,10 +15,10 @@ bc_cont* bc_cont_new(void)
 	return new;
 }
 
-bc_cont** bc_cont_push(bc_cont** head)
+bc_cont* bc_cont_push(bc_cont* head)
 {
-	(*head)->next = bc_cont_new();
-	return &((*head)->next);
+	head->next = bc_cont_new();
+	return head->next;
 }
 
 void bc_cont_del(bc_cont* root)
@@ -33,43 +33,43 @@ void bc_cont_del(bc_cont* root)
 	free(root);
 }
 
-void get_args(FILE** f, long* f_pos, bc_cont** ins)
+void get_args(FILE* f, long* f_pos, bc_cont* ins)
 {
 	int num_args,
 	    arg_types[3];
 
-	get_mdata((*ins)->mdata, &num_args, arg_types);
+	get_mdata(ins->mdata, &num_args, arg_types);
 
 	for (int x = 0; x < num_args; x++)
 	{
 		if (arg_types[x] == A_BYTE)
 		{
-			get_byte_arg(f, f_pos, &(*ins)->args[x]);
+			ins->args[x] = get_byte_arg(f, f_pos);
 		} else
 		if (arg_types[x] == A_WORD)
 		{
-			get_word_arg(f, f_pos, &(*ins)->args[x]);
+			ins->args[x] = get_word_arg(f, f_pos);
 		} else
 		if (arg_types[x] == A_DYNC)
 		{
-			get_dync_arg(f, f_pos, &(*ins)->args[x]);
+			ins->args[x] = get_dync_arg(f, f_pos);
 		}
 	}
 }
 
-void get_byte_arg(FILE** f, long* f_pos, byte_t** arg)
+byte_t* get_byte_arg(FILE* f, long* f_pos)
 {
-	read_bytes(f, f_pos, 1, arg);
+	return read_bytes(f, f_pos, 1);
 }
 
-void get_word_arg(FILE** f, long* f_pos, byte_t** arg)
+byte_t* get_word_arg(FILE* f, long* f_pos)
 {
-	read_bytes(f, f_pos, 2, arg);
+	return read_bytes(f, f_pos, 2);
 }
 
-void get_dync_arg(FILE** f, long* f_pos, byte_t** arg)
+byte_t* get_dync_arg(FILE* f, long* f_pos)
 {
-	read_until_null(f, f_pos, arg);
+	return read_until_null(f, f_pos);
 }
 
 bc_cont* bc_read(char* fname)
@@ -79,23 +79,24 @@ bc_cont* bc_read(char* fname)
 	FILE* f;
 	byte_t byte;
 	long f_pos = 0;
-	long fsize = read_size(&f, fname);
+	long fsize;
+	
+	f = fopen(fname, "rb");
+	fsize = read_size(f);
 	
 	bc_cont *root = bc_cont_new();
-	bc_cont **ptr = &root;
+	bc_cont *ptr = root;
 
 	/* Loop through file byte-by-byte */
 	while (f_pos<fsize)
 	{
-		byte = read_byte(&f, &f_pos);
-
+		byte = read_byte(f, &f_pos);
 		get_opcode(byte, ptr);
-		get_args(&f, &f_pos, ptr);
+		get_args(f, &f_pos, ptr);
 
 		ptr = bc_cont_push(ptr);
 	}
 
 	fclose(f);
-
 	return root;
 }
