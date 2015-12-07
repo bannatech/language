@@ -14,6 +14,8 @@ void read_until_null(FILE**, long*, byte_t**);
 
 void read_bytes(FILE**, long*, int, byte_t**);
 
+byte_t read_byte(FILE**, long*);
+
 long read_size(FILE**, char*);
 
 #endif // FH_H

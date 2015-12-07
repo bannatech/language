@@ -15,6 +15,12 @@ bc_cont* bc_cont_new(void)
 	return new;
 }
 
+bc_cont** bc_cont_push(bc_cont** head)
+{
+	(*head)->next = bc_cont_new();
+	return &((*head)->next);
+}
+
 void bc_cont_del(bc_cont* root)
 {
 	if (root->next != NULL)
@@ -71,7 +77,7 @@ bc_cont* bc_read(char* fname)
 	/* initialize datastructures for instructionstuffs,
 	   begin to read file byte-by-byte */
 	FILE* f;
-	char byte;
+	byte_t byte;
 	long f_pos = 0;
 	long fsize = read_size(&f, fname);
 	
@@ -81,14 +87,12 @@ bc_cont* bc_read(char* fname)
 	/* Loop through file byte-by-byte */
 	while (f_pos<fsize)
 	{
-		byte = fgetc(f);
-		f_pos++;
+		byte = read_byte(&f, &f_pos);
 
 		get_opcode(byte, ptr);
 		get_args(&f, &f_pos, ptr);
 
-		(*ptr)->next = bc_cont_new();
-		ptr = &((*ptr)->next);
+		ptr = bc_cont_push(ptr);
 	}
 
 	fclose(f);

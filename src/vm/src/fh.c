@@ -24,6 +24,13 @@ void read_bytes(FILE** f, long* f_pos, int bytes, byte_t** buffer)
 	*f_pos = *f_pos + bytes;
 }
 
+byte_t read_byte(FILE** f, long* f_pos)
+{
+	byte_t byte = fgetc(*f);
+	(*f_pos)++;
+	return byte;
+}
+
 long read_size(FILE** f, char* fname)
 {
 	*f = fopen(fname, "rb");

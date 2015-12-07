@@ -27,6 +27,8 @@ typedef struct bc_cont {
 */
 bc_cont* bc_cont_new(void);
 
+bc_cont** bc_cont_push(bc_cont**);
+
 /*
  Deallocates all the things, assuming the arguement is the root.
 */
