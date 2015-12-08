@@ -3,40 +3,37 @@
 
 #include "fh.h"
 
-byte_t* read_until_null(FILE* f, long* f_pos)
+byte_t* read_until_null(FILE* f)
 {
-	long f_pos_i = *f_pos;
+	long f_pos_i = ftell(f);
 	
 	// This bit needs to be refactored.
-	byte_t byte = read_byte(f, f_pos);
+	byte_t byte = read_byte(f);
 	while (byte != 0)
 	{
-		byte = read_byte(f, f_pos);
+		byte = read_byte(f);
 	}
 
-	long bytes = (*f_pos - f_pos_i);
-	*f_pos = f_pos_i;
+	long bytes = (ftell(f) - f_pos_i);
 
 	fseek(f, 0-bytes, SEEK_CUR);
 
-	return read_bytes(f, f_pos, bytes);
+	return read_bytes(f, bytes);
 }
 
-byte_t* read_bytes(FILE* f, long* f_pos, long bytes)
+byte_t* read_bytes(FILE* f, long bytes)
 {
 	byte_t* buffer = (byte_t*)malloc(bytes*sizeof(byte_t));
 	if (buffer == NULL)
 		return buffer;
 
 	fread(buffer, bytes, 1, f);
-	*f_pos = *f_pos + bytes;
 
 	return buffer;
 }
 
-byte_t read_byte(FILE* f, long* f_pos)
+byte_t read_byte(FILE* f)
 {
-	(*f_pos)++;
 	return fgetc(f);
 }
 

@@ -13,6 +13,8 @@
 #include "bc.h"
 #include "fh.h"
 
+#include "ins_mdata.h"
+
 #define A_NULL 0
 #define A_BYTE 1
 #define A_WORD 2

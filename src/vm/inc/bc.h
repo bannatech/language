@@ -38,10 +38,10 @@ void bc_cont_del(bc_cont*);
  Given a file object, and an instance of `bc_cont` with proper metadata, this
  function will read arguements 
 */
-void get_args(FILE*, long*, bc_cont*);
-byte_t* get_byte_arg(FILE*, long*);
-byte_t* get_word_arg(FILE*, long*);
-byte_t* get_dync_arg(FILE*, long*);
+void get_args(FILE*, bc_cont*);
+byte_t* get_byte_arg(FILE*);
+byte_t* get_word_arg(FILE*);
+byte_t* get_dync_arg(FILE*);
 
 /*
  Initiates the first pass to take a raw binary file and translate it into a

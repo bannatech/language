@@ -12,6 +12,10 @@ bc_cont* bc_cont_new(void)
 		fprintf(stderr, "Cannot allocate memory\n");
 		exit(1);
 	}
+	new->args[0] = NULL;
+	new->args[1] = NULL;
+	new->args[2] = NULL;
+
 	return new;
 }
 
@@ -33,7 +37,7 @@ void bc_cont_del(bc_cont* root)
 	free(root);
 }
 
-void get_args(FILE* f, long* f_pos, bc_cont* ins)
+void get_args(FILE* f, bc_cont* ins)
 {
 	int num_args,
 	    arg_types[3];
@@ -44,32 +48,32 @@ void get_args(FILE* f, long* f_pos, bc_cont* ins)
 	{
 		if (arg_types[x] == A_BYTE)
 		{
-			ins->args[x] = get_byte_arg(f, f_pos);
+			ins->args[x] = get_byte_arg(f);
 		} else
 		if (arg_types[x] == A_WORD)
 		{
-			ins->args[x] = get_word_arg(f, f_pos);
+			ins->args[x] = get_word_arg(f);
 		} else
 		if (arg_types[x] == A_DYNC)
 		{
-			ins->args[x] = get_dync_arg(f, f_pos);
+			ins->args[x] = get_dync_arg(f);
 		}
 	}
 }
 
-byte_t* get_byte_arg(FILE* f, long* f_pos)
+byte_t* get_byte_arg(FILE* f)
 {
-	return read_bytes(f, f_pos, 1);
+	return read_bytes(f, 1);
 }
 
-byte_t* get_word_arg(FILE* f, long* f_pos)
+byte_t* get_word_arg(FILE* f)
 {
-	return read_bytes(f, f_pos, 2);
+	return read_bytes(f, 2);
 }
 
-byte_t* get_dync_arg(FILE* f, long* f_pos)
+byte_t* get_dync_arg(FILE* f)
 {
-	return read_until_null(f, f_pos);
+	return read_until_null(f);
 }
 
 bc_cont* bc_read(char* fname)
@@ -78,7 +82,6 @@ bc_cont* bc_read(char* fname)
 	   begin to read file byte-by-byte */
 	FILE* f;
 	byte_t byte;
-	long f_pos = 0;
 	long fsize;
 	
 	f = fopen(fname, "rb");
@@ -88,11 +91,11 @@ bc_cont* bc_read(char* fname)
 	bc_cont *ptr = root;
 
 	/* Loop through file byte-by-byte */
-	while (f_pos<fsize)
+	while (ftell(f)<fsize)
 	{
-		byte = read_byte(f, &f_pos);
+		byte = read_byte(f);
 		get_opcode(byte, ptr);
-		get_args(f, &f_pos, ptr);
+		get_args(f, ptr);
 
 		ptr = bc_cont_push(ptr);
 	}

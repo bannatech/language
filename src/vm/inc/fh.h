@@ -10,11 +10,11 @@
 
 typedef unsigned char byte_t;
 
-byte_t* read_until_null(FILE*, long*);
+byte_t* read_until_null(FILE*);
 
-byte_t* read_bytes(FILE*, long*, long);
+byte_t* read_bytes(FILE*, long);
 
-byte_t read_byte(FILE*, long*);
+byte_t read_byte(FILE*);
 
 long read_size(FILE*);
 

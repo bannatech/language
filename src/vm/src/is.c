@@ -4,6 +4,8 @@
 #include "bc.h"
 #include "fh.h"
 
+#include "ins_mdata.h"
+
 void get_opcode(byte_t byte, bc_cont* ins)
 {
 	ins->op    = byte;
@@ -25,5 +27,5 @@ void init(void)
 
 void init_mdata(void)
 {
-	#include "is_mdata"
+	INS_MDATA_DEF();
 }
