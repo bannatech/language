@@ -6,8 +6,8 @@
 byte_t* read_until_null(FILE* f)
 {
 	long f_pos_i = ftell(f);
-	
-	// This bit needs to be refactored.
+
+	// This bit gets the length in bytes it needs to read into a buffer
 	byte_t byte = read_byte(f);
 	while (byte != 0)
 	{
@@ -16,7 +16,8 @@ byte_t* read_until_null(FILE* f)
 
 	long bytes = (ftell(f) - f_pos_i);
 
-	fseek(f, 0-bytes, SEEK_CUR);
+	// Seek backwards
+	fseek(f, -bytes, SEEK_CUR);
 
 	return read_bytes(f, bytes);
 }

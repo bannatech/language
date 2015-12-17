@@ -31,9 +31,11 @@ void bc_cont_del(bc_cont* root)
 	{
 		bc_cont_del(root->next);
 	}
-	free(root->args[0]);
-	free(root->args[1]);
-	free(root->args[2]);
+
+	if (root->args[0] != NULL) free(root->args[0]);
+	if (root->args[1] != NULL) free(root->args[1]);
+	if (root->args[2] != NULL) free(root->args[2]);
+
 	free(root);
 }
 
@@ -78,8 +80,6 @@ byte_t* get_dync_arg(FILE* f)
 
 bc_cont* bc_read(char* fname)
 {
-	/* initialize datastructures for instructionstuffs,
-	   begin to read file byte-by-byte */
 	FILE* f;
 	byte_t byte;
 	long fsize;
