@@ -1,5 +1,4 @@
-/*
- * types.h -> Provide implemenation of types
+/*  types.h -> Provide implemenation of types
  */
 
 #include <stdlib.h>
@@ -26,13 +25,11 @@ typedef struct var_cont {
 	void* data;
 } var_cont;
 
-/*
- * Initialze variable with type
+/* Initialze variable with type
  */
 var_cont* var_new(b_type);
 
-/*
- * Frees variable
+/* Frees variable
  */
 void var_del(var_cont*);
 

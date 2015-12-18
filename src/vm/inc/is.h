@@ -10,8 +10,8 @@
 
 #include <stdlib.h>
 
-#include "bc.h"
 #include "fh.h"
+#include "bc.h"
 
 #include "ins_mdata.h"
 
@@ -26,14 +26,12 @@
 // This array is populated by inc/is_mdata
 byte_t INS_MDATA[256];
 
-/*
- * Takes an opcode, fills metadata about that opcode (given that it exists) in the
- * `bc_cont` structure
+/* Takes an opcode, fills metadata about that opcode (given that it exists) in
+ * the `bc_cont` structure
  */
 void get_opcode(byte_t, bc_cont*);
 
-/*
- * Fills in metadata in @param byte_t.
+/* Fills in metadata in @param byte_t.
  * @param[1] is number of params,
  * @param[2] is an array[3] detailing param types
  *
@@ -43,8 +41,7 @@ void get_opcode(byte_t, bc_cont*);
  */
 void get_mdata(byte_t, int*, int*);
 
-/*
- * Sets up the datastructure to quickly queue for data.
+/* Sets up the datastructure to quickly queue for data.
  */
 void init(void);
 

@@ -20,6 +20,9 @@ void var_del(var_cont* var)
 {
 	if (var == NULL)
 		return;
+	
+	if (var->data != NULL)
+		free(var->data);
 
 	free(var);
 }

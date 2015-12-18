@@ -25,7 +25,8 @@ int main(int argc, char** argv)
 		}
 		if (ptr->op == 3)
 		{
-			printf("%x: %x, %x %x\n", ptr->op, ptr->args[0][0], ptr->args[1][0], ptr->args[1][1]);
+			printf("%x: %x, %x %x\n",
+			       ptr->op, ptr->args[0][0], ptr->args[1][0], ptr->args[1][1]);
 		}
 		if (ptr->op == 4)
 		{
