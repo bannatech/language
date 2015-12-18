@@ -3,9 +3,9 @@
  * Each variable that exists and accessed will be via a level on a namespace
  * instance. For example, at the root of a program, a namespace is initialized
  * and variables declared at this level are accessable everywhere. When a func
- * is called, a new namespace level is initialized and variables declared on that
- * level will be destroyed/inaccessable when the function returns and the new
- * level is 'popped', going up a level.
+ * is called, a new namespace level is initialized and variables declared on
+ * that level will be destroyed/inaccessable when the function returns and the 
+ * new level is 'popped', going up a level.
  *
  * When a variable is queued, it will search through all the levels of the
  * namespace to retreive the proper value.
