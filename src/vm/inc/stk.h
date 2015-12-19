@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "types.h"
+#include "helper.h"
 
 typedef struct stk_t {
 	struct stk_t* next;

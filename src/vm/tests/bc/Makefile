@@ -5,13 +5,14 @@ CC      = gcc
 CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
 
 DEPS    = i$(INC_DIR)/is_mdata.h \
-                     fh.h \
-                     is.h \
-                     bc.h \
+                      helper.h   \
+                      fh.h       \
+                      is.h       \
+                      bc.h       \
 
-OBJ     = test.o \
-          $(SRC_DIR)/fh.o   \
-          $(SRC_DIR)/is.o   \
+OBJ     = test.o          \
+          $(SRC_DIR)/fh.o \
+          $(SRC_DIR)/is.o \
           $(SRC_DIR)/bc.o
 
 OUT     = test

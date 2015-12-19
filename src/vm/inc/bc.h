@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "fh.h"
+#include "helper.h"
 
 /* 'Bytecode Container'
  */

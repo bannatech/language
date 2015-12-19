@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include "types.h"
+#include "helper.h"
 
 typedef struct ht_entry {
 	char* key;
@@ -19,9 +20,25 @@ typedef struct ht_t {
 	ht_entry** table;
 } ht_t;
 
-/* Creates hashtable of size
+/* Creates hashtable of @param int size
  */
-ht_t* ht_create(int);
+ht_t* ht_init(int);
+
+/* Creates the table of buckets for the hashtable
+ */
+ht_entry** ht_init_table(int);
+
+/* Destroys hashtable
+ */
+void ht_destroy(ht_t*);
+
+/* Destroys the table of buckets for the hashtable
+ */
+void ht_destroy_table(ht_entry**, int);
+
+/* Destroys an entry.
+ */
+void ht_destroy_entry(ht_entry*);
 
 /* Set a key-value pair
  */
@@ -38,7 +55,5 @@ ht_entry* ht_newpair(char*, var_cont*);
 /* Hash a string
  */
 int ht_hash(ht_t*, char*);
-
-
 
 #endif // HT_H

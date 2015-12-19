@@ -2,15 +2,13 @@
 #include <stdio.h>
 
 #include "types.h"
+#include "helper.h"
 
 var_cont* var_new(b_type type)
 {
 	var_cont* new = (var_cont*)malloc(sizeof(var_cont));
-	if (new == NULL)
-	{
-		fprintf(stderr, "Could not allocate memory");
-		exit(1);
-	}
+	ASSERT(new != NULL, "Could not allocate memory\n");
+
 	new->type = type;
 	new->data = NULL;
 	return new;

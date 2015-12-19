@@ -3,15 +3,12 @@
 
 #include "stk.h"
 #include "types.h"
+#include "helper.h"
 
 stk_t* stk_new( void )
 {
 	stk_t* new = (stk_t*)malloc(sizeof(stk_t));
-	if (new == NULL)
-	{
-		fprintf(stderr, "Could not allocate memory\n");
-		exit(1);
-	}
+	ASSERT(new != NULL, "Could not allocate memory\n");
 
 	return new;
 }

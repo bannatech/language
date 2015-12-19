@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "fh.h"
+#include "helper.h"
 
 byte_t* read_until_null(FILE* f)
 {
@@ -25,9 +26,7 @@ byte_t* read_until_null(FILE* f)
 byte_t* read_bytes(FILE* f, long bytes)
 {
 	byte_t* buffer = (byte_t*)malloc(bytes*sizeof(byte_t));
-	if (buffer == NULL)
-		return buffer;
-
+	ASSERT(buffer != NULL, "Could not allocate memory\n");
 	fread(buffer, bytes, 1, f);
 
 	return buffer;

@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 #include "types.h"
+#include "helper.h"
 
 typedef struct ns_t {
 	void* placeholder;

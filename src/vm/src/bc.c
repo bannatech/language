@@ -4,14 +4,13 @@
 #include "bc.h"
 #include "is.h"
 #include "fh.h"
+#include "helper.h"
 
 bc_cont* bc_cont_new(void)
 {
 	bc_cont *new = (bc_cont*)malloc(sizeof(bc_cont));
-	if (new == NULL) {
-		fprintf(stderr, "Cannot allocate memory\n");
-		exit(1);
-	}
+	ASSERT(new != NULL, "Could not allocate memory\n");
+
 	new->args[0] = NULL;
 	new->args[1] = NULL;
 	new->args[2] = NULL;

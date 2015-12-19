@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "helper.h"
+
 typedef unsigned char byte_t;
 
 /* Reads passed file descriptor until NULL, returns array of byte_t
