@@ -1,11 +1,11 @@
 /*  types.h -> Provide implemenation of types
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #ifndef TYPES_H
 #define TYPES_H
+
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef enum {
 	VOID,
@@ -17,13 +17,24 @@ typedef enum {
 	G_STRING,
 	S_ARRAY,
 	D_ARRAY,
-	A_ARRAY
+	K_ARRAY,
+	G_FIFO
 } b_type;
 
 typedef struct var_cont {
 	b_type type;
 	void* data;
 } var_cont;
+
+typedef void var_data_void;
+
+typedef int var_data_int;
+
+typedef char var_data_char;
+
+typedef struct var_data_str {
+	char* str;
+} var_data_str;
 
 /* Initialze variable with type
  */

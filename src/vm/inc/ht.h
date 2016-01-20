@@ -4,7 +4,10 @@
 #ifndef HT_H
 #define HT_H
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <string.h>
 
 #include "types.h"
 #include "helper.h"
@@ -24,7 +27,7 @@ typedef struct ht_t {
  */
 ht_t* ht_init(int);
 
-/* Creates the table of buckets for the hashtable
+/* Creates the table of empty buckets for the hashtable
  */
 ht_entry** ht_init_table(int);
 
