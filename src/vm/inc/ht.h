@@ -9,7 +9,7 @@
 #include <limits.h>
 #include <string.h>
 
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
 typedef struct ht_entry {

@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "stk.h"
-#include "types.h"
+#include "var.h"
 
 
 void printstk(stk_t* stk)

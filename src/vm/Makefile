@@ -9,7 +9,7 @@ DEPS    = $(INC_DIR)/is_mdata.h \
                      fh.h       \
                      bc.h       \
                      is.h       \
-                     types.h    \
+                     var.h      \
                      stk.h      \
                      ht.h       \
                      ns.h
@@ -18,7 +18,7 @@ OBJ     = $(SRC_DIR)/main.o \
           $(SRC_DIR)/fh.o   \
           $(SRC_DIR)/bc.o   \
           $(SRC_DIR)/is.o   \
-          $(SRC_DIR)/types.o\
+          $(SRC_DIR)/var.o  \
           $(SRC_DIR)/stk.o  \
           $(SRC_DIR)/ht.o   \
           $(SRC_DIR)/ns.o

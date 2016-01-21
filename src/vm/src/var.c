@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
 var_cont* var_new(b_type type)

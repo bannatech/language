@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
 typedef struct stk_t {

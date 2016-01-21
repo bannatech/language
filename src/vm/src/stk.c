@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "stk.h"
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
 stk_t* stk_new( void )

@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "ht.h"
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
 ht_t* ht_init(int size)

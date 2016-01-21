@@ -27,27 +27,36 @@ RUNTIME
 'Function' in this case means a callable block of code which may or may not retu
 rn a value.
 
+Scopes are handled by referencing to either the Global Scope, Local Scope.
+Local Scope is denoted by '1' in the scope arguement when handling variables,
+and this scope is initialized when evaluating any new block of code. When a diff
+erent block of code is called, a new scope is initialized and the old scope is
+pushed on to the local scope stack. The local scope stack keeps track of previou
+s-level scopes, such as when a function returns the local scope stack is popped,
+deconstructing variables on the popped local stack.
+
+Global scope variables (denoted by a '0' in the scope arguement) are persistient
+through the runtime as they handle all function definitions, objects, and 
+variables declared in the global scope.
+
  +---------+
- |Function | -> Function is 'defined', when called with reference a new scope is
- +---------+    formed, along with arguements being supplied. Can support object
-                oriented behaviour with preserving scopes, and providing access
-                methods to member functions.
+ |Function | -> Functions are defined with a reference, called with the same
+ +---------+    reference. The top elements on the stack are used as arguements
+                when calling a function, which must align with the parameter
+                types.
 
-    Variables (and functions) exist under various scopes. The scopes are as 
-follows:
-  * Temporary Scope
-  * Local Scope
-  * Global Scope
+ +---------------+
+ |Class          |
+ | +---------+   | -> Classes are defined as wrappers around functions. Special
+ | |Function |   |    functions such as the Constructor function and the Deconst
+ | +---------+   |    ructor exist to initialze/clean up properties.
+ +---------------+
 
-    Temporary scope variables are variables declared outside the Root method.
-The Root method is the code that is ran any time a 'module' of code is evaluated
-and/or imported. A 'module' is any file containing code. Local Scope variables
-are variables in which are visible to the module, and only the module. Global
-scope variables are visible anywhere within the runtime.
+
 
     A stack is used to keep a local group of values to manipulate. Values are
 pushed on to the stack and are operated upon, and the values in the stack can
-but assigned or re-assigned to variables.
+be assigned or re-assigned to variables.
 
  Bytecode Instructions
 
@@ -80,10 +89,11 @@ Stack manipulation
 -------------------------------------------------------------------------------
 Variable management
 -------------------------------------------------------------------------------
- DEC S<type> D<ref> - declare variable of type
- LOV D<ref>         - loads reference variable on to stack
- STV D<ref>         - stores TOS to reference variable
- LOC D<ref> D<data> - loads constant
+ DEC S<scope> S<type> D<ref> - declare variable of type
+ LOV S<scope> D<ref>         - loads reference variable on to stack
+ STV S<scope> D<ref>         - stores TOS to reference variable
+ LOC S<scope> D<ref> D<data> - loads constant into variable
+ CTS D<data>                 - loads constant into stack
 -------------------------------------------------------------------------------
 Type management
 
@@ -132,12 +142,19 @@ Manipulating High-order Object Variables
 
     For arrays, key-value arrays, etc
 -------------------------------------------------------------------------------
- PUSH D<ref>         - Push TOS on to <ref>, expects <ref> to be an object that
-                       supports the scheme.
- AT D<ref>           - Push element in structure at TOS (assumes index of sorts)
-                       for <ref> object. Assumes <ref> supports the scheme.
- DEL D<ref> D<index> - Delete element in structure at TOS (assumes index of
-                       sorts) for <ref> object.
+ PUSH         - Push TOS on to TOS1, expects TOS1 to be an object hat
+                supports the scheme.
+
+ DEL          - Delete element in structure at TOS (assumes index of
+                sorts) for <ref> object.
+-------------------------------------------------------------------------------
+Functions/classes
+-------------------------------------------------------------------------------
+ DEFUN D<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
+                                function. D<ref> is its name, S<type> is the
+                                return value, D<args> is the args.
+
+ DECLASS D<ref>               - Defines a class
 -------------------------------------------------------------------------------
 
 LEXICAL ANALYSIS

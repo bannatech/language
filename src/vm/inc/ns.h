@@ -1,14 +1,4 @@
 /* `ns` Namespace implementation
- *
- * Each variable that exists and accessed will be via a level on a namespace
- * instance. For example, at the root of a program, a namespace is initialized
- * and variables declared at this level are accessable everywhere. When a func
- * is called, a new namespace level is initialized and variables declared on
- * that level will be destroyed/inaccessable when the function returns and the 
- * new level is 'popped', going up a level.
- *
- * When a variable is queued, it will search through all the levels of the
- * namespace to retreive the proper value.
  */
 
 #ifndef NS_H
@@ -16,41 +6,46 @@
 
 #include <stdlib.h>
 
-#include "types.h"
+#include "var.h"
 #include "helper.h"
 
+typedef struct ns_cont {
+	int size;
+	var_cont** names;
+	struct ns_cont* next;
+} ns_cont;
+
 typedef struct ns_t {
-	void* placeholder;
+	ns_cont* root;
+	ns_cont* last;
 } ns_t;
 
-/* Initializes namespace.
+/* Initializes namespace of size
  */
-ns_t* ns_init(void);
+ns_t* ns_init(int);
 
-/* Initializes new namspace level.
- */
-void ns_new(ns_t*);
+ns_cont* ns_cont_init(int);
 
-/* Pushes new namespace level to a pre-initialized state
+/* Cleans up memory
  */
-void ns_push(ns_t*, ns_t*);
+void ns_del(ns_t*);
 
-/* Pops last namespace level. Destroys all data initialized at level.
- */
-void ns_pop_del(ns_t*);
+void ns_cont_del(ns_cont*);
 
-/* Pops last namespace level. Keeps data, returns pointer.
+/* Pushes namespace of size
  */
-ns_t* ns_pop(ns_t*);
+void ns_push(ns_t*, int);
 
-/* Declares a variable of name char*.
- * Return code denotes a success or failure. (bool)
+/* Pops last namespace level
  */
-int ns_dec(ns_t*, char*);
+void ns_pop(ns_t*);
 
-/* Sets variable to value.
- * Return code denotes a success or failure. (bool)
+/* Declares a variable, at root or last namespace
  */
-int ns_set(ns_t*, char*, var_cont*);
+void ns_dec(ns_t*, b_type, int, int);
+
+/* Sets variable to value, at root or last namespace
+ */
+void ns_set(ns_t*, int, int, var_cont*);
 
 #endif // NS_H
