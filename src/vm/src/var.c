@@ -104,7 +104,7 @@ void var_del(var_cont* var)
 {
 	if (var == NULL)
 		return;
-	
+
 	if (var->data != NULL)
 		var_data_free(var->data, var->type);
 
@@ -125,72 +125,71 @@ void var_set(var_cont* var, void** data, b_type type)
 	var->data = data;
 }
 
-var_cont* var_cast_data(var_cont* var, b_type type)
+void** var_cast_data_G_INT(void** data, b_type type)
 {
-	if (var->type == VOID)
-		return var_new(type);
+	N_ASSERT(data);
 
-	if (var->type == G_INT)
-		return var_cast_data_G_INT(var->data, type);
+	free(data);
 
-	if (var->type == G_FLOAT)
-		return var_cast_data_G_FLOAT(var->data, type);
-
-	if (var->type == G_CHAR)
-		return var_cast_data_G_CHAR(var->data, type);
-
-	if (var->type == G_STR)
-		return var_cast_data_G_STR(var->data, type);
-
-	return var_new(type);
+	return var_data_alloc(type);
 }
 
-void var_cast(var_cont** var, b_type type)
+void** var_cast_data_G_FLOAT(void** data, b_type type)
+{
+	N_ASSERT(data);
+
+	free(data);
+
+	return var_data_alloc(type);
+}
+
+void** var_cast_data_G_CHAR(void** data, b_type type)
+{
+	N_ASSERT(data);
+
+	free(data);
+
+	return var_data_alloc(type);
+}
+
+void** var_cast_data_G_STR(void** data, b_type type)
+{
+	N_ASSERT(data);
+
+	free(data);
+
+	return var_data_alloc(type);
+}
+
+void** var_cast_data(var_cont* var, b_type type)
+{
+	void** rv = NULL;
+
+	if (var->type == G_INT)
+		rv = var_cast_data_G_INT(var->data, type);
+
+	if (var->type == G_FLOAT)
+		rv = var_cast_data_G_FLOAT(var->data, type);
+
+	if (var->type == G_CHAR)
+		rv = var_cast_data_G_CHAR(var->data, type);
+
+	if (var->type == G_STR)
+		rv = var_cast_data_G_STR(var->data, type);
+
+	return rv;
+}
+
+void var_cast(var_cont* var, b_type type)
 {
 	if (var == NULL)
 		return;
+	
+	if (var->data == NULL)
+		return;
 
-	*var = var_cast_data(*var, type);
+	var->data = var_cast_data(var, type);
 
-	(*var)->type = type;
+	var->type = type;
 }
 
-var_cont* var_cast_data_G_INT(void** data, b_type type)
-{
-	var_cont* new = var_new(type);
-
-	if (data != NULL)
-		free(data);
-
-	return new;
-}
-
-var_cont* var_cast_data_G_FLOAT(void** data, b_type type)
-{
-	var_cont* new = var_new(type);
-
-	if (data != NULL)
-		free(data);
-
-	return new;
-}
-
-var_cont* var_cast_data_G_CHAR(void** data, b_type type)
-{
-	var_cont* new = var_new(type);
-
-	if (data != NULL)
-		free(data);
-
-	return new;
-}
-
-var_cont* var_cast_data_G_STR(void** data, b_type type)
-{
-	var_cont* new = var_new(type);
-
-	if (data != NULL)
-		free(data);
-
-	return new;
-}

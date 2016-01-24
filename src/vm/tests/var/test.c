@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "var.h"
+#include "helper.h"
 
 int main( void )
 {
@@ -9,16 +10,21 @@ int main( void )
 		printf("1\n");
 	else
 		printf("0\n");
-	
+
 	var_cont* test1 = var_new(G_INT);
 
 	var_set(test1, var_data_alloc_G_INT(32), G_INT);
-	int testing = *(test1->data);
-	if (testing == 32)
+	if (*(test1->data) == 32)
 		printf("1\n");
 	else
-		printf("0: %d\n", testing);
+		printf("0: %d\n", *(test1->data));
 
+	printf("%i -> ", test1->type);
+	var_cast(test1, G_FLOAT);
+	printf("%i\n", test1->type);
+
+	N_ASSERT(test1->data);
+	
 	var_del(test0);
 	var_del(test1);
 }

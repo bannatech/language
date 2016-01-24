@@ -1,4 +1,4 @@
-#define _XOPEN_SOUCE 500
+#define _XOPEN_SOURCE 500
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +11,10 @@
 
 ht_t* ht_init(int size)
 {
+	ASSERT((size % 2) == 0, "Hashtable size must be powers of 2\n");
+
 	ht_t* hashtable = (ht_t*)malloc(sizeof(ht_t));
-	ASSERT(hashtable != NULL, "Could not allocate memory\n");
+	M_ASSERT(hashtable);
 
 	hashtable->size = size;
 	hashtable->table = ht_init_table(hashtable->size);
@@ -22,8 +24,10 @@ ht_t* ht_init(int size)
 
 ht_entry** ht_init_table(int size)
 {
+	ASSERT((size % 2 ) == 0, "hashtable size must be powers of 2\n");
+
 	ht_entry** table = (ht_entry**)malloc(sizeof(ht_entry*)*size);
-	ASSERT(table != NULL, "Could not allocate memory\n");
+	M_ASSERT(table);
 
 	for (int i = 0; i < size; i++)
 	{
@@ -130,10 +134,10 @@ ht_entry* ht_newpair(char* key, var_cont* value)
 	ht_entry* newpair;
 
 	newpair = malloc(sizeof(ht_entry));
-	ASSERT(newpair != NULL, "Couldn't allocate memory!");
+	M_ASSERT(newpair);
 
-	newpair->key = strdup(key);
-	ASSERT(newpair->key != NULL, "Null keys are bad mhmkay");
+	newpair->key = (char*)strdup(key);
+	M_ASSERT(newpair->key);
 
 	newpair->value = value;
 

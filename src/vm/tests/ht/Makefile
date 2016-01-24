@@ -5,11 +5,11 @@ CC      = gcc
 CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
 
 DEPS    = i$(INC_DIR)/helper.h \
-                      types.h  \
+                      var.h    \
                       ht.h
 
 OBJ     = test.o             \
-          $(SRC_DIR)/types.o \
+          $(SRC_DIR)/var.o   \
           $(SRC_DIR)/ht.o
 
 OUT     = test
