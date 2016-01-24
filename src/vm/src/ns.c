@@ -4,24 +4,13 @@
 #include "var.h"
 #include "helper.h"
 
-ns_t* ns_init(int size)
-{
-	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
-	ASSERT(ns != NULL, "Could not allocate memory\n");
-	
-	ns->root = ns_cont_init(size);
-	ns->last = NULL;
-
-	return ns;
-}
-
-ns_cont* ns_cont_init(int size)
+ns_cont* ns_cont_init(ns_addr size)
 {
 	ns_cont* new = (ns_cont*)malloc(sizeof(ns_cont));
-	ASSERT(new != NULL, "Could not allocate memory\n");
+	M_ASSERT(new);
 
 	new->names = (var_cont**)malloc(sizeof(var_cont*)*size);
-	ASSERT(new->names != NULL, "Could not allocate memory\n");
+	M_ASSERT(new->names);
 
 	new->size = size;
 
@@ -35,12 +24,15 @@ ns_cont* ns_cont_init(int size)
 	return new;
 }
 
-void ns_del(ns_t* ns)
+ns_t* ns_init(ns_addr size)
 {
-	while (ns->last->next != NULL)
-		ns_pop(ns);
+	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
+	M_ASSERT(ns);
 	
-	free(ns);
+	ns->root = ns_cont_init(size);
+	ns->last = NULL;
+
+	return ns;
 }
 
 void ns_cont_del(ns_cont* container)
@@ -56,7 +48,17 @@ void ns_cont_del(ns_cont* container)
 	free(container);
 }
 
-void ns_push(ns_t* ns, int size)
+void ns_del(ns_t* ns)
+{
+	M_ASSERT(ns);
+	if (ns->last != NULL)
+		while (ns->last->next != NULL)
+			ns_pop(ns);
+	
+	free(ns);
+}
+
+void ns_push(ns_t* ns, ns_addr size)
 {
 	ns_cont* new = ns_cont_init(size);
 
@@ -83,13 +85,44 @@ void ns_pop(ns_t* ns)
 	}
 }
 
-void ns_dec(ns_t* ns, b_type type, int scope, int name)
+void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
 {
-	return;
+	SIZE_ASSERT( ns->size > address );
+
+	ns->names[ address ] = var_new(type);
 }
 
-void ns_set(ns_t* ns, int scope, int name, var_cont* data)
+void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 {
-	return;
+	ns_cont* scoped_ns = scope ? ns->root : ns->last;
+
+	ns_cont_dec(scoped_ns, type, address);
 }
 
+void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
+{
+	SIZE_ASSERT( ns->size > address );
+
+	var_set(ns->names[ address ], var->data, var->type);
+}
+
+void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
+{
+	ns_cont* scoped_ns = scope ? ns->root : ns->last;
+
+	ns_cont_set(scoped_ns, var, address);
+}
+
+var_cont* ns_cont_get(ns_cont* ns, ns_addr address)
+{
+	SIZE_ASSERT( ns->size > address );
+
+	return ns->names[ address ];
+}
+
+var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
+{
+	ns_cont* scoped_ns = scope ? ns->root : ns->last;
+
+	return ns_cont_get(scoped_ns, address);
+}

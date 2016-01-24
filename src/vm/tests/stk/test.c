@@ -17,13 +17,14 @@ void printstk(stk_t* stk)
 int main(int argc, char* argv[])
 {
 	stk_t* new = stk_new();
-	new->data = var_new(0);
 
-	stk_push(&new, var_new(1));
-	stk_push(&new, var_new(2));
-	stk_push(&new, var_new(3));
-	stk_push(&new, var_new(4));
-	stk_push(&new, var_new(5));
+	new->data = var_new(VOID);
+
+	stk_push(&new, var_new(VOID));
+	stk_push(&new, var_new(G_INT));
+	stk_push(&new, var_new(G_FLOAT));
+	stk_push(&new, var_new(G_CHAR));
+	stk_push(&new, var_new(G_STR));
 
 	printstk(new);
 

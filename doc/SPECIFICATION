@@ -18,7 +18,34 @@ are deemed inferior.
  * float
  * character
  * boolean
-    Will be elaborated on as thoughts progress.
+
+Types are structured in memory with an integer representing types, along with a
+null pointer to a space in memory containing the data. Building on top of basic
+types, there will be more complex data structures built into the virtual machine
+such as static Arrays, dynamic Arrays, and a hashtable implementation. Functions
+and Classes have their own type, which acts as a pointer to an address within
+the program space. For example, variables would be accessed in the runtime, in
+code would be like so:
+
+    var_cont* get_variable(ns_cont* namespace, int x)
+    {
+    	var_cont* var = namespace->names[x];
+    	return var;
+    }
+
+To set variable:
+
+    void set_variable(ns_cont* namespace, var_cont* var, int x)
+    {
+    	var_cont* c_var = namespace->names[x];
+
+    	del_var(c_var);
+
+    	var_cont* c_var = var;
+    }
+
+Both of these functions require some safeguards against hard crashes, where the
+program will segfault if given incorrect values.
 
 RUNTIME
 
