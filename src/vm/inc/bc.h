@@ -44,6 +44,6 @@ byte_t* get_dync_arg(FILE*);
 /* Initiates the first pass to take a raw binary file and translate it into a
  * basic datastructure
  */
-bc_cont* bc_read(char* fname);
+bc_cont* bc_read(char*);
 
 #endif // BC_H
