@@ -1,0 +1,61 @@
+                    What Comprises of 'Language'
+          Detailed List of What is Contained Within thereof.
+
+OVERVIEW
+
+    This document covers individual, trackable, and testable components within
+the project. The list is as follows:
+
+Virtual Machine:
+
+ - Instruction interpreter
+   * Reading bytecode
+   * Handling instructions in memory
+   * Interpreting bytecode arguements
+
+ - Instruction opcode definitions/Instruction metadata
+   * Translate meaningless bytes into action
+   * Provide O(1) instruction metadata retrieval
+
+ - Provide interface for runtime variables
+   * Implement primitive data types
+   * Allocate resources for runtime variables
+
+ - Implementing a F.I.L.O. data structure (stack) that extends runtime variables
+   * Push & pop variables on the data structure
+   * Push & pop 'level's of the stack
+   * Communicate & manage instances of semaphores to thread manager
+
+ - Namespace implemenataion
+   * Global, local (traced) namespaces
+   * Handles memory deallocation
+   * Communicate instances of semaphores to thread manager
+
+ - Threading wrapper/Threading manager
+   * Set up thread pool
+   * Handle calls to initialize new threads
+   * Handle thread safe variables
+
+ - Runtime manager
+   * Provide program counter
+   * Iterate over bytecode, interpret arguements
+   * Handle initailzation of various runtime dependencies
+   * Provide interface to built-in functions
+
+Compiler:
+
+    Currently how the compiler will operate will change as the runtime develops.
+
+Once the Virtual Machine meets the minimum requirements of implemented features,
+the compiler will be drafted, prototyped, and implemented in bytecode. Once this
+step is complete, further development will happen in the next step.
+
+Standard Library/Libraries in general:
+
+    The standard library will be a reflection of the langauges capabilitiy, and
+the functionality of existing standard libraries.
+
+
+IN SUMNATION
+
+    A sumnation of a sumnation of what is contained within the 'Language'.
