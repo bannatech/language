@@ -107,82 +107,98 @@ Keywords:
  D<[variable]> - Dynamic bytecode arguement. Arguements terminated with NULL
                  byte.
 -------------------------------------------------------------------------------
-Stack manipulation
+1 - Stack manipulation
 -------------------------------------------------------------------------------
- POP S<n>  - pops the stack n times.
- ROT       - rotates top of stack
- ROT_THREE - rotates top three elements of stack
- DUP       - duplicates the top of the stack
+10 POP S<n>  - pops the stack n times.
+11 ROT       - rotates top of stack
+12 DUP       - duplicates the top of the stack
+13 ROT_THREE - rotates top three elements of stack
 -------------------------------------------------------------------------------
-Variable management
+2 - Variable management
 -------------------------------------------------------------------------------
- DEC S<scope> S<type> D<ref> - declare variable of type
- LOV S<scope> D<ref>         - loads reference variable on to stack
- STV S<scope> D<ref>         - stores TOS to reference variable
- LOC S<scope> D<ref> D<data> - loads constant into variable
- CTS D<data>                 - loads constant into stack
+20 DEC S<scope> S<type> D<ref> - declare variable of type
+21 LOV S<scope> D<ref>         - loads reference variable on to stack
+22 STV S<scope> D<ref>         - stores TOS to reference variable
+23 LOC S<scope> D<ref> D<data> - loads constant into variable
+24 CTS D<data>                 - loads constant into stack
 -------------------------------------------------------------------------------
-Type management
+3 - Type management
 
    Types are in the air at this moment. I'll detail what types there are when
 the time comes
 -------------------------------------------------------------------------------
- TYPEOF D<ref>      - returns type structure on TOS (used for comparing types)
- CAST D<ref> S<type> - Tries to cast <ref> to <type>
+30 TYPEOF D<ref>      - returns type structure on TOS (used for comparing types)
+31 CAST D<ref> S<type> - Tries to cast <ref> to <type>
 -------------------------------------------------------------------------------
-Arithmetic
+4 - Binary Ops
     OPS take the two top elements of the stack, preform an operation and push
 the result on the stack.
 -------------------------------------------------------------------------------
- ADD  - adds the two top elements of the stack and pushes the result
- SUB  - subtracts the two top elements of the stack and pushes the result
- MULT - multiplies the two top elements of the stack and pushes the result
- DIV  - divides the two top elements of the stack and pushes the result
+40 ADD  - adds
+41 SUB  - subtracts
+42 MULT - multiplies
+43 DIV  - divides
+44 POW  - power, TOS^TOS1
+45 BRT  - base root, TOS root TOS1
+46 SIN  - sine
+47 COS  - cosine
+48 TAN  - tangent
+49 ISIN - inverse sine
+4A ICOS - inverse consine
+4B ITAN - inverse tangent
+4C MOD  - modulus
+4D OR   - or's
+4E XOR  - xor's
+4F NAND - and's
 -------------------------------------------------------------------------------
-Conditional Expressions
+5 - Conditional Expressions
 
-    Things for booleans, < > = ! and so on and so forth.
-Behaves like Arithmetic instructions
+    Things for comparison, < > = ! and so on and so forth.
+Behaves like Arithmetic instructions, besides NOT instruction. Pushes boolean
+to TOS
 -------------------------------------------------------------------------------
- GTHAN - Greather than
- LTHAN - Less than
- EQ    - Equal to
- NOT   - Not this.
+50 GTHAN - Greather than
+51 LTHAN - Less than
+52 EQ    - Equal to
+53 NOT   - Inverts TOS if TOS is boolean
 -------------------------------------------------------------------------------
-Loops
+6 - Loops
 -------------------------------------------------------------------------------
- STARTL - Start of loop
- CLOOP  - Conditional loop. If TOS is true, continue looping, else break
- BREAK  - Breaks out of loop
- DONE   - End of loop
+60 STARTL - Start of loop
+61 CLOOP  - Conditional loop. If TOS is true, continue looping, else break
+6E BREAK  - Breaks out of loop
+6F DONE   - End of loop
 -------------------------------------------------------------------------------
-Code flow
+7 - Code flow
 
     These instructions dictate code flow.
 -------------------------------------------------------------------------------
- GOTO A<addr> - Goes to address
- JUMPF S<n>   - Goes forward <n> lines
- CALL D<ref>  - Calls function, pushes return value on to STACK. Expects array
-                on TOS to be used for arguements
+70 GOTO A<addr> - Goes to address
+71 JUMPF S<n>   - Goes forward <n> lines
+7F CALL D<ref>  - Calls function, pushes return value on to STACK. Expects array
+                  on TOS to be used for arguements
 -------------------------------------------------------------------------------
-Manipulating High-order Object Variables
+8 - Manipulating High-order Object Variables
 
     For arrays, key-value arrays, etc
 -------------------------------------------------------------------------------
- PUSH         - Push TOS on to TOS1, expects TOS1 to be an object hat
+80 PUSH         - Push TOS on to TOS1, expects TOS1 to be an object hat
                 supports the scheme.
 
- DEL          - Delete element in structure at TOS (assumes index of
+81 DEL          - Delete element in structure at TOS (assumes index of
                 sorts) for <ref> object.
 -------------------------------------------------------------------------------
-Functions/classes
+F - Functions/classes
 -------------------------------------------------------------------------------
- DEFUN D<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
-                                function. D<ref> is its name, S<type> is the
-                                return value, D<args> is the args.
+FF DEFUN D<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
+                                  function. D<ref> is its name, S<type> is the
+                                  return value, D<args> is the args.
 
- DECLASS D<ref>               - Defines a class
+FE DECLASS D<ref>               - Defines a class
 -------------------------------------------------------------------------------
+0 - SPECIAL BYTES
+-------------------------------------------------------------------------------
+00 - Terminator byte
 
 LEXICAL ANALYSIS
 
