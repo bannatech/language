@@ -23,7 +23,7 @@
 #define encode(n, a0, a1, a2) \
 	( n << 6 | a0 << 4 | a1 << 2 | a2 );
 
-// This array is populated by inc/is_mdata
+// This array is populated by inc/is_mdata.h
 byte_t INS_MDATA[256];
 
 /* Takes an opcode, fills metadata about that opcode (given that it exists) in

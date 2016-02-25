@@ -1,5 +1,5 @@
-SRC_DIR = ../../src
-INC_DIR = ../../inc
+SRC_DIR = ../../../src
+INC_DIR = ../../../inc
 
 CC      = gcc
 CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
@@ -20,5 +20,4 @@ $(OUT): $(OBJ)
 
 clean:
 	rm *.o
-	rm $(SRC_DIR)/*.o
 	rm $(OUT)

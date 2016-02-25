@@ -47,7 +47,12 @@ To set variable:
 Both of these functions require some safeguards against hard crashes, where the
 program will segfault if given incorrect values.
 
+________________________________________________________________________________
 RUNTIME
+--------------------------------------------------------------------------------
+
+TODO: SPEC VARIABLE SERIALZATION
+
 
     Code in the runtime is organized on a per-function basis.
 
@@ -127,8 +132,9 @@ Keywords:
    Types are in the air at this moment. I'll detail what types there are when
 the time comes
 -------------------------------------------------------------------------------
-30 TYPEOF D<ref>      - returns type structure on TOS (used for comparing types)
-31 CAST D<ref> S<type> - Tries to cast <ref> to <type>
+30 TYPEOF              - returns type structure on TOS
+                         (used for comparing types)
+31 CAST S<type>        - Tries to cast TOS to <type>
 -------------------------------------------------------------------------------
 4 - Binary Ops
     OPS take the two top elements of the stack, preform an operation and push
@@ -175,8 +181,7 @@ to TOS
 -------------------------------------------------------------------------------
 70 GOTO A<addr> - Goes to address
 71 JUMPF S<n>   - Goes forward <n> lines
-7F CALL D<ref>  - Calls function, pushes return value on to STACK. Expects array
-                  on TOS to be used for arguements
+7F CALL D<ref>  - Calls function, pushes return value on to STACK.
 -------------------------------------------------------------------------------
 8 - Manipulating High-order Object Variables
 
@@ -187,6 +192,15 @@ to TOS
 
 81 DEL          - Delete element in structure at TOS (assumes index of
                 sorts) for <ref> object.
+
+82 GET          - Gets key, TOS must be a keyed datastructure, and TOS1 must be
+                a string that is a key in TOS.
+
+83 GETP D<ref>  - Get property of <ref> in object contained in TOS. pushes
+                to stack
+
+84 CALLM D<ref> - Call method of <ref> in object contained in TOS. Uses
+                arguement stack
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
@@ -194,11 +208,48 @@ FF DEFUN D<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   function. D<ref> is its name, S<type> is the
                                   return value, D<args> is the args.
 
-FE DECLASS D<ref>               - Defines a class
+FE DECLASS D<ref> D<args>       - Defines a class.
 -------------------------------------------------------------------------------
 0 - SPECIAL BYTES
 -------------------------------------------------------------------------------
-00 - Terminator byte
+00 NULL        - Terminator byte
+
+01 SYNC        - Updates global namespace with global namespace cache of current
+                 thread
+
+0E ARGB        - Builds arguement stack
+
+0F LIBC A<ref> - Library call
+
+-------------------------------------------------------------------------------
+General Architecture Overview
+-------------------------------------------------------------------------------
+RUNTIME CONTEXT
+
+    The runtime context keeps track of a invidual threads metadata, such as:
+
+ * The operating stack
+
+ * Local namespace scope stack
+
+ * Arguement stack
+
+ * Thread instance
+
+ * Global Namespace cache
+
+ * Program counter
+
+
+FUNCTION CALL PROCEDURE
+
+    When calling a function, arguements are assumed to be built up using the
+`ARGB` instruction. TOS is popped into a special stack, named 'arguement stack'
+which is a member of the runtime context.
+
+________________________________________________________________________________
+COMPILER/TRANSLATOR/ASSEMBLER SHINDIGS
+--------------------------------------------------------------------------------
 
 LEXICAL ANALYSIS
 

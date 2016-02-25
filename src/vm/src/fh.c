@@ -20,14 +20,18 @@ byte_t* read_until_null(FILE* f)
 	// Seek backwards
 	fseek(f, -bytes, SEEK_CUR);
 
+	ASSERT(f_pos_i == ftell(f), "Something bad happened.\n");
+
 	return read_bytes(f, bytes);
 }
 
 byte_t* read_bytes(FILE* f, long bytes)
 {
 	byte_t* buffer = (byte_t*)malloc(bytes*sizeof(byte_t));
+
 	ASSERT(buffer != NULL, "Could not allocate memory\n");
-	fread(buffer, bytes, 1, f);
+
+	fread(buffer, bytes, sizeof(byte_t), f);
 
 	return buffer;
 }
