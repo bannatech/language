@@ -1,6 +1,8 @@
 #ifndef INS_MDATA_H
 #define INS_MDATA_H
 
+#include "ins_def.h"
+
 #define INS_MDATA_DEF()                                             \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* POP       */ INS_MDATA[0x10] = encode(1, A_BYTE, A_NULL, A_NULL); \

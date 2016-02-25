@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SEPARATOR="--------------------------------------------------------------------------------"
+
 dir=$(ls)
 
 for i in $dir
@@ -13,6 +15,7 @@ do
 		printf "\n"
 		
 		./test bytecode | diff /dev/stdin expected_output
+		printf "\n$SEPARATOR\n"
 		cd ..
 	fi
 done
