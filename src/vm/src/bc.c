@@ -21,6 +21,7 @@ bc_cont* bc_cont_new(void)
 bc_cont* bc_cont_push(bc_cont* head)
 {
 	head->next = bc_cont_new();
+	head->next->prev = head;
 	return head->next;
 }
 
@@ -77,6 +78,25 @@ byte_t* get_dync_arg(FILE* f)
 	return read_until_null(f);
 }
 
+bc_cont* bc_scan(bc_cont* ptr, int scanto)
+{
+	while (scanto != 0)
+	{
+		if (scanto > 0 && ptr->next != NULL)
+		{
+			ptr = ptr->next;
+			scanto--;
+		} else
+		if (scanto < 0 && ptr->next != NULL)
+		{
+			ptr = ptr->prev;
+			scanto++;
+		}
+	}
+
+	return ptr;
+}
+
 bc_cont* bc_read(char* fname)
 {
 	FILE* f;
@@ -87,7 +107,8 @@ bc_cont* bc_read(char* fname)
 	fsize = read_size(f);
 	
 	bc_cont *root = bc_cont_new();
-	bc_cont *ptr = root;
+	bc_cont *ptr  = root;
+	bc_addr addr  = 0;
 
 	/* Loop through file byte-by-byte */
 	while (ftell(f)<fsize)
@@ -96,9 +117,14 @@ bc_cont* bc_read(char* fname)
 		get_opcode(byte, ptr);
 		get_args(f, ptr);
 
+		ptr->real_addr = addr;
+
 		ptr = bc_cont_push(ptr);
+
+		addr++;
 	}
 
 	fclose(f);
+
 	return root;
 }

@@ -10,13 +10,17 @@
 #include "fh.h"
 #include "helper.h"
 
+typedef unsigned short int bc_addr;
+
 /* 'Bytecode Container'
  */
 typedef struct bc_cont {
 	byte_t   op;
 	byte_t*  args[3];
 	byte_t   mdata;
+	bc_addr  real_addr;
 	struct bc_cont* next;
+	struct bc_cont* prev;
 } bc_cont;
 
 #include "is.h"
@@ -40,6 +44,8 @@ void get_args(FILE*, bc_cont*);
 byte_t* get_byte_arg(FILE*);
 byte_t* get_word_arg(FILE*);
 byte_t* get_dync_arg(FILE*);
+
+bc_cont* bc_scan(bc_cont*, int);
 
 /* Initiates the first pass to take a raw binary file and translate it into a
  * basic datastructure

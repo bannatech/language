@@ -1,8 +1,6 @@
 #ifndef INS_MDATA_H
 #define INS_MDATA_H
 
-#include "ins_def.h"
-
 #define INS_MDATA_DEF()                                             \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* POP       */ INS_MDATA[0x10] = encode(1, A_BYTE, A_NULL, A_NULL); \
@@ -53,10 +51,10 @@
 /* PUSH      */ INS_MDATA[0x80] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* DEL       */ INS_MDATA[0x81] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* GET       */ INS_MDATA[0x82] = encode(0, A_NULL, A_NULL, A_NULL); \
-/* GETP      */ INS_MDATA[0x83] = encode(0, A_WORD, A_NULL, A_NULL); \
-/* CALLM     */ INS_MDATA[0x84] = encode(0, A_WORD, A_NULL, A_NULL); \
+/* GETP      */ INS_MDATA[0x83] = encode(1, A_WORD, A_NULL, A_NULL); \
+/* CALLM     */ INS_MDATA[0x84] = encode(1, A_WORD, A_NULL, A_NULL); \
                                                                      \
-/* DECLASS   */ INS_MDATA[0xFE] = encode(0, A_WORD, A_DYNC, A_NULL); \
-/* DEFUN     */ INS_MDATA[0xFF] = encode(0, A_WORD, A_BYTE, A_DYNC);
+/* DECLASS   */ INS_MDATA[0xFE] = encode(2, A_WORD, A_DYNC, A_NULL); \
+/* DEFUN     */ INS_MDATA[0xFF] = encode(3, A_WORD, A_BYTE, A_DYNC);
 
 #endif

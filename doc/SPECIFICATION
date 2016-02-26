@@ -209,6 +209,10 @@ FF DEFUN A<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   return value, D<args> is the args.
 
 FE DECLASS A<ref> D<args>       - Defines a class.
+
+F1 NEW A<ref>                   - Instantiates class
+
+F0 LSIZE W<size>                - Dictates local scope size for function/class
 -------------------------------------------------------------------------------
 0 - SPECIAL BYTES
 -------------------------------------------------------------------------------

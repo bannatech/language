@@ -23,4 +23,3 @@ $(OUT): $(OBJ)
 clean:
 	rm *.o
 	rm $(OUT)
-	rm $(SRC_DIR)/*.o
