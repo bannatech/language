@@ -210,20 +210,22 @@ FF DEFUN A<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
 
 FE DECLASS A<ref> D<args>       - Defines a class.
 
+F2 LSIZE W<size>                - Dictates local scope size for function/class
+
 F1 NEW A<ref>                   - Instantiates class
 
-F0 LSIZE W<size>                - Dictates local scope size for function/class
+F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------
 0 - SPECIAL BYTES
 -------------------------------------------------------------------------------
-00 NULL        - Terminator byte
+00 NULL          - Terminator byte
 
-01 SYNC        - Updates global namespace with global namespace cache of current
-                 thread
+01 SYNC S<level> - Updates global namespace with global namespace cache of 
+                   current thread
 
-0E ARGB        - Builds arguement stack
+0E ARGB          - Builds arguement stack
 
-0F LIBC A<ref> - Library call
+0F LIBC A<ref>   - Library call
 
 -------------------------------------------------------------------------------
 General Architecture Overview

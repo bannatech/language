@@ -37,6 +37,8 @@ void pc_update(pc_t*);
  */
 void pc_inc(pc_t*, pc_addr);
 
+int pc_safe(pc_t*);
+
 /* Branch
  */
 void pc_branch(pc_t*, pc_addr);

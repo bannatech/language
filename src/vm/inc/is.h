@@ -13,8 +13,6 @@
 #include "fh.h"
 #include "bc.h"
 
-#include "ins_mdata.h"
-
 #define A_NULL 0
 #define A_BYTE 1
 #define A_WORD 2
@@ -23,8 +21,10 @@
 #define encode(n, a0, a1, a2) \
 	( n << 6 | a0 << 4 | a1 << 2 | a2 );
 
+#include "ins_mdata.h"
+
 // This array is populated by inc/is_mdata.h
-byte_t INS_MDATA[256];
+byte_t INS_MDATA[0xFF];
 
 /* Takes an opcode, fills metadata about that opcode (given that it exists) in
  * the `bc_cont` structure

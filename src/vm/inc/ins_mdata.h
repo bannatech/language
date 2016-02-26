@@ -3,6 +3,10 @@
 
 #define INS_MDATA_DEF()                                             \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_NULL, A_NULL, A_NULL); \
+/* SYNC      */ INS_MDATA[0x01] = encode(1, A_BYTE, A_NULL, A_NULL); \
+/* ARGB      */ INS_MDATA[0x02] = encode(0, A_NULL, A_NULL, A_NULL); \
+/* LIBC      */ INS_MDATA[0x0F] = encode(1, A_WORD, A_NULL, A_NULL); \
+                                                                     \
 /* POP       */ INS_MDATA[0x10] = encode(1, A_BYTE, A_NULL, A_NULL); \
 /* ROT       */ INS_MDATA[0x11] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* DUP       */ INS_MDATA[0x12] = encode(0, A_NULL, A_NULL, A_NULL); \
@@ -54,6 +58,9 @@
 /* GETP      */ INS_MDATA[0x83] = encode(1, A_WORD, A_NULL, A_NULL); \
 /* CALLM     */ INS_MDATA[0x84] = encode(1, A_WORD, A_NULL, A_NULL); \
                                                                      \
+/* RETURN    */ INS_MDATA[0xF0] = encode(0, A_NULL, A_NULL, A_NULL); \
+/* NEW       */ INS_MDATA[0xF1] = encode(1, A_WORD, A_NULL, A_NULL); \
+/* LSIZE     */ INS_MDATA[0xF2] = encode(1, A_WORD, A_NULL, A_NULL); \
 /* DECLASS   */ INS_MDATA[0xFE] = encode(2, A_WORD, A_DYNC, A_NULL); \
 /* DEFUN     */ INS_MDATA[0xFF] = encode(3, A_WORD, A_BYTE, A_DYNC);
 

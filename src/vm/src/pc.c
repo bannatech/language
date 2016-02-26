@@ -48,6 +48,23 @@ void pc_inc(pc_t* pc, pc_addr addr)
 	pc->address = pc->address + addr;
 }
 
+int pc_safe(pc_t* pc)
+{
+	N_ASSERT(pc);
+
+	int rv = 0;
+
+	if (pc->address >= pc->root->real_addr)
+	{
+		rv = 0;
+	} else
+	if (pc->address < pc->root->real_addr)
+	{
+		rv = 1;
+	}
+
+	return rv;
+}
 
 void pc_branch(pc_t* pc, pc_addr addr)
 {
