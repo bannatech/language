@@ -1,6 +1,24 @@
 #ifndef INS_MDATA_H
 #define INS_MDATA_H
 
+#define A_NULL 0
+#define A_BYTE 1
+#define A_WORD 2
+#define A_DYNC 3
+
+
+/* Macro used below.
+ * It should be self-explainitory
+ * i.e. encode( 3, 2, 1, 0 ) = 0b11100100
+ *             11,10,01,00   = 0xE4
+ */
+#define encode(n, a0, a1, a2) \
+	( n << 6 | a0 << 4 | a1 << 2 | a2 );
+
+/* This definition is ran in `is.c`
+ *
+ *  INS_MDATA[ <opcode> ] = encode( <number of arguements>, <type..3> )
+ */
 #define INS_MDATA_DEF()                                             \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* SYNC      */ INS_MDATA[0x01] = encode(1, A_BYTE, A_NULL, A_NULL); \

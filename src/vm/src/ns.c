@@ -4,6 +4,9 @@
 #include "var.h"
 #include "helper.h"
 
+/* Initialize namespace container of size
+ *  ns_addr - name limit
+ */
 ns_cont* ns_cont_init(ns_addr size)
 {
 	ns_cont* new = (ns_cont*)malloc(sizeof(ns_cont));
@@ -24,6 +27,9 @@ ns_cont* ns_cont_init(ns_addr size)
 	return new;
 }
 
+/* Initializes namespace of size
+ *  ns_addr - name limit
+ */
 ns_t* ns_init(ns_addr size)
 {
 	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
@@ -35,6 +41,8 @@ ns_t* ns_init(ns_addr size)
 	return ns;
 }
 
+/* Cleans up memory
+ */
 void ns_cont_del(ns_cont* container)
 {
 	N_ASSERT(container);
@@ -51,6 +59,8 @@ void ns_cont_del(ns_cont* container)
 	free(container);
 }
 
+/* Cleans up memory
+ */
 void ns_del(ns_t* ns)
 {
 	N_ASSERT(ns);
@@ -62,6 +72,10 @@ void ns_del(ns_t* ns)
 	free(ns);
 }
 
+/* Pushes namespace of size
+ * ns_t*   - namespace instance
+ * ns_addr - name limit
+ */
 void ns_push(ns_t* ns, ns_addr size)
 {
 	N_ASSERT(ns);
@@ -80,6 +94,8 @@ void ns_push(ns_t* ns, ns_addr size)
 	}
 }
 
+/* Pops last namespace level
+ */
 void ns_pop(ns_t* ns)
 {
 	N_ASSERT(ns);
@@ -93,15 +109,16 @@ void ns_pop(ns_t* ns)
 	}
 }
 
-void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
-{
-	N_ASSERT(ns);
-
-	SIZE_ASSERT( ns->size > address );
-
-	ns->names[ address ] = var_new(type);
-}
-
+/* Declares a variable, at root or last namespace
+ *  ns_t*     - Namespace instance
+ *  b_type    - Type of variable
+ *  int       - Mux value         [0]
+ *  ns_addr   - Variable name
+ *
+ * @param[0] = namespace level
+ *  0 -> current namespace
+ *  1 -> global namespace
+ */
 void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 {
 	N_ASSERT(ns);
@@ -111,15 +128,31 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 	ns_cont_dec(scoped_ns, type, address);
 }
 
-void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
+/* Declares a variable, at namespace
+ *  ns_t*     - Namespace instance
+ *  b_type    - Type of variable
+ *  ns_addr   - Variable name
+ */
+
+void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
 {
 	N_ASSERT(ns);
-	N_ASSERT(var);
+
 	SIZE_ASSERT( ns->size > address );
 
-	var_set(ns->names[ address ], var->data, var->type);
+	ns->names[ address ] = var_new(type);
 }
 
+/* Sets variable to value, at root or last namespace
+ *  ns_t*     - namespace instance
+ *  int       - mux value         [0]
+ *  ns_addr   - Variable name
+ *  var_cont* - Variable
+ *
+ * @param[0] = namespace level
+ * * 0 -> current namespace
+ * * 1 -> global namespace
+ */
 void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
 {
 	N_ASSERT(ns);
@@ -130,14 +163,30 @@ void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
 	ns_cont_set(scoped_ns, var, address);
 }
 
-var_cont* ns_cont_get(ns_cont* ns, ns_addr address)
+/* Sets variable to value, at root or last namespace
+ *  ns_cont*  - Namespace instance
+ *  var_cont* - Variable
+ *  ns_addr   - Variable name
+ */
+void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
 {
 	N_ASSERT(ns);
+	N_ASSERT(var);
 	SIZE_ASSERT( ns->size > address );
 
-	return ns->names[ address ];
+	var_set(ns->names[ address ], var->data, var->type);
 }
 
+/* Gets variable from address
+
+ *  ns_t*     - namespace instance
+ *  int       - mux value         [0]
+ *  ns_addr   - Variable name
+ *
+ * @param[0] = namespace level
+ *  0 -> current namespace
+ *  1 -> global namespace
+ */
 var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
 {
 	N_ASSERT(ns);
@@ -145,4 +194,16 @@ var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
 
 	return ns_cont_get(scoped_ns, address);
+}
+
+/* Gets variable from address
+ *  ns_t*     - namespace instance
+ *  ns_addr   - Variable name
+ */
+var_cont* ns_cont_get(ns_cont* ns, ns_addr address)
+{
+	N_ASSERT(ns);
+	SIZE_ASSERT( ns->size > address );
+
+	return ns->names[ address ];
 }

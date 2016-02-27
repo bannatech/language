@@ -3,25 +3,21 @@
 #include "proc.h"
 #include "rt.h"
 #include "ins_def.h"
-#include "is.h"
-#include "bc.h"
-#include "stk.h"
-#include "var.h"
-#include "pc.h"
+#include "ins_mdata.h"
 #include "helper.h"
-
 
 int main(int argc, char** argv)
 {
-	ASSERT(argc < 0, "C'mon, man! Gimme some args");
-	init();
+	ASSERT(argc < 0, "C'mon, man! Gimme some args\n");
+
+	init_mdata();                       // Initalize the instruction definitions
 	init_ins_def();
 
-	rt_t* runtime = proc_init(argv[0]);
+	rt_t* runtime = proc_init(argv[0]); // Initalize process
 
-	proc_run(runtime);
+	proc_run(runtime);                  // Execute runtime
 
-	proc_clean(runtime);
+	proc_clean(runtime);                // Once `proc_run` returns, try to clean what sort of mess it made.
 
 	return 0;
 }

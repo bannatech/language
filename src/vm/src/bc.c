@@ -6,6 +6,8 @@
 #include "fh.h"
 #include "helper.h"
 
+/* Handles allocation for new `bc_cont` instances
+ */
 bc_cont* bc_cont_new(void)
 {
 	bc_cont *new = (bc_cont*)malloc(sizeof(bc_cont));
@@ -18,6 +20,8 @@ bc_cont* bc_cont_new(void)
 	return new;
 }
 
+/* Handles allocation for new `bc_cont` instances
+ */
 bc_cont* bc_cont_push(bc_cont* head)
 {
 	head->next = bc_cont_new();
@@ -25,6 +29,11 @@ bc_cont* bc_cont_push(bc_cont* head)
 	return head->next;
 }
 
+/* Pushes new bc_cont to the chain.
+ * bc_cont* - bytecode container
+ *
+ * -> bc_cont* - push new bytecode container on chain
+ */
 void bc_cont_del(bc_cont* root)
 {
 	if (root->next != NULL)
@@ -39,6 +48,9 @@ void bc_cont_del(bc_cont* root)
 	free(root);
 }
 
+/* Deallocates all the things, assuming the arguement is the root.
+ *  bc_cont* - bytecode container, root node (hopefully)
+ */
 void get_args(FILE* f, bc_cont* ins)
 {
 	int num_args,
@@ -78,6 +90,12 @@ byte_t* get_dync_arg(FILE* f)
 	return read_until_null(f);
 }
 
+/* Scan to +/- int in bytecode chain
+ *  bc_cont* - bytecode container [0]
+ *  int      - +/- up/down        [1]
+ *
+ * -> bc_cont* - Bytecode @param[0]'s location +/- @param[1]
+ */
 bc_cont* bc_scan(bc_cont* ptr, int scanto)
 {
 	while (scanto != 0)
@@ -97,6 +115,9 @@ bc_cont* bc_scan(bc_cont* ptr, int scanto)
 	return ptr;
 }
 
+/* Initiates the first pass to take a raw binary file and translate it into a
+ * basic datastructure
+ */
 bc_cont* bc_read(char* fname)
 {
 	FILE* f;

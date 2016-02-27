@@ -7,6 +7,48 @@
 #include "pc.h"
 #include "helper.h"
 
+/* Creates new runtime context.
+ *  char*   - Filename
+ *  stk_t*  - Arguement stack (non-null)
+ *  ns_cont*- Copy of the global namespace
+ */
+rt_t* rt_ctx_new(char* fname, stk_t* args, ns_cont* gvars)
+{
+	N_ASSERT(fname);
+	N_ASSERT(args);
+	N_ASSERT(gvars);
+	rt_t* ctx = (rt_t*)malloc(sizeof(rt_t));
+	M_ASSERT(ctx);
+
+	ctx->pc     = pc_new(fname);
+	ctx->stack  = stk_new();
+	ctx->vars   = ns_new(1024);
+	ctx->argstk = args;
+	ctx->gvars  = gvars;
+
+
+	return ctx;
+}
+
+/* Destroys runtime context. This can be *very* slow.
+ */
+void rt_ctx_del(rt_t* ctx)
+{
+	N_ASSERT(ctx);
+
+	N_ASSERT(ctx->stack);
+	stk_del(ctx->stack);
+
+	N_ASSERT(ctx->argstk);
+	stk_del(ctx->argstk);
+
+	N_ASSERT(ctx->ns);
+	ns_del(ctx->ns);
+	
+	N_ASERT(ctx->pc);
+	pc_del(ctx->pc);
+}
+
 #ifdef THREADING
 
 #include <pthread.h>
@@ -57,38 +99,3 @@ void rt_worker_del(rt_worker* worker)
 }
 
 #endif // SINGLE_THREAD
-
-rt_t* rt_ctx_new(char* fname, stk_t* args, ns_cont* gvars)
-{
-	N_ASSERT(fname);
-	N_ASSERT(args);
-	N_ASSERT(gvars);
-	rt_t* ctx = (rt_t*)malloc(sizeof(rt_t));
-	M_ASSERT(ctx);
-
-	ctx->pc     = pc_new(fname);
-	ctx->stack  = stk_new();
-	ctx->vars   = ns_new(1024);
-	ctx->argstk = args;
-	ctx->gvars  = gvars;
-
-
-	return ctx;
-}
-
-void rt_ctx_del(rt_t* ctx)
-{
-	N_ASSERT(ctx);
-
-	N_ASSERT(ctx->stack);
-	stk_del(ctx->stack);
-
-	N_ASSERT(ctx->argstk);
-	stk_del(ctx->argstk);
-
-	N_ASSERT(ctx->ns);
-	ns_del(ctx->ns);
-	
-	N_ASERT(ctx->pc);
-	pc_del(ctx->pc);
-}

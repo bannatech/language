@@ -30,10 +30,14 @@ typedef struct bc_cont {
 bc_cont* bc_cont_new(void);
 
 /* Pushes new bc_cont to the chain.
+ * bc_cont* - bytecode container
+ *
+ * -> bc_cont* - push new bytecode container on chain
  */
 bc_cont* bc_cont_push(bc_cont*);
 
 /* Deallocates all the things, assuming the arguement is the root.
+ *  bc_cont* - bytecode container, root node (hopefully)
  */
 void bc_cont_del(bc_cont*);
 
@@ -45,10 +49,17 @@ byte_t* get_byte_arg(FILE*);
 byte_t* get_word_arg(FILE*);
 byte_t* get_dync_arg(FILE*);
 
+/* Scan to +/- int in bytecode chain
+ *  bc_cont* - bytecode container [0]
+ *  int      - +/- up/down        [1]
+ *
+ * -> bc_cont* - Bytecode @param[0]'s location +/- @param[1]
+ */
 bc_cont* bc_scan(bc_cont*, int);
 
 /* Initiates the first pass to take a raw binary file and translate it into a
  * basic datastructure
+ *  char* -> filename
  */
 bc_cont* bc_read(char*);
 

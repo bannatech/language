@@ -5,6 +5,9 @@
 #include "rt.h"
 #include "helper.h"
 
+/* Initializes INS_DEF with pointers to each instructions function
+ * Populates INS_DEF
+ */
 void init_ins_def( void )
 {
 	INS_DEF[0x00] = _ins_def_NULL;

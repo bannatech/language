@@ -18,6 +18,9 @@
 // This array is populated by init_ins_def( void );
 void INS_DEF[0xFF];
 
+/* Initializes INS_DEF with pointers to each instructions function
+ * Populates INS_DEF
+ */
 void init_ins_def( void );
 
 void _ins_def_NULL     (rt_t*, byte_t*);
