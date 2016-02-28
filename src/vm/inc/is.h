@@ -5,7 +5,11 @@
  be handled by this file.
 */
 
+#ifndef IS_H
+
 #include "ins_mdata.h"
+#include "bc.h"
+#include "fh.h"
 
 // This array is populated by inc/is_mdata.h
 byte_t INS_MDATA[0xFF];

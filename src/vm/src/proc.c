@@ -8,6 +8,7 @@
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
+#include "ns.h"
 #include "pc.h"
 #include "helper.h"
 
@@ -17,7 +18,7 @@
 rt_t* proc_init(char* fname)
 {
 	N_ASSERT(fname);
-	rt_t* ctx = rt_ctx_new(fname, stk_new(), ns_cont_new(1024));
+	rt_t* ctx = rt_ctx_new(fname, stk_new());
 
 	return ctx;
 }
@@ -54,7 +55,7 @@ void proc_clean(rt_t* ctx)
 var_cont* proc_callfun(rt_t* ctx, var_cont* func)
 {
 	N_ASSERT(ctx);
-	
+	return 0;
 }
 
 /* Set a variable subroutine
@@ -67,7 +68,7 @@ var_cont* proc_callfun(rt_t* ctx, var_cont* func)
  */
 void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
 {
-	
+
 }
 
 /* Get a variable subroutine
@@ -77,7 +78,7 @@ void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
  */
 var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 {
-	
+	return 0;
 }
 
 

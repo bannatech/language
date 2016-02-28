@@ -16,12 +16,17 @@
 #include "helper.h"
 
 // This array is populated by init_ins_def( void );
-void INS_DEF[0xFF];
+void (*INS_DEF[0xFF])(rt_t*, byte_t*);
 
 /* Initializes INS_DEF with pointers to each instructions function
  * Populates INS_DEF
  */
 void init_ins_def( void );
+
+/* Checks if instruction exists.
+ *  byte_t - opcode
+ */
+int ins_def_is_valid(bc_cont*);
 
 void _ins_def_NULL     (rt_t*, byte_t*);
 void _ins_def_SYNC     (rt_t*, byte_t*);

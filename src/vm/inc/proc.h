@@ -11,6 +11,7 @@
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
+#include "ns.h"
 #include "pc.h"
 #include "helper.h"
 

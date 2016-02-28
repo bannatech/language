@@ -10,6 +10,7 @@
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
+#include "ns.h"
 #include "pc.h"
 #include "helper.h"
 
@@ -28,7 +29,6 @@ typedef struct rt_t {
 	stk_t*     stack;
 	stk_t*     argstk;
 	ns_t*      vars;
-	ns_cont*   gvars;
 } rt_t;
 
 /* Creates new runtime context.
@@ -36,7 +36,7 @@ typedef struct rt_t {
  *  stk_t*  - Arguement stack
  *  ns_cont*- Copy of the global namespace
  */
-rt_t* rt_ctx_new(char*, stk_t*, ns_cont*);
+rt_t* rt_ctx_new(char*, stk_t*);
 
 /* Destroys runtime context. This can be *very* slow.
  */
