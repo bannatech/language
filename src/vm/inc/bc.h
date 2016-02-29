@@ -17,6 +17,9 @@ typedef unsigned short int bc_addr;
 typedef struct bc_cont {
 	byte_t   op;
 	byte_t*  args[3];
+	void*    a1;
+	void*    a2;
+	void*    a3;
 	byte_t   mdata;
 	bc_addr  real_addr;
 	struct bc_cont* next;
@@ -48,6 +51,11 @@ void get_args(FILE*, bc_cont*);
 byte_t* get_byte_arg(FILE*);
 byte_t* get_word_arg(FILE*);
 byte_t* get_dync_arg(FILE*);
+
+/* Process arguements into typed & readable data
+ *  bc_cont* - bytecode container
+ */
+void process_args(bc_cont*);
 
 /* Scan to +/- int in bytecode chain
  *  bc_cont* - bytecode container [0]

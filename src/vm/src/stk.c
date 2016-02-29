@@ -8,20 +8,29 @@
 stk_t* stk_new( void )
 {
 	stk_t* new = (stk_t*)malloc(sizeof(stk_t));
-	ASSERT(new != NULL, "Could not allocate memory\n");
+	M_ASSERT(new);
+
+	new->data = var_new(VOID);
+	new->next = NULL;
 
 	return new;
 }
 
 void stk_del(stk_t* root)
 {
-	if (root->next != NULL)
+	//N_ASSERT(root);
+
+	var_cont* data;
+
+	while ((data = stk_pop(&root)) != NULL)
 	{
-		stk_del(root->next);
+		if (data != NULL)
+		{
+			var_del(data);
+		}
 	}
 
-	if (root->data != NULL)
-		var_del(root->data);
+	var_del(root->data);
 
 	free(root);
 }
@@ -29,7 +38,7 @@ void stk_del(stk_t* root)
 var_cont* stk_pop(stk_t** root)
 {
 	if ((*root)->next == NULL)
-		return 0;
+		return NULL;
 
 	stk_t* new = (*root)->next;
 	var_cont* data = (*root)->data;

@@ -29,11 +29,16 @@ rt_t* proc_init(char* fname)
 void proc_run(rt_t* ctx)
 {
 	N_ASSERT(ctx);
+
+	int n;
 	
-	for (pc_branch(ctx->pc, 0); pc_safe(ctx->pc); pc_update(ctx->pc))
+	for (n = 0; ctx->pc->line->next != NULL; pc_update(ctx->pc))
 	{
-		ins_def_is_valid(ctx->pc->line);
-		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line->args);
+		printf("%i: %x\n", n, ctx->pc->line->op);
+
+		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
+
+		n++;
 	}
 }
 

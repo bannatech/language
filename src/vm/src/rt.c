@@ -43,7 +43,7 @@ void rt_ctx_del(rt_t* ctx)
 
 	N_ASSERT(ctx->vars);
 	ns_del(ctx->vars);
-	
+
 	N_ASSERT(ctx->pc);
 	pc_del(ctx->pc);
 }
@@ -66,7 +66,7 @@ void *rt_worker_run(void* ctx)
 	rt_worker* c;
 	c = (rt_worker*)ctx;
 
-	//TODO actually make this run the function that runs opcodes n' what not
+	//TODO this.
 
 	return 0;
 }

@@ -68,7 +68,6 @@ void init_ins_def( void )
 
 	INS_DEF[0xF0] = _ins_def_RETURN;
 	INS_DEF[0xF1] = _ins_def_NEW;
-	INS_DEF[0xF2] = _ins_def_LSIZE;
 	INS_DEF[0xFE] = _ins_def_DECLASS;
 	INS_DEF[0xFF] = _ins_def_DEFUN;
 }
@@ -84,168 +83,233 @@ int ins_def_is_valid(bc_cont* line)
 	return rv;
 }
 
-void _ins_def_NULL     (rt_t* ctx, byte_t* args)
+void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_SYNC     (rt_t* ctx, byte_t* args)
+void _ins_def_SYNC     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_ARGB     (rt_t* ctx, byte_t* args)
+void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_LIBC     (rt_t* ctx, byte_t* args)
+void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)
 {
-}
-
-void _ins_def_POP      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_ROT      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_DUP      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_ROT_THREE(rt_t* ctx, byte_t* args)
-{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_DEC      (rt_t* ctx, byte_t* args)
+void _ins_def_POP      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_LOV      (rt_t* ctx, byte_t* args)
+void _ins_def_ROT      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_STV      (rt_t* ctx, byte_t* args)
+void _ins_def_DUP      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_LOC      (rt_t* ctx, byte_t* args)
+void _ins_def_ROT_THREE(rt_t* ctx, bc_cont* line)
 {
-}
-void _ins_def_CTS      (rt_t* ctx, byte_t* args)
-{
-}
-
-void _ins_def_TYPEOF   (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_CAST     (rt_t* ctx, byte_t* args)
-{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_ADD      (rt_t* ctx, byte_t* args)
+void _ins_def_DEC      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_SUB      (rt_t* ctx, byte_t* args)
+void _ins_def_LOV      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_MULT     (rt_t* ctx, byte_t* args)
+void _ins_def_STV      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_DIV      (rt_t* ctx, byte_t* args)
+void _ins_def_LOC      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_POW      (rt_t* ctx, byte_t* args)
+void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 {
-}
-void _ins_def_BRT      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_SIN      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_COS      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_TAN      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_ISIN     (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_ICOS     (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_ITAN     (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_MOD      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_OR       (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_XOR      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_NAND     (rt_t* ctx, byte_t* args)
-{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_GTHAN    (rt_t* ctx, byte_t* args)
+void _ins_def_TYPEOF   (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_LTHAN    (rt_t* ctx, byte_t* args)
+void _ins_def_CAST     (rt_t* ctx, bc_cont* line)
 {
-}
-void _ins_def_EQ       (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_NOT      (rt_t* ctx, byte_t* args)
-{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_STARTL   (rt_t* ctx, byte_t* args)
+void _ins_def_ADD      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_CLOOP    (rt_t* ctx, byte_t* args)
+void _ins_def_SUB      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_BREAK    (rt_t* ctx, byte_t* args)
+void _ins_def_MULT     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_DONE     (rt_t* ctx, byte_t* args)
+void _ins_def_DIV      (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_POW      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_BRT      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_SIN      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_COS      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_TAN      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_ISIN     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_ICOS     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_ITAN     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_MOD      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_OR       (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_XOR      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_NAND     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_GOTO     (rt_t* ctx, byte_t* args)
+void _ins_def_GTHAN    (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_JUMPF    (rt_t* ctx, byte_t* args)
+void _ins_def_LTHAN    (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_CALL     (rt_t* ctx, byte_t* args)
+void _ins_def_EQ       (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-
-void _ins_def_PUSH     (rt_t* ctx, byte_t* args)
+void _ins_def_NOT      (rt_t* ctx, bc_cont* line)
 {
-}
-void _ins_def_DEL      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_GET      (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_GETP     (rt_t* ctx, byte_t* args)
-{
-}
-void _ins_def_CALLM    (rt_t* ctx, byte_t* args)
-{
+	pc_inc(ctx->pc, 1);
 }
 
-void _ins_def_RETURN   (rt_t* ctx, byte_t* args)
+void _ins_def_STARTL   (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_NEW      (rt_t* ctx, byte_t* args)
+void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_LSIZE    (rt_t* ctx, byte_t* args)
+void _ins_def_BREAK    (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_DECLASS  (rt_t* ctx, byte_t* args)
+void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
 }
-void _ins_def_DEFUN    (rt_t* ctx, byte_t* args)
+
+void _ins_def_GOTO     (rt_t* ctx, bc_cont* line)
 {
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_JUMPF    (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+
+void _ins_def_PUSH     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_DEL      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_GET      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_GETP     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+
+void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
+{
+	//ns_dec(ctx->vars, FUNC, 0, arg_to_int(0, 0, line));
+
+	int nsize;
+
+	for (nsize = 0; ctx->pc->line->next != NULL; pc_update(ctx->pc))
+	{
+		pc_inc(ctx->pc, 1);
+		if (ctx->pc->line->op == 0xF0)
+		{
+			break;
+		} else
+		if (ctx->pc->line->op == 0x20)
+		{
+			nsize++;
+		}
+	}
+
+	printf("Namespace size for thingy: %i\n", nsize);
 }

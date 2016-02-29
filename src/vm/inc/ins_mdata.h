@@ -78,7 +78,6 @@
                                                                      \
 /* RETURN    */ INS_MDATA[0xF0] = encode(0, A_NULL, A_NULL, A_NULL); \
 /* NEW       */ INS_MDATA[0xF1] = encode(1, A_WORD, A_NULL, A_NULL); \
-/* LSIZE     */ INS_MDATA[0xF2] = encode(1, A_WORD, A_NULL, A_NULL); \
 /* DECLASS   */ INS_MDATA[0xFE] = encode(2, A_WORD, A_DYNC, A_NULL); \
 /* DEFUN     */ INS_MDATA[0xFF] = encode(3, A_WORD, A_BYTE, A_DYNC);
 

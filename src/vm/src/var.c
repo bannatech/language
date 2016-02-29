@@ -72,7 +72,7 @@ var_cont* var_new(b_type type)
 
 	new->type = type;
 
-	new->data = var_data_alloc(type);
+	new->data = NULL;
 
 	return new;
 }
@@ -102,8 +102,7 @@ void var_data_free(void** data, b_type type)
 
 void var_del(var_cont* var)
 {
-	if (var == NULL)
-		return;
+	N_ASSERT(var);
 
 	if (var->data != NULL)
 		var_data_free(var->data, var->type);

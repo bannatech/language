@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include "bc.h"
+
+#include "ins_adata.h"
 #include "is.h"
 #include "fh.h"
 #include "helper.h"
@@ -48,8 +50,8 @@ void bc_cont_del(bc_cont* root)
 	free(root);
 }
 
-/* Deallocates all the things, assuming the arguement is the root.
- *  bc_cont* - bytecode container, root node (hopefully)
+/* Given a file object, and an instance of `bc_cont` with proper metadata, this
+ * function will read arguements into bc_cont.
  */
 void get_args(FILE* f, bc_cont* ins)
 {
@@ -74,20 +76,22 @@ void get_args(FILE* f, bc_cont* ins)
 		}
 	}
 }
-
 byte_t* get_byte_arg(FILE* f)
 {
 	return read_bytes(f, 1);
 }
-
 byte_t* get_word_arg(FILE* f)
 {
 	return read_bytes(f, 2);
 }
-
 byte_t* get_dync_arg(FILE* f)
 {
 	return read_until_null(f);
+}
+			
+void process_args(bc_cont* ins)
+{
+
 }
 
 /* Scan to +/- int in bytecode chain
@@ -137,6 +141,7 @@ bc_cont* bc_read(char* fname)
 		byte = read_byte(f);
 		get_opcode(byte, ptr);
 		get_args(f, ptr);
+		process_args(ptr);
 
 		ptr->real_addr = addr;
 

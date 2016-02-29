@@ -2,18 +2,20 @@
 
 #include "proc.h"
 #include "rt.h"
+#include "is.h"
 #include "ins_def.h"
-#include "ins_mdata.h"
+#include "ins_adata.h"
 #include "helper.h"
 
 int main(int argc, char** argv)
 {
-	ASSERT(argc < 0, "C'mon, man! Gimme some args\n");
+	ASSERT(argc > 1, "C'mon, man! Gimme some args\n");
 
 	init_mdata();                       // Initalize the instruction definitions
+	init_adata();
 	init_ins_def();
 
-	rt_t* runtime = proc_init(argv[0]); // Initalize process
+	rt_t* runtime = proc_init(argv[1]); // Initalize process
 
 	proc_run(runtime);                  // Execute runtime
 
