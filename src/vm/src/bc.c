@@ -3,7 +3,7 @@
 
 #include "bc.h"
 
-#include "ins_adata.h"
+#include "var.h"
 #include "is.h"
 #include "fh.h"
 #include "helper.h"
@@ -13,22 +13,20 @@
 bc_cont* bc_cont_new(void)
 {
 	bc_cont *new = (bc_cont*)malloc(sizeof(bc_cont));
-	ASSERT(new != NULL, "Could not allocate memory\n");
+	M_ASSERT(new);
 
 	new->args[0] = NULL;
 	new->args[1] = NULL;
 	new->args[2] = NULL;
 
-	return new;
-}
+	new->targ[0] = NULL;
+	new->targ[1] = NULL;
+	new->targ[2] = NULL;
 
-/* Handles allocation for new `bc_cont` instances
- */
-bc_cont* bc_cont_push(bc_cont* head)
-{
-	head->next = bc_cont_new();
-	head->next->prev = head;
-	return head->next;
+	new->next = NULL;
+	new->prev = NULL;
+
+	return new;
 }
 
 /* Pushes new bc_cont to the chain.
@@ -36,6 +34,13 @@ bc_cont* bc_cont_push(bc_cont* head)
  *
  * -> bc_cont* - push new bytecode container on chain
  */
+void bc_cont_push(bc_cont** head)
+{
+	(*head)->next = bc_cont_new();
+	(*head)->next->prev = *head;
+	*head = (*head)->next;
+}
+
 void bc_cont_del(bc_cont* root)
 {
 	if (root->next != NULL)
@@ -43,11 +48,18 @@ void bc_cont_del(bc_cont* root)
 		bc_cont_del(root->next);
 	}
 
-	if (root->args[0] != NULL) free(root->args[0]);
-	if (root->args[1] != NULL) free(root->args[1]);
-	if (root->args[2] != NULL) free(root->args[2]);
+	if (root != NULL)
+	{
+		if (root->args[0] != NULL) free(root->args[0]);
+		if (root->args[1] != NULL) free(root->args[1]);
+		if (root->args[2] != NULL) free(root->args[2]);
 
-	free(root);
+		if (root->targ[0] != NULL) free(root->targ[0]);
+		if (root->targ[1] != NULL) free(root->targ[1]);
+		if (root->targ[2] != NULL) free(root->targ[2]);
+	
+		free(root);
+	}
 }
 
 /* Given a file object, and an instance of `bc_cont` with proper metadata, this
@@ -58,7 +70,7 @@ void get_args(FILE* f, bc_cont* ins)
 	int num_args,
 	    arg_types[3];
 
-	get_mdata(ins->mdata, &num_args, arg_types);
+	unencode(ins->mdata, &num_args, arg_types);
 
 	for (int x = 0; x < num_args; x++)
 	{
@@ -88,10 +100,64 @@ byte_t* get_dync_arg(FILE* f)
 {
 	return read_until_null(f);
 }
-			
+
+/* Given an instruction, convert raw arguement data into typed data
+ *  bc_cont* - bytecode container
+ */
 void process_args(bc_cont* ins)
 {
+	int num_args,
+	    arg_types[3];
 
+	unencode(ins->adata, &num_args, arg_types);
+
+	for (int x = 0; x < num_args; x++)
+	{
+		if (arg_types[x] == BTOI)
+		{
+			arg_to_int(ins->targ[x], ins->args[x]);
+		} else
+		if (arg_types[x] == WTOA)
+		{
+			arg_to_addr(ins->targ[x], ins->args[x]);
+		} else
+		if (arg_types[x] == DTOL)
+		{
+			arg_to_arglist(ins->targ[x], ins->args[x]);
+		} else
+		if (arg_types[x] == DTOV)
+		{
+			arg_to_var(ins->targ[x], ins->args[x]);
+		}
+	}
+}
+
+void arg_to_int(void* ptr, byte_t* byte)
+{
+	ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
+	M_ASSERT(ptr);
+
+	bc_targ_int* v = ptr;
+
+	v->i = (int)byte[0];
+}
+
+void arg_to_addr(void* ptr, byte_t* word)
+{
+	ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
+	M_ASSERT(ptr);
+
+	bc_targ_int* v = ptr;
+	
+	v->i = (int)((word[1] >> 8) | word[0]);
+}
+
+void arg_to_arglist(void* ptr, byte_t* bytes)
+{
+}
+
+void arg_to_var(void* ptr, byte_t* bytes)
+{
 }
 
 /* Scan to +/- int in bytecode chain
@@ -109,10 +175,14 @@ bc_cont* bc_scan(bc_cont* ptr, int scanto)
 			ptr = ptr->next;
 			scanto--;
 		} else
-		if (scanto < 0 && ptr->next != NULL)
+		if (scanto < 0 && ptr->prev != NULL)
 		{
 			ptr = ptr->prev;
 			scanto++;
+		} else
+		if (ptr->next == NULL || ptr->prev == NULL)
+		{
+			scanto = 0;
 		}
 	}
 
@@ -145,7 +215,7 @@ bc_cont* bc_read(char* fname)
 
 		ptr->real_addr = addr;
 
-		ptr = bc_cont_push(ptr);
+		bc_cont_push(&ptr);
 
 		addr++;
 	}

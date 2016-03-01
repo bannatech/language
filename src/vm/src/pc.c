@@ -29,6 +29,7 @@ void pc_del(pc_t* pc)
 {
 	N_ASSERT(pc);
 	N_ASSERT(pc->root);
+
 	bc_cont_del(pc->root);
 
 	free(pc);
@@ -37,7 +38,6 @@ void pc_del(pc_t* pc)
 void pc_update(pc_t* pc)
 {
 	N_ASSERT(pc);
-
 	pc->line = bc_scan(pc->line, pc->address - pc->line->real_addr);
 }
 

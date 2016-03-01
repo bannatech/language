@@ -6,13 +6,17 @@
 */
 
 #ifndef IS_H
+#define IS_H
 
 #include "ins_mdata.h"
 #include "bc.h"
 #include "fh.h"
 
-// This array is populated by inc/is_mdata.h
+// This array is populated by inc/ins_mdata.h
 byte_t INS_MDATA[0xFF];
+
+// This array is populated by inc/ins_adata.h
+byte_t INS_ADATA[0xFF];
 
 /* Takes an opcode, fills metadata about that opcode (given that it exists) in
  * the `bc_cont` structure
@@ -30,10 +34,16 @@ void get_opcode(byte_t, bc_cont*);
  * @param[1] = 3,
  * @param[2] = { 01, 10, 11 }
  */
-void get_mdata(byte_t, int*, int*);
+void unencode(byte_t, int*, int*);
 
-/* Sets up the datastructure to quickly queue for data.
+/* Sets up INS_MDATA datastructure to quickly queue for data.
+ *  Instruction arguement type metadata
  */
 void init_mdata(void);
+
+/* Sets up INS_ADATA datastructure to quickly queue for data.
+ *  Instruction arguement abstract-type metadata
+ */
+void init_adata(void);
 
 #endif // IS_H

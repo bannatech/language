@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "var.h"
 #include "fh.h"
 #include "helper.h"
 
@@ -17,14 +18,26 @@ typedef unsigned short int bc_addr;
 typedef struct bc_cont {
 	byte_t   op;
 	byte_t*  args[3];
-	void*    a1;
-	void*    a2;
-	void*    a3;
 	byte_t   mdata;
+	void*    targ[3];
+	byte_t   adata;
 	bc_addr  real_addr;
 	struct bc_cont* next;
 	struct bc_cont* prev;
 } bc_cont;
+
+typedef struct bc_targ_int {
+	int i;
+} bc_targ_int;
+
+typedef struct bc_targ_list {
+	int size;
+	b_type* i;
+} bc_targ_list;
+
+typedef struct bc_targ_var_cont {
+	var_cont* i;
+} bc_targ_var_cont;
 
 #include "is.h"
 
@@ -33,11 +46,9 @@ typedef struct bc_cont {
 bc_cont* bc_cont_new(void);
 
 /* Pushes new bc_cont to the chain.
- * bc_cont* - bytecode container
- *
- * -> bc_cont* - push new bytecode container on chain
+ * bc_cont** - bytecode container
  */
-bc_cont* bc_cont_push(bc_cont*);
+void bc_cont_push(bc_cont**);
 
 /* Deallocates all the things, assuming the arguement is the root.
  *  bc_cont* - bytecode container, root node (hopefully)
@@ -56,6 +67,10 @@ byte_t* get_dync_arg(FILE*);
  *  bc_cont* - bytecode container
  */
 void process_args(bc_cont*);
+void arg_to_int(void*, byte_t*);
+void arg_to_addr(void*, byte_t*);
+void arg_to_arglist(void*, byte_t*);
+void arg_to_var(void*, byte_t*);
 
 /* Scan to +/- int in bytecode chain
  *  bc_cont* - bytecode container [0]

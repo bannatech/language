@@ -16,7 +16,7 @@ void get_opcode(byte_t byte, bc_cont* ins)
 {
 	ins->op    = byte;
 	ins->mdata = INS_MDATA[byte];
-	//ins->adata = INS_ADATA[byte];
+	ins->adata = INS_ADATA[byte];
 }
 
 /* Fills in metadata in @param byte_t.
@@ -28,7 +28,7 @@ void get_opcode(byte_t byte, bc_cont* ins)
  * @param[1] = 3,
  * @param[2] = { 01, 10, 11 }
  */
-void get_mdata(byte_t byte, int* n, int* at)
+void unencode(byte_t byte, int* n, int* at)
 {
 	*n    = (byte & (3 << 6)) >> 6;
 	at[0] = (byte & (3 << 4)) >> 4;
@@ -43,3 +43,7 @@ void init_mdata(void)
 	INS_MDATA_DEF();
 }
 
+void init_adata(void)
+{
+	INS_ADATA_DEF();
+}

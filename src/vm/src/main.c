@@ -4,7 +4,6 @@
 #include "rt.h"
 #include "is.h"
 #include "ins_def.h"
-#include "ins_adata.h"
 #include "helper.h"
 
 int main(int argc, char** argv)
@@ -19,7 +18,8 @@ int main(int argc, char** argv)
 
 	proc_run(runtime);                  // Execute runtime
 
-	proc_clean(runtime);                // Once `proc_run` returns, try to clean what sort of mess it made.
+	proc_clean(runtime);                // Once `proc_run` returns, try to clean
+	                                    // what sort of mess it made.
 
 	return 0;
 }
