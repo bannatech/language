@@ -23,6 +23,10 @@ bc_cont* bc_cont_new(void)
 	new->targ[1] = NULL;
 	new->targ[2] = NULL;
 
+	new->sarg[0] = 0;
+	new->sarg[1] = 0;
+	new->sarg[2] = 0;
+
 	new->next = NULL;
 	new->prev = NULL;
 
@@ -76,29 +80,44 @@ void get_args(FILE* f, bc_cont* ins)
 	{
 		if (arg_types[x] == A_BYTE)
 		{
-			ins->args[x] = get_byte_arg(f);
+			ins->args[x] = get_byte_arg(f, &ins->sarg[x]);
 		} else
 		if (arg_types[x] == A_WORD)
 		{
-			ins->args[x] = get_word_arg(f);
+			ins->args[x] = get_word_arg(f, &ins->sarg[x]);
 		} else
 		if (arg_types[x] == A_DYNC)
 		{
-			ins->args[x] = get_dync_arg(f);
+			ins->args[x] = get_dync_arg(f, &ins->sarg[x]);
 		}
 	}
 }
-byte_t* get_byte_arg(FILE* f)
+byte_t* get_byte_arg(FILE* f, int* size)
 {
+	*size = 1;
 	return read_bytes(f, 1);
 }
-byte_t* get_word_arg(FILE* f)
+byte_t* get_word_arg(FILE* f, int* size)
 {
+	*size = 2;
 	return read_bytes(f, 2);
 }
-byte_t* get_dync_arg(FILE* f)
+byte_t* get_dync_arg(FILE* f, int* size)
 {
-	return read_until_null(f);
+	int n = 0;
+
+	byte_t byte = read_byte(f);
+
+	// This bit gets the length in bytes it needs to read into a buffer
+	while (byte != 0)
+	{
+		n = (n << 8 | byte);
+		byte = read_byte(f);
+	}
+
+	*size = n;
+
+	return read_bytes(f, n);
 }
 
 /* Given an instruction, convert raw arguement data into typed data
@@ -115,49 +134,57 @@ void process_args(bc_cont* ins)
 	{
 		if (arg_types[x] == BTOI)
 		{
-			arg_to_int(ins->targ[x], ins->args[x]);
+			arg_to_int(&ins->targ[x], ins->args[x]);
 		} else
 		if (arg_types[x] == WTOA)
 		{
-			arg_to_addr(ins->targ[x], ins->args[x]);
+			arg_to_addr(&ins->targ[x], ins->args[x]);
 		} else
 		if (arg_types[x] == DTOL)
 		{
-			arg_to_arglist(ins->targ[x], ins->args[x]);
+			arg_to_arglist(&ins->targ[x], ins->sarg[x], ins->args[x]);
 		} else
 		if (arg_types[x] == DTOV)
 		{
-			arg_to_var(ins->targ[x], ins->args[x]);
+			arg_to_var(&ins->targ[x], ins->sarg[x], ins->args[x]);
 		}
 	}
 }
 
-void arg_to_int(void* ptr, byte_t* byte)
+void arg_to_int(void** ptr, byte_t* byte)
 {
-	ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
-	M_ASSERT(ptr);
+	*ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
+	M_ASSERT(*ptr);
 
-	bc_targ_int* v = ptr;
+	bc_targ_int* v = *ptr;
 
 	v->i = (int)byte[0];
 }
 
-void arg_to_addr(void* ptr, byte_t* word)
+void arg_to_addr(void** ptr, byte_t* word)
 {
-	ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
-	M_ASSERT(ptr);
+	*ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
+	M_ASSERT(*ptr);
 
-	bc_targ_int* v = ptr;
+	bc_targ_int* v = *ptr;
 	
-	v->i = (int)((word[1] >> 8) | word[0]);
+	v->i = (int)(word[0] << 8 | word[1]);
 }
 
-void arg_to_arglist(void* ptr, byte_t* bytes)
+void arg_to_arglist(void** ptr, int n, byte_t* bytes)
 {
+	*ptr = (bc_targ_list*)malloc(sizeof(bc_targ_list));
+	M_ASSERT(*ptr);
+
+//	bc_targ_list* v = *ptr;
 }
 
-void arg_to_var(void* ptr, byte_t* bytes)
+void arg_to_var(void** ptr, int n, byte_t* bytes)
 {
+	*ptr = (bc_targ_var_cont*)malloc(sizeof(bc_targ_list));
+	M_ASSERT(*ptr);
+
+//	bc_targ_var_cont* v = *ptr;
 }
 
 /* Scan to +/- int in bytecode chain

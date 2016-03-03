@@ -11,10 +11,6 @@
 
 typedef unsigned char byte_t;
 
-/* Reads passed file descriptor until NULL, returns array of byte_t
- */
-byte_t* read_until_null(FILE*);
-
 /* Reads n bytes, n passed as @param long, returns array of byte_t
  */
 byte_t* read_bytes(FILE*, long);

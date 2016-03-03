@@ -4,49 +4,49 @@
 #include "var.h"
 #include "helper.h"
 
-void** var_data_alloc_G_INT(var_data_int value)
+void* var_data_alloc_G_INT(int value)
 {
 	var_data_int* rv = (var_data_int*)malloc(sizeof(var_data_int));
 	M_ASSERT(rv);
 
-	*rv = value;
+	rv->v = value;
 
-	return (void**)rv;
+	return rv;
 }
 
-void** var_data_alloc_G_FLOAT(var_data_float value)
+void* var_data_alloc_G_FLOAT(double value)
 {
 	var_data_float* rv = (var_data_float*)malloc(sizeof(var_data_float));
 	M_ASSERT(rv);
 
-	*rv = value;
+	rv->v = value;
 
 	return (void**)rv;
 }
 
-void** var_data_alloc_G_CHAR(var_data_char value)
+void* var_data_alloc_G_CHAR(char value)
 {
 	var_data_char* rv = (var_data_char*)malloc(sizeof(var_data_char));
 	M_ASSERT(rv);
 
-	*rv = value;
+	rv->v = value;
 
-	return (void**)rv;
+	return rv;
 }
 
-void** var_data_alloc_G_STR(size_t size)
+void* var_data_alloc_G_STR(size_t size)
 {
 	var_data_str* rv = (var_data_str*)malloc(sizeof(var_data_str));
 	M_ASSERT(rv);
 
-	rv->str = (var_data_char*)malloc(sizeof(var_data_char)*size);
+	rv->v = (char*)malloc(sizeof(char)*size);
 
-	return (void**)rv;
+	return rv;
 }
 
-void** var_data_alloc(b_type type)
+void* var_data_alloc(b_type type)
 {
-	void** rv = NULL;
+	void* rv = NULL;
 
 	if (type ==  G_INT)
 		rv = var_data_alloc_G_INT(0);
@@ -77,7 +77,7 @@ var_cont* var_new(b_type type)
 	return new;
 }
 
-void var_data_free(void** data, b_type type)
+void var_data_free(void* data, b_type type)
 {
 	N_ASSERT(data);
 
@@ -92,9 +92,9 @@ void var_data_free(void** data, b_type type)
 
 	if (type == G_STR)
 	{
-		var_data_str* t_data = *data;
-		if (t_data->str != NULL)
-			free(t_data->str);
+		var_data_str* d = data;
+		if (d->v != NULL)
+			free(d->v);
 
 		free(data);
 	}
@@ -110,7 +110,7 @@ void var_del(var_cont* var)
 	free(var);
 }
 
-void var_set(var_cont* var, void** data, b_type type)
+void var_set(var_cont* var, void* data, b_type type)
 {
 	if (var == NULL || data == NULL)
 		return;
@@ -124,71 +124,50 @@ void var_set(var_cont* var, void** data, b_type type)
 	var->data = data;
 }
 
-void** var_cast_data_G_INT(void** data, b_type type)
+int var_data_get_G_INT(var_cont* var)
 {
-	N_ASSERT(data);
+	N_ASSERT(var);
+	ASSERT( var->type == G_INT, "TypeError" );
 
-	free(data);
+	N_ASSERT(var->data);
 
-	return var_data_alloc(type);
+	var_data_int* t = var->data;
+
+	return t->v;
 }
 
-void** var_cast_data_G_FLOAT(void** data, b_type type)
+double var_data_get_G_FLOAT(var_cont* var)
 {
-	N_ASSERT(data);
+	N_ASSERT(var);
+	ASSERT( var->type == G_FLOAT, "TypeError" );
 
-	free(data);
+	N_ASSERT(var->data);
 
-	return var_data_alloc(type);
+	var_data_float* t = var->data;
+
+	return t->v;
 }
 
-void** var_cast_data_G_CHAR(void** data, b_type type)
+char var_data_get_G_CHAR(var_cont* var)
 {
-	N_ASSERT(data);
+	N_ASSERT(var);
+	ASSERT( var->type == G_CHAR, "TypeError" );
 
-	free(data);
+	N_ASSERT(var->data);
 
-	return var_data_alloc(type);
+	var_data_char* t = var->data;
+
+	return t->v;
 }
 
-void** var_cast_data_G_STR(void** data, b_type type)
+char* var_data_get_G_STR(var_cont* var)
 {
-	N_ASSERT(data);
+	N_ASSERT(var);
+	ASSERT( var->type == G_STR, "TypeError" );
 
-	free(data);
+	N_ASSERT(var->data);
 
-	return var_data_alloc(type);
+	var_data_str* t = var->data;
+
+	return t->v;
 }
-
-void** var_cast_data(var_cont* var, b_type type)
-{
-	void** rv = NULL;
-
-	if (var->type == G_INT)
-		rv = var_cast_data_G_INT(var->data, type);
-
-	if (var->type == G_FLOAT)
-		rv = var_cast_data_G_FLOAT(var->data, type);
-
-	if (var->type == G_CHAR)
-		rv = var_cast_data_G_CHAR(var->data, type);
-
-	if (var->type == G_STR)
-		rv = var_cast_data_G_STR(var->data, type);
-
-	return rv;
-}
-
-void var_cast(var_cont* var, b_type type)
-{
-	if (var == NULL)
-		return;
-	
-	if (var->data == NULL)
-		return;
-
-	var->data = var_cast_data(var, type);
-
-	var->type = type;
-}
-

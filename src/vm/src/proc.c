@@ -34,7 +34,7 @@ void proc_run(rt_t* ctx)
 	
 	for (n = 0; ctx->pc->line->next != NULL; pc_update(ctx->pc))
 	{
-		printf("%i: %x\n", n, ctx->pc->line->op);
+		printf("%i - %i: %x\n", n, ctx->pc->stk->address, ctx->pc->line->op);
 
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 
@@ -65,6 +65,19 @@ var_cont* proc_callfun(rt_t* ctx, var_cont* func)
 
 /* Set a variable subroutine
  *  rt_t*     - Runtime context
+ *  b_type    - Type
+ *  int       - Scope
+ *  ns_addr   - Name of variable
+ *
+ *  This function is used to support an interface to multithreaded instances
+ */
+void proc_decvar(rt_t* ctx, b_type type, int scope, ns_addr name)
+{
+	ns_dec(ctx->vars, type, scope, name);
+}
+
+/* Set a variable subroutine
+ *  rt_t*     - Runtime context
  *  int       - Scope
  *  ns_addr   - Name of variable
  *  var_cont* - Variable container
@@ -73,7 +86,7 @@ var_cont* proc_callfun(rt_t* ctx, var_cont* func)
  */
 void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
 {
-
+	ns_set(ctx->vars, scope, name, var);
 }
 
 /* Get a variable subroutine

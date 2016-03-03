@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "helper.h"
+
 typedef enum {
 	VOID,
 	FUNC,
@@ -25,21 +27,29 @@ typedef enum {
 
 typedef struct var_cont {
 	b_type type;
-	void** data;
+	void* data;
 } var_cont;
 
-typedef void var_data_void;
+typedef struct var_data_void {
+	void* v;
+} var_data_void;
 
-typedef int var_data_int;
+typedef struct var_data_int {
+	int v;
+} var_data_int;
 
-typedef double var_data_float;
+typedef struct var_data_float {
+	double v;
+} var_data_float;
 
-typedef char var_data_char;
+typedef struct var_data_char {
+	char v;
+} var_data_char;
 /*
 typedef char var_data_u_char;
 */
 typedef struct var_data_str {
-	var_data_char* str;
+	char* v;
 } var_data_str;
 /*
 typedef struct var_data_u_str {
@@ -51,30 +61,25 @@ typedef struct var_data_u_str {
  */
 var_cont* var_new(b_type);
 
-void** var_data_alloc(b_type);
-void** var_data_alloc_G_INT(var_data_int);
-void** var_data_alloc_G_FLOAT(var_data_float);
-void** var_data_alloc_G_CHAR(var_data_char);
-void** var_data_alloc_G_STR(size_t);
+void* var_data_alloc(b_type);
+void* var_data_alloc_G_INT(int);
+void* var_data_alloc_G_FLOAT(double);
+void* var_data_alloc_G_CHAR(char);
+void* var_data_alloc_G_STR(size_t);
 
 /* Frees variable
  */
 void var_del(var_cont*);
-void var_data_free(void**, b_type);
+void var_data_free(void*, b_type);
 
 /* Sets variable
  * void** -> pointer to allocated space of memory that agrees with b_type
  */
-void var_set(var_cont*, void**, b_type);
+void var_set(var_cont*, void*, b_type);
 
-/* Casts type to variable
- * This function will try to change the passed variable to a different type
- */
-void var_cast(var_cont*, b_type);
-void** var_cast_data(var_cont*, b_type);
-void** var_cast_data_G_INT(void**, b_type);
-void** var_cast_data_G_FLOAT(void**, b_type);
-void** var_cast_data_G_CHAR(void**, b_type);
-void** var_cast_data_G_STR(void**, b_type);
+int    var_data_get_G_INT(var_cont*);
+double var_data_get_G_FLOAT(var_cont*);
+char   var_data_get_G_CHAR(var_cont*);
+char*  var_data_get_G_STR(var_cont*);
 
 #endif // TYPES_H

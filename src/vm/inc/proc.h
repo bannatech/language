@@ -41,6 +41,14 @@ var_cont* proc_callfun(rt_t*, var_cont*);
  *  rt_t*     - Runtime context
  *  int       - Scope
  *  ns_addr   - Name of variable
+ *
+ *  This function is used to support an interface to multithreaded instances
+ */
+void proc_decvar(rt_t*, b_type, int, ns_addr);
+/* Set a variable subroutine
+ *  rt_t*     - Runtime context
+ *  int       - Scope
+ *  ns_addr   - Name of variable
  *  var_cont* - Variable container
  *
  *  This function is used to support an interface to multithreaded instances

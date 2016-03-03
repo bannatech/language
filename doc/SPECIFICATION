@@ -110,7 +110,7 @@ Keywords:
  A<[variable]> - Address Arguement. Address width will vary on file size,
                  decided on compile time. (for now, a word)
  D<[variable]> - Dynamic bytecode arguement. Arguements terminated with NULL
-                 byte.
+                 byte. Two null bytes escapes terminator.
 -------------------------------------------------------------------------------
 1 - Stack manipulation
 -------------------------------------------------------------------------------

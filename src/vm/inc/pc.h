@@ -14,10 +14,15 @@
 
 typedef unsigned short int pc_addr;
 
+typedef struct pc_stk {
+	pc_addr address;
+	struct pc_stk* next;
+} pc_stk;
+
 typedef struct pc_t {
 	bc_cont* root;
 	bc_cont* line;
-	pc_addr  address;
+	pc_stk*  stk;
 } pc_t;
 
 /* Initalizes program counter
@@ -25,9 +30,13 @@ typedef struct pc_t {
  */
 pc_t* pc_new(char*);
 
+pc_stk* pc_stk_new(void);
+
 /* Frees memory assosiated with pc_t* instance
  */
 void pc_del(pc_t*);
+
+void pc_stk_del(pc_stk*);
 
 /* Updates program counter on changes
  */
@@ -40,5 +49,9 @@ void pc_inc(pc_t*, pc_addr);
 /* Branch
  */
 void pc_branch(pc_t*, pc_addr);
+
+/* Return from branch
+ */
+void pc_return(pc_t*);
 
 #endif // PC_H

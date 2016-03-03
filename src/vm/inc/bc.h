@@ -16,12 +16,13 @@ typedef unsigned short int bc_addr;
 /* 'Bytecode Container'
  */
 typedef struct bc_cont {
-	byte_t   op;
-	byte_t*  args[3];
-	byte_t   mdata;
-	void*    targ[3];
-	byte_t   adata;
 	bc_addr  real_addr;
+	byte_t   op;
+	byte_t   mdata;
+	byte_t   adata;
+	byte_t*  args[3];
+	void*    targ[3];
+	int      sarg[3];
 	struct bc_cont* next;
 	struct bc_cont* prev;
 } bc_cont;
@@ -59,18 +60,18 @@ void bc_cont_del(bc_cont*);
  * function will read arguements into bc_cont.
  */
 void get_args(FILE*, bc_cont*);
-byte_t* get_byte_arg(FILE*);
-byte_t* get_word_arg(FILE*);
-byte_t* get_dync_arg(FILE*);
+byte_t* get_byte_arg(FILE*, int*);
+byte_t* get_word_arg(FILE*, int*);
+byte_t* get_dync_arg(FILE*, int*);
 
 /* Process arguements into typed & readable data
  *  bc_cont* - bytecode container
  */
 void process_args(bc_cont*);
-void arg_to_int(void*, byte_t*);
-void arg_to_addr(void*, byte_t*);
-void arg_to_arglist(void*, byte_t*);
-void arg_to_var(void*, byte_t*);
+void arg_to_int(void**, byte_t*);
+void arg_to_addr(void**, byte_t*);
+void arg_to_arglist(void**, int, byte_t*);
+void arg_to_var(void**, int, byte_t*);
 
 /* Scan to +/- int in bytecode chain
  *  bc_cont* - bytecode container [0]

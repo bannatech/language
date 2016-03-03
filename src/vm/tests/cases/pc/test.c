@@ -8,7 +8,8 @@
 
 int main(int argc, char *argv[])
 {
-	init();
+	init_mdata();
+	init_adata();
 
 	pc_t* pc = pc_new("bytecode");
 

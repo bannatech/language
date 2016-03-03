@@ -2,7 +2,13 @@
 #include <stdio.h>
 
 #include "ins_def.h"
+
+#include "proc.h"
 #include "rt.h"
+#include "bc.h"
+#include "stk.h"
+#include "var.h"
+#include "pc.h"
 #include "helper.h"
 
 /* Initializes INS_DEF with pointers to each instructions function
@@ -294,7 +300,11 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
-	//ns_dec(ctx->vars, FUNC, 0, arg_to_int(0, 0, line));
+	bc_targ_int*  name = line->targ[0];
+	bc_targ_int*  type = line->targ[1];
+	bc_targ_list* args = line->targ[2];
+
+	proc_decvar(ctx, FUNC, 1, name->i);
 
 	int nsize;
 
@@ -311,5 +321,8 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 		}
 	}
 
+
+
 	printf("Namespace size for thingy: %i\n", nsize);
+	printf("Name: %i\n", name->i);
 }
