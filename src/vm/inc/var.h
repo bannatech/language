@@ -102,12 +102,12 @@ char           var_data_get_G_CHAR(var_cont*);
 char*          var_data_get_G_STR(var_cont*);
 b_type*        var_data_get_PLIST(var_cont*);
 
-void bytes_to_int(var_cont**, int, byte_t*);
+var_cont* bytes_to_int(int, byte_t*);
 
-void byte_to_type(var_cont**, byte_t);
+var_cont* byte_to_type(byte_t);
 
-void raw_to_plist(var_cont**, int, byte_t*);
+var_cont* raw_to_plist(int, byte_t*);
 
-void raw_to_var(var_cont**, int, byte_t*);
+var_cont* raw_to_var(int, byte_t*);
 
 #endif // var_H

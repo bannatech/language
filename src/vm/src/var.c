@@ -243,9 +243,9 @@ b_type* var_data_get_PLIST(var_cont* var)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-void bytes_to_int(var_cont** rv, int size, byte_t* bytes)
+var_cont* bytes_to_int(int size, byte_t* bytes)
 {
-	*rv = var_new(G_INT);
+	var_cont* rv = var_new(G_INT);
 
 	int i,
 	    data;
@@ -256,14 +256,18 @@ void bytes_to_int(var_cont** rv, int size, byte_t* bytes)
 		data = (data << 8 | bytes[i]);
 	}
 
-	var_set(*rv, var_data_alloc_G_INT(data), G_INT);
+	var_set(rv, var_data_alloc_G_INT(data), G_INT);
+
+	return rv;
 }
 
-void byte_to_type(var_cont** rv, byte_t byte)
+var_cont* byte_to_type(byte_t byte)
 {
-	*rv = var_new(TYPE);
+	var_cont* rv = var_new(TYPE);
 
-	var_set(*rv, var_data_alloc_TYPE((b_type)byte), TYPE);
+	var_set(rv, var_data_alloc_TYPE((b_type)byte), TYPE);
+
+	return rv;
 }
 
 /* Converts array of bytes of size n into parameter list
@@ -271,13 +275,13 @@ void byte_to_type(var_cont** rv, byte_t byte)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-void raw_to_plist(var_cont** rv, int n, byte_t* bytes)
+var_cont* raw_to_plist(int n, byte_t* bytes)
 {
-	*rv = var_new(PLIST);
+	var_cont* rv = var_new(PLIST);
 
-	var_set(*rv, var_data_alloc_PLIST(n), PLIST);
+	var_set(rv, var_data_alloc_PLIST(n), PLIST);
 
-	b_type* var = var_data_get_PLIST(*rv);
+	b_type* var = var_data_get_PLIST(rv);
 
 	int i;
 
@@ -285,6 +289,8 @@ void raw_to_plist(var_cont** rv, int n, byte_t* bytes)
 	{
 		var[i] = (b_type)bytes[i];
 	}
+
+	return rv;
 }
 
 /* Raw variable to var_cont
@@ -292,10 +298,11 @@ void raw_to_plist(var_cont** rv, int n, byte_t* bytes)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-void raw_to_var(var_cont** rv, int n, byte_t* bytes)
+var_cont* raw_to_var(int n, byte_t* bytes)
 {
-	*rv = var_new(VOID);
+	var_cont* rv = var_new(VOID);
 
 	// TODO: implement.
+	return rv;
 }
 

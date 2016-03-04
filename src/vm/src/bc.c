@@ -144,19 +144,19 @@ void process_args(bc_cont* ins)
 	{
 		if (arg_types[x] == BTOI)
 		{
-			bytes_to_int(&ins->varg[x], ins->sarg[x], ins->args[x]);
+			ins->varg[x] = bytes_to_int(ins->sarg[x], ins->args[x]);
 		} else
 		if (arg_types[x] == BTOT)
 		{
-			byte_to_type(&ins->varg[x], ins->args[x][0]);
+			ins->varg[x] = byte_to_type(ins->args[x][0]);
 		} else
 		if (arg_types[x] == DTOL)
 		{
-			raw_to_plist(&ins->varg[x], ins->sarg[x], ins->args[x]);
+			ins->varg[x] = raw_to_plist(ins->sarg[x], ins->args[x]);
 		} else
 		if (arg_types[x] == DTOV)
 		{
-			raw_to_var(&ins->varg[x], ins->sarg[x], ins->args[x]);
+			ins->varg[x] = raw_to_var(ins->sarg[x], ins->args[x]);
 		}
 	}
 }
