@@ -9,7 +9,7 @@
 #include "var.h"
 #include "helper.h"
 
-typedef int ns_addr;
+typedef unsigned int ns_addr;
 
 typedef struct ns_cont {
 	ns_addr    size;

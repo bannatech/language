@@ -3,9 +3,9 @@
 
 #include "bc.h"
 
-#include "var.h"
 #include "is.h"
 #include "fh.h"
+#include "var.h"
 #include "helper.h"
 
 /* Handles allocation for new `bc_cont` instances
@@ -19,9 +19,9 @@ bc_cont* bc_cont_new(void)
 	new->args[1] = NULL;
 	new->args[2] = NULL;
 
-	new->targ[0] = NULL;
-	new->targ[1] = NULL;
-	new->targ[2] = NULL;
+	new->varg[0] = NULL;
+	new->varg[1] = NULL;
+	new->varg[2] = NULL;
 
 	new->sarg[0] = 0;
 	new->sarg[1] = 0;
@@ -58,9 +58,9 @@ void bc_cont_del(bc_cont* root)
 		if (root->args[1] != NULL) free(root->args[1]);
 		if (root->args[2] != NULL) free(root->args[2]);
 
-		if (root->targ[0] != NULL) free(root->targ[0]);
-		if (root->targ[1] != NULL) free(root->targ[1]);
-		if (root->targ[2] != NULL) free(root->targ[2]);
+		if (root->varg[0] != NULL) var_del(root->varg[0]);
+		if (root->varg[1] != NULL) var_del(root->varg[1]);
+		if (root->varg[2] != NULL) var_del(root->varg[2]);
 	
 		free(root);
 	}
@@ -82,9 +82,13 @@ void get_args(FILE* f, bc_cont* ins)
 		{
 			ins->args[x] = get_byte_arg(f, &ins->sarg[x]);
 		} else
-		if (arg_types[x] == A_WORD)
+		if (arg_types[x] == A_NAME)
 		{
-			ins->args[x] = get_word_arg(f, &ins->sarg[x]);
+			ins->args[x] = get_name_arg(f, &ins->sarg[x]);
+		} else
+		if (arg_types[x] == A_ADDR)
+		{
+			ins->args[x] = get_addr_arg(f, &ins->sarg[x]);
 		} else
 		if (arg_types[x] == A_DYNC)
 		{
@@ -97,10 +101,15 @@ byte_t* get_byte_arg(FILE* f, int* size)
 	*size = 1;
 	return read_bytes(f, 1);
 }
-byte_t* get_word_arg(FILE* f, int* size)
+byte_t* get_name_arg(FILE* f, int* size)
 {
-	*size = 2;
-	return read_bytes(f, 2);
+	*size = NAMELEN;
+	return read_bytes(f, NAMELEN);
+}
+byte_t* get_addr_arg(FILE* f, int* size)
+{
+	*size = ADDRLEN;
+	return read_bytes(f, ADDRLEN);
 }
 byte_t* get_dync_arg(FILE* f, int* size)
 {
@@ -130,61 +139,26 @@ void process_args(bc_cont* ins)
 
 	unencode(ins->adata, &num_args, arg_types);
 
-	for (int x = 0; x < num_args; x++)
+	int x;
+	for (x = 0; x < num_args; x++)
 	{
 		if (arg_types[x] == BTOI)
 		{
-			arg_to_int(&ins->targ[x], ins->args[x]);
+			bytes_to_int(&ins->varg[x], ins->sarg[x], ins->args[x]);
 		} else
-		if (arg_types[x] == WTOA)
+		if (arg_types[x] == BTOT)
 		{
-			arg_to_addr(&ins->targ[x], ins->args[x]);
+			byte_to_type(&ins->varg[x], ins->args[x][0]);
 		} else
 		if (arg_types[x] == DTOL)
 		{
-			arg_to_arglist(&ins->targ[x], ins->sarg[x], ins->args[x]);
+			raw_to_plist(&ins->varg[x], ins->sarg[x], ins->args[x]);
 		} else
 		if (arg_types[x] == DTOV)
 		{
-			arg_to_var(&ins->targ[x], ins->sarg[x], ins->args[x]);
+			raw_to_var(&ins->varg[x], ins->sarg[x], ins->args[x]);
 		}
 	}
-}
-
-void arg_to_int(void** ptr, byte_t* byte)
-{
-	*ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
-	M_ASSERT(*ptr);
-
-	bc_targ_int* v = *ptr;
-
-	v->i = (int)byte[0];
-}
-
-void arg_to_addr(void** ptr, byte_t* word)
-{
-	*ptr = (bc_targ_int*)malloc(sizeof(bc_targ_int));
-	M_ASSERT(*ptr);
-
-	bc_targ_int* v = *ptr;
-	
-	v->i = (int)(word[0] << 8 | word[1]);
-}
-
-void arg_to_arglist(void** ptr, int n, byte_t* bytes)
-{
-	*ptr = (bc_targ_list*)malloc(sizeof(bc_targ_list));
-	M_ASSERT(*ptr);
-
-//	bc_targ_list* v = *ptr;
-}
-
-void arg_to_var(void** ptr, int n, byte_t* bytes)
-{
-	*ptr = (bc_targ_var_cont*)malloc(sizeof(bc_targ_list));
-	M_ASSERT(*ptr);
-
-//	bc_targ_var_cont* v = *ptr;
 }
 
 /* Scan to +/- int in bytecode chain
@@ -236,8 +210,11 @@ bc_cont* bc_read(char* fname)
 	while (ftell(f)<fsize)
 	{
 		byte = read_byte(f);
+
 		get_opcode(byte, ptr);
+
 		get_args(f, ptr);
+
 		process_args(ptr);
 
 		ptr->real_addr = addr;

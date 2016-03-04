@@ -19,23 +19,27 @@ typedef struct pc_stk {
 	struct pc_stk* next;
 } pc_stk;
 
+/* pc_t structure
+ *
+ * bc_cont* root - First instruction
+ * bc_cont* line - Current instruction
+ * pc_stk*  stk  - Address stack
+ */
 typedef struct pc_t {
 	bc_cont* root;
 	bc_cont* line;
 	pc_stk*  stk;
 } pc_t;
 
-/* Initalizes program counter
- * char* is filename of file containing bytecode
+/* Initalizes program counter, returns pc_t* instance
+ * char* - filename of file containing bytecode
  */
 pc_t* pc_new(char*);
-
-pc_stk* pc_stk_new(void);
+pc_stk* pc_stk_new(ns_addr);
 
 /* Frees memory assosiated with pc_t* instance
  */
 void pc_del(pc_t*);
-
 void pc_stk_del(pc_stk*);
 
 /* Updates program counter on changes
@@ -46,7 +50,7 @@ void pc_update(pc_t*);
  */
 void pc_inc(pc_t*, pc_addr);
 
-/* Branch
+/* Branch to addr
  */
 void pc_branch(pc_t*, pc_addr);
 

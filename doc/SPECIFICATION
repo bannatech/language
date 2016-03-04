@@ -107,6 +107,7 @@ be assigned or re-assigned to variables.
 Keywords:
  TOS           - 'Top Of Stack' The top element
  S<[variable]> - Static Arguement. (1 byte)
+ N<[variable]> - Name, word in length
  A<[variable]> - Address Arguement. Address width will vary on file size,
                  decided on compile time. (for now, a word)
  D<[variable]> - Dynamic bytecode arguement. Arguements terminated with NULL
@@ -121,10 +122,10 @@ Keywords:
 -------------------------------------------------------------------------------
 2 - Variable management
 -------------------------------------------------------------------------------
-20 DEC S<scope> S<type> A<ref> - declare variable of type
-21 LOV S<scope> A<ref>         - loads reference variable on to stack
-22 STV S<scope> A<ref>         - stores TOS to reference variable
-23 LOC S<scope> A<ref> D<data> - loads constant into variable
+20 DEC S<scope> S<type> N<ref> - declare variable of type
+21 LOV S<scope> N<ref>         - loads reference variable on to stack
+22 STV S<scope> N<ref>         - stores TOS to reference variable
+23 LOC S<scope> N<ref> D<data> - loads constant into variable
 24 CTS D<data>                 - loads constant into stack
 -------------------------------------------------------------------------------
 3 - Type management
@@ -180,8 +181,8 @@ to TOS
     These instructions dictate code flow.
 -------------------------------------------------------------------------------
 70 GOTO A<addr> - Goes to address
-71 JUMPF S<n>   - Goes forward <n> lines
-7F CALL A<ref>  - Calls function, pushes return value on to STACK.
+71 JUMPF A<n>   - Goes forward <n> lines
+7F CALL N<ref>  - Calls function, pushes return value on to STACK.
 -------------------------------------------------------------------------------
 8 - Manipulating High-order Object Variables
 
@@ -196,21 +197,21 @@ to TOS
 82 GET          - Gets key, TOS must be a keyed datastructure, and TOS1 must be
                 a string that is a key in TOS.
 
-83 GETP A<ref>  - Get property of <ref> in object contained in TOS. pushes
+83 GETP N<ref>  - Get property of <ref> in object contained in TOS. pushes
                 to stack
 
-84 CALLM A<ref> - Call method of <ref> in object contained in TOS. Uses
+84 CALLM N<ref> - Call method of <ref> in object contained in TOS. Uses
                 arguement stack
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
-FF DEFUN A<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
+FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   function. D<ref> is its name, S<type> is the
                                   return value, D<args> is the args.
 
-FE DECLASS A<ref> D<args>       - Defines a class.
+FE DECLASS N<ref> D<args>       - Defines a class.
 
-F1 NEW A<ref>                   - Instantiates class
+F1 NEW N<ref>                   - Instantiates class
 
 F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------

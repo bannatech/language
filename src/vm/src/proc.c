@@ -96,7 +96,10 @@ void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
  */
 var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 {
-	return 0;
-}
+	var_cont* rv;
+	
+	rv = ns_get(ctx->vars, scope, name);
 
+	return rv;
+}
 

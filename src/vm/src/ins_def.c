@@ -300,11 +300,13 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
-	bc_targ_int*  name = line->targ[0];
-	bc_targ_int*  type = line->targ[1];
-	bc_targ_list* args = line->targ[2];
+	int     name = var_data_get_G_INT(line->varg[0]);
+	b_type  type = var_data_get_TYPE(line->varg[1]);
+	b_type* args = var_data_get_PLIST(line->varg[2]);
 
-	proc_decvar(ctx, FUNC, 1, name->i);
+	var_data_func* data = var_data_alloc_FUNC(type);
+
+	data->loc = line->real_addr + 1;
 
 	int nsize;
 
@@ -320,9 +322,13 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 			nsize++;
 		}
 	}
+	
+	data->size = nsize;
+	data->type = type;
+	data->param = args;
 
+	proc_decvar(ctx, 1, name, FUNC);
 
-
-	printf("Namespace size for thingy: %i\n", nsize);
-	printf("Name: %i\n", name->i);
+	var_cont* var = proc_getvar(ctx, 1, name);
+	var_set(var, data, FUNC);
 }
