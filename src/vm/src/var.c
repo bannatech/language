@@ -65,6 +65,7 @@ void* var_data_alloc_G_STR(size_t size)
 	var_data_str* rv = (var_data_str*)malloc(sizeof(var_data_str));
 	M_ASSERT(rv);
 
+	rv->size = size;
 	rv->v = (char*)malloc(sizeof(char)*size);
 
 	return rv;
@@ -239,6 +240,76 @@ b_type* var_data_get_PLIST(var_cont* var)
 	return t->v;
 }
 
+void* var_data_cpy_G_INT(var_data_int* data)
+{
+	var_data_int* rv = var_data_alloc_G_INT(data->v);
+
+	return rv;
+}
+
+void* var_data_cpy_G_FLOAT(var_data_float* data)
+{
+	var_data_float* rv = var_data_alloc_G_FLOAT(data->v);
+
+	return rv;
+}
+
+void* var_data_cpy_G_CHAR(var_data_char* data)
+{
+	var_data_char* rv = var_data_alloc_G_CHAR(data->v);
+
+	return rv;
+}
+
+void* var_data_cpy_G_STR(var_data_str* data)
+{
+	var_data_str* rv = var_data_alloc_G_STR(data->size);
+
+	int i;
+	for (i = 0; data->size > i; i++)
+	{
+		rv->v[i] = data->v[i];
+	}
+
+	return rv;
+}
+
+/* Reconstructs variable into seperate variable container, copies data
+ *  var_cont* - variable to copy
+ *
+ * Returns new variable container
+ */
+var_cont* var_data_cpy(var_cont* var)
+{
+	N_ASSERT(var);
+
+	var_cont* rv = var_new(var->type);
+
+	if (var->type == G_INT)
+	{
+		rv->data = var_data_cpy_G_INT(var->data);
+	}
+	
+	if (var->type == G_FLOAT)
+	{
+		rv->data = var_data_cpy_G_FLOAT(var->data);
+	}
+
+	if (var->type == G_CHAR)
+	{
+		rv->data = var_data_cpy_G_CHAR(var->data);
+	}
+	
+	if (var->type == G_STR)
+	{
+		rv->data = var_data_cpy_G_STR(var->data);
+	}
+
+	ASSERT((rv->data != NULL), "ERROR: Could not copy type.\n");
+
+	return rv;
+}
+
 /* Lovely little function to take bytes and turn it into an integer.
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
@@ -261,6 +332,9 @@ var_cont* bytes_to_int(int size, byte_t* bytes)
 	return rv;
 }
 
+/* Byte to b_type.
+ *  byte_t - value maps to enum b_type
+ */
 var_cont* byte_to_type(byte_t byte)
 {
 	var_cont* rv = var_new(TYPE);
@@ -293,6 +367,18 @@ var_cont* raw_to_plist(int n, byte_t* bytes)
 	return rv;
 }
 
+var_data_str* raw_to_str(int n, byte_t* bytes)
+{
+	var_data_str* data = var_data_alloc_G_STR(n);
+	int i;
+	for (i = 0; n > i; i++)
+	{
+		data->v[i] = (char)bytes[i];
+	}
+
+	return data;
+}
+
 /* Raw variable to var_cont
  *
  *  int     - sizeof(bytes)
@@ -300,9 +386,24 @@ var_cont* raw_to_plist(int n, byte_t* bytes)
  */
 var_cont* raw_to_var(int n, byte_t* bytes)
 {
-	var_cont* rv = var_new(VOID);
+	N_ASSERT(bytes);
 
-	// TODO: implement.
+	b_type type = (b_type)bytes[0];
+
+	var_cont* rv = var_new(type);
+
+	byte_t* data = ++bytes;
+
+	if (type == G_STR)
+	{
+		rv->data = raw_to_str(n - 1, data);
+	} else
+	{
+		printf("Type {%x} is not a seralizeable type\n", type);
+	}
+
+	N_ASSERT(rv->data);
+
 	return rv;
 }
 

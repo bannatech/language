@@ -30,6 +30,7 @@ int ins_def_is_valid(bc_cont*);
 
 void _ins_def_NULL     (rt_t*, bc_cont*);
 void _ins_def_SYNC     (rt_t*, bc_cont*);
+void _ins_def_PRINT    (rt_t*, bc_cont*);
 void _ins_def_ARGB     (rt_t*, bc_cont*);
 void _ins_def_LIBC     (rt_t*, bc_cont*);
 

@@ -58,4 +58,9 @@ void pc_branch(pc_t*, pc_addr);
  */
 void pc_return(pc_t*);
 
+/* For now, a simple function that returns true if the next instruction is not
+ * NULL.
+ */
+int pc_safe(pc_t* pc);
+
 #endif // PC_H

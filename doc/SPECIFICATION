@@ -219,8 +219,10 @@ F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------
 00 NULL          - Terminator byte
 
-01 SYNC S<level> - Updates global namespace with global namespace cache of 
+01 SYNC S<level> - Updates global namespace with global namespace cache of
                    current thread
+
+02 PRINT         - Prints whatever is on the TOS.
 
 0E ARGB          - Builds arguement stack
 

@@ -32,7 +32,7 @@ void proc_run(rt_t* ctx)
 
 	int n;
 	
-	for (n = 0; ctx->pc->line->next != NULL; pc_update(ctx->pc))
+	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
 		printf("%i - %i: %x\n", n, ctx->pc->stk->address, ctx->pc->line->op);
 

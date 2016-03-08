@@ -13,20 +13,20 @@ typedef unsigned int bc_addr;
 typedef unsigned int ns_addr;
 
 typedef enum {
-	VOID,
-	ADDR,
-	TYPE,
-	PLIST,
-	FUNC,
-	OBJECT,
-	G_INT,
-	G_FLOAT,
-	G_CHAR,
-	G_STR,
-	S_ARRAY,
-	D_ARRAY,
-	K_ARRAY,
-	G_FIFO
+	VOID,   // 0
+	ADDR,   // 1
+	TYPE,   // 2
+	PLIST,  // 3
+	FUNC,   // 4
+	OBJECT, // 5
+	G_INT,  // 6
+	G_FLOAT,// 7
+	G_CHAR, // 8
+	G_STR,  // 9
+	S_ARRAY,// A
+	D_ARRAY,// B
+	K_ARRAY,// C
+	G_FIFO  // D
 } b_type;
 
 typedef struct var_cont {
@@ -59,6 +59,7 @@ typedef struct var_data_char {
 } var_data_char;
 
 typedef struct var_data_str {
+	size_t size;
 	char* v;
 } var_data_str;
 
@@ -102,12 +103,36 @@ char           var_data_get_G_CHAR(var_cont*);
 char*          var_data_get_G_STR(var_cont*);
 b_type*        var_data_get_PLIST(var_cont*);
 
+
+void* var_data_cpy_G_INT(var_data_int*);
+void* var_data_cpy_G_FLOAT(var_data_float*);
+void* var_data_cpy_G_CHAR(var_data_char*);
+void* var_data_cpy_G_STR(var_data_str*);
+
+var_cont* var_data_cpy(var_cont*);
+
+/* Lovely little function to take bytes and turn it into an integer.
+ *  int     - sizeof(bytes)
+ *  byte_t* - array of bytes
+ */
 var_cont* bytes_to_int(int, byte_t*);
 
+/* Byte to b_type.
+ *  byte_t - value maps to enum b_type
+ */
 var_cont* byte_to_type(byte_t);
 
+/* Converts array of bytes of size n into parameter list
+ *
+ *  int     - sizeof(bytes)
+ *  byte_t* - array of bytes
+ */
 var_cont* raw_to_plist(int, byte_t*);
-
+/* Raw variable to var_cont
+ *
+ *  int     - sizeof(bytes)
+ *  byte_t* - array of bytes
+ */
 var_cont* raw_to_var(int, byte_t*);
 
 #endif // var_H

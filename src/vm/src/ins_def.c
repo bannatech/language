@@ -18,7 +18,8 @@ void init_ins_def( void )
 {
 	INS_DEF[0x00] = _ins_def_NULL;
 	INS_DEF[0x01] = _ins_def_SYNC;
-	INS_DEF[0x02] = _ins_def_ARGB;
+	INS_DEF[0x02] = _ins_def_PRINT;
+	INS_DEF[0x0E] = _ins_def_ARGB;
 	INS_DEF[0x0F] = _ins_def_LIBC;
 
 	INS_DEF[0x10] = _ins_def_POP;
@@ -93,12 +94,27 @@ void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
+void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
+{
+	var_cont* var = stk_at(ctx->stack, 0);
+
+	if (var->type == G_STR)
+	{
+		char* str = var_data_get_G_STR(var);
+		printf("%s\n", str);
+	}
+
+	pc_inc(ctx->pc, 1);
+}
 void _ins_def_SYNC     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
 {
+	var_cont* var = stk_at(ctx->stack, 0);
+
+	stk_push(&ctx->argstk, var);
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)
@@ -108,18 +124,39 @@ void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)
 
 void _ins_def_POP      (rt_t* ctx, bc_cont* line)
 {
+	int n = var_data_get_G_INT(line->varg[0]);
+	int i = 0;
+
+	var_cont* var;
+
+	while (n > i)
+	{
+		i++;
+
+		var = stk_pop(&ctx->stack);
+
+		if (var != NULL)
+			var_del(var);
+	}
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ROT      (rt_t* ctx, bc_cont* line)
 {
+	stk_rot_top(&ctx->stack);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_DUP      (rt_t* ctx, bc_cont* line)
 {
+	var_cont* var = stk_at(ctx->stack, 0);
+	var_cont* dup = var_data_cpy(var);
+	stk_push(&ctx->stack, dup);
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ROT_THREE(rt_t* ctx, bc_cont* line)
 {
+	stk_rot_three(&ctx->stack);
 	pc_inc(ctx->pc, 1);
 }
 
@@ -141,6 +178,7 @@ void _ins_def_LOC      (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 {
+	stk_push(&ctx->stack, line->varg[0]);
 	pc_inc(ctx->pc, 1);
 }
 
@@ -310,7 +348,7 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 
 	int nsize;
 
-	for (nsize = 0; ctx->pc->line->next != NULL; pc_update(ctx->pc))
+	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
 		pc_inc(ctx->pc, 1);
 		if (ctx->pc->line->op == 0xF0)

@@ -108,3 +108,12 @@ void pc_return(pc_t* pc)
 
 	free(tmp);
 }
+
+/* For now, a simple function that returns true if the next instruction is not
+ * NULL.
+ */
+int pc_safe(pc_t* pc)
+{
+	return (pc->line->next != NULL);
+}
+

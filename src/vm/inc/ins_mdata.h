@@ -24,7 +24,8 @@
 #define INS_MDATA_DEF()                                             \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* SYNC      */ INS_MDATA[0x01] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
-/* ARGB      */ INS_MDATA[0x02] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* PRINT     */ INS_MDATA[0x02] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* ARGB      */ INS_MDATA[0x0E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* LIBC      */ INS_MDATA[0x0F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
                                                                      \
 /* POP       */ INS_MDATA[0x10] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
@@ -95,7 +96,8 @@
 #define INS_ADATA_DEF()                                        \
 /* NULL      */ INS_ADATA[0x00] = encode(0, BTOI, BTOI, BTOI); \
 /* SYNC      */ INS_ADATA[0x01] = encode(1, BTOI, BTOI, BTOI); \
-/* ARGB      */ INS_ADATA[0x02] = encode(0, BTOI, BTOI, BTOI); \
+/* PRINT     */ INS_ADATA[0x01] = encode(0, BTOI, BTOI, BTOI); \
+/* ARGB      */ INS_ADATA[0x0E] = encode(0, BTOI, BTOI, BTOI); \
 /* LIBC      */ INS_ADATA[0x0F] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
 /* POP       */ INS_ADATA[0x10] = encode(1, BTOI, BTOI, BTOI); \
