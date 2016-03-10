@@ -67,10 +67,13 @@
 /* STARTL    */ INS_MDATA[0x60] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* CLOOP     */ INS_MDATA[0x61] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* BREAK     */ INS_MDATA[0x6E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* DONE      */ INS_MDATA[0x6F] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* ENDL      */ INS_MDATA[0x6F] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* GOTO      */ INS_MDATA[0x70] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
 /* JUMPF     */ INS_MDATA[0x71] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
+/* IFDO      */ INS_MDATA[0x72] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* ELSE      */ INS_MDATA[0x73] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* DONE      */ INS_MDATA[0x7E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* CALL      */ INS_MDATA[0x7F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
                                                                      \
 /* PUSH      */ INS_MDATA[0x80] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
@@ -108,7 +111,7 @@
 /* DEC       */ INS_ADATA[0x20] = encode(3, BTOI, BTOI, BTOI); \
 /* LOV       */ INS_ADATA[0x21] = encode(2, BTOI, BTOI, BTOI); \
 /* STV       */ INS_ADATA[0x22] = encode(2, BTOI, BTOI, BTOI); \
-/* LOC       */ INS_ADATA[0x23] = encode(3, BTOI, BTOI, BTOI); \
+/* CTV       */ INS_ADATA[0x23] = encode(3, BTOI, BTOI, BTOI); \
 /* CTS       */ INS_ADATA[0x24] = encode(1, DTOV, BTOI, BTOI); \
                                                                \
 /* TYPEOF    */ INS_ADATA[0x30] = encode(0, BTOI, BTOI, BTOI); \
@@ -139,10 +142,13 @@
 /* STARTL    */ INS_ADATA[0x60] = encode(0, BTOI, BTOI, BTOI); \
 /* CLOOP     */ INS_ADATA[0x61] = encode(0, BTOI, BTOI, BTOI); \
 /* BREAK     */ INS_ADATA[0x6E] = encode(0, BTOI, BTOI, BTOI); \
-/* DONE      */ INS_ADATA[0x6F] = encode(0, BTOI, BTOI, BTOI); \
+/* ENDL      */ INS_ADATA[0x6F] = encode(0, BTOI, BTOI, BTOI); \
                                                                \
 /* GOTO      */ INS_ADATA[0x70] = encode(1, BTOI, BTOI, BTOI); \
 /* JUMPF     */ INS_ADATA[0x71] = encode(1, BTOI, BTOI, BTOI); \
+/* IFDO      */ INS_ADATA[0x72] = encode(0, BTOI, BTOI, BTOI); \
+/* ELSE      */ INS_ADATA[0x73] = encode(0, BTOI, BTOI, BTOI); \
+/* DONE      */ INS_ADATA[0x7E] = encode(0, BTOI, BTOI, BTOI); \
 /* CALL      */ INS_ADATA[0x7F] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
 /* PUSH      */ INS_ADATA[0x80] = encode(0, BTOI, BTOI, BTOI); \

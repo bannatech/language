@@ -25,7 +25,7 @@ typedef enum {
 	G_STR,  // 9
 	S_ARRAY,// A
 	D_ARRAY,// B
-	K_ARRAY,// C
+	H_TABLE,// C
 	G_FIFO  // D
 } b_type;
 
@@ -37,6 +37,10 @@ typedef struct var_cont {
 typedef struct var_data_type {
 	b_type v;
 } var_data_type;
+
+typedef struct var_data_plist {
+	b_type* v;
+} var_data_plist;
 
 typedef struct var_data_func {
 	bc_addr loc;
@@ -63,9 +67,10 @@ typedef struct var_data_str {
 	char* v;
 } var_data_str;
 
-typedef struct var_data_plist {
-	b_type* v;
-} var_data_plist;
+typedef struct var_data_array {
+	size_t size;
+	var_cont* v;
+} var_data_array;
 
 #include "bc.h"
 
@@ -74,21 +79,22 @@ typedef struct var_data_plist {
 var_cont* var_new(b_type);
 
 void* var_data_alloc_TYPE(b_type);
+void* var_data_alloc_PLIST(size_t);
 void* var_data_alloc_FUNC(b_type);
 void* var_data_alloc_G_INT(int);
 void* var_data_alloc_G_FLOAT(double);
 void* var_data_alloc_G_CHAR(char);
 void* var_data_alloc_G_STR(size_t);
-void* var_data_alloc_PLIST(size_t);
+void* var_data_alloc_S_ARRAY(size_t);
 
 /* Frees variable
  */
 void var_del(var_cont*);
 void var_data_free(void*, b_type);
 
+void var_data_free_PLIST(void*);
 void var_data_free_FUNC(void*);
 void var_data_free_G_STR(void*);
-void var_data_free_PLIST(void*);
 
 /* Sets variable
  * void* -> pointer to allocated space of memory that agrees with b_type
@@ -115,7 +121,7 @@ var_cont* var_data_cpy(var_cont*);
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* bytes_to_int(int, byte_t*);
+var_cont* raw_to_int(int, byte_t*);
 
 /* Byte to b_type.
  *  byte_t - value maps to enum b_type

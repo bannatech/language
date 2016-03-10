@@ -125,7 +125,7 @@ Keywords:
 20 DEC S<scope> S<type> N<ref> - declare variable of type
 21 LOV S<scope> N<ref>         - loads reference variable on to stack
 22 STV S<scope> N<ref>         - stores TOS to reference variable
-23 LOC S<scope> N<ref> D<data> - loads constant into variable
+23 CTV S<scope> N<ref> D<data> - loads constant into variable
 24 CTS D<data>                 - loads constant into stack
 -------------------------------------------------------------------------------
 3 - Type management
@@ -174,7 +174,7 @@ to TOS
 60 STARTL - Start of loop
 61 CLOOP  - Conditional loop. If TOS is true, continue looping, else break
 6E BREAK  - Breaks out of loop
-6F DONE   - End of loop
+6F ENDL   - End of loop
 -------------------------------------------------------------------------------
 7 - Code flow
 
@@ -182,6 +182,10 @@ to TOS
 -------------------------------------------------------------------------------
 70 GOTO A<addr> - Goes to address
 71 JUMPF A<n>   - Goes forward <n> lines
+72 IFDO         - If TOS is TRUE, do until done, if not, jump to done
+73 ELSE         - Chained with an IFDO statement, if IFDO fails, execute ELSE
+                  block until DONE is reached.
+7E DONE         - End of block
 7F CALL N<ref>  - Calls function, pushes return value on to STACK.
 -------------------------------------------------------------------------------
 8 - Manipulating High-order Object Variables
@@ -223,6 +227,8 @@ F0 RETURN                       - Returns from function
                    current thread
 
 02 PRINT         - Prints whatever is on the TOS.
+
+03 FREE          - Pops & Deletes TOS
 
 0E ARGB          - Builds arguement stack
 

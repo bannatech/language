@@ -12,6 +12,7 @@
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
+#include "var_ops.h"
 #include "pc.h"
 #include "helper.h"
 
@@ -42,7 +43,7 @@ void _ins_def_ROT_THREE(rt_t*, bc_cont*);
 void _ins_def_DEC      (rt_t*, bc_cont*);
 void _ins_def_LOV      (rt_t*, bc_cont*);
 void _ins_def_STV      (rt_t*, bc_cont*);
-void _ins_def_LOC      (rt_t*, bc_cont*);
+void _ins_def_CTV      (rt_t*, bc_cont*);
 void _ins_def_CTS      (rt_t*, bc_cont*);
 
 void _ins_def_TYPEOF   (rt_t*, bc_cont*);
@@ -73,10 +74,13 @@ void _ins_def_NOT      (rt_t*, bc_cont*);
 void _ins_def_STARTL   (rt_t*, bc_cont*);
 void _ins_def_CLOOP    (rt_t*, bc_cont*);
 void _ins_def_BREAK    (rt_t*, bc_cont*);
-void _ins_def_DONE     (rt_t*, bc_cont*);
+void _ins_def_ENDL     (rt_t*, bc_cont*);
 
 void _ins_def_GOTO     (rt_t*, bc_cont*);
 void _ins_def_JUMPF    (rt_t*, bc_cont*);
+void _ins_def_IFDO     (rt_t*, bc_cont*);
+void _ins_def_ELSE     (rt_t*, bc_cont*);
+void _ins_def_DONE     (rt_t*, bc_cont*);
 void _ins_def_CALL     (rt_t*, bc_cont*);
 
 void _ins_def_PUSH     (rt_t*, bc_cont*);

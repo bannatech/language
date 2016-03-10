@@ -16,6 +16,16 @@ void* var_data_alloc_TYPE(b_type type)
 	return rv;
 }
 
+void* var_data_alloc_PLIST(size_t size)
+{
+	var_data_plist* rv = (var_data_plist*)malloc(sizeof(var_data_plist));
+	M_ASSERT(rv);
+
+	rv->v = (b_type*)malloc(sizeof(b_type)*size);
+
+	return rv;
+}
+
 void* var_data_alloc_FUNC(b_type type)
 {
 	var_data_func* rv = (var_data_func*)malloc(sizeof(var_data_func));
@@ -71,16 +81,6 @@ void* var_data_alloc_G_STR(size_t size)
 	return rv;
 }
 
-void* var_data_alloc_PLIST(size_t size)
-{
-	var_data_plist* rv = (var_data_plist*)malloc(sizeof(var_data_plist));
-	M_ASSERT(rv);
-
-	rv->v = (b_type*)malloc(sizeof(b_type)*size);
-
-	return rv;
-}
-
 var_cont* var_new(b_type type)
 {
 	var_cont* new = (var_cont*)malloc(sizeof(var_cont));
@@ -126,22 +126,21 @@ void var_data_free(void* data, b_type type)
 		free(data);
 }
 
+void var_data_free_PLIST(void* data)
+{
+	var_data_plist* d = data;
+	if (d->v != NULL)
+		free(d->v);
+}
 void var_data_free_FUNC(void* data)
 {
 	var_data_func* d = data;
 	if (d->param != NULL)
 		free(d->param);
 }
-
 void var_data_free_G_STR(void* data)
 {
 	var_data_str* d = data;
-	if (d->v != NULL)
-		free(d->v);
-}
-void var_data_free_PLIST(void* data)
-{
-	var_data_plist* d = data;
 	if (d->v != NULL)
 		free(d->v);
 }
@@ -166,6 +165,18 @@ b_type var_data_get_TYPE(var_cont* var)
 	ASSERT( var->type == TYPE, "TypeError" );
 
 	var_data_type* t = var->data;
+
+	return t->v;
+}
+
+b_type* var_data_get_PLIST(var_cont* var)
+{
+	N_ASSERT(var);
+	ASSERT( var->type == PLIST, "TypeError" );
+
+	N_ASSERT(var->data);
+
+	var_data_plist* t = var->data;
 
 	return t->v;
 }
@@ -224,18 +235,6 @@ char* var_data_get_G_STR(var_cont* var)
 	N_ASSERT(var->data);
 
 	var_data_str* t = var->data;
-
-	return t->v;
-}
-
-b_type* var_data_get_PLIST(var_cont* var)
-{
-	N_ASSERT(var);
-	ASSERT( var->type == PLIST, "TypeError" );
-
-	N_ASSERT(var->data);
-
-	var_data_plist* t = var->data;
 
 	return t->v;
 }
@@ -314,7 +313,7 @@ var_cont* var_data_cpy(var_cont* var)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* bytes_to_int(int size, byte_t* bytes)
+var_cont* raw_to_int(int size, byte_t* bytes)
 {
 	var_cont* rv = var_new(G_INT);
 
@@ -394,6 +393,10 @@ var_cont* raw_to_var(int n, byte_t* bytes)
 
 	byte_t* data = ++bytes;
 
+	if (type == G_INT)
+	{
+		rv->data = raw_to_int(n - 1, data);
+	} else
 	if (type == G_STR)
 	{
 		rv->data = raw_to_str(n - 1, data);
