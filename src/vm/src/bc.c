@@ -144,7 +144,7 @@ void process_args(bc_cont* ins)
 	{
 		if (arg_types[x] == BTOI)
 		{
-			ins->varg[x] = raw_to_int(ins->sarg[x], ins->args[x]);
+			ins->varg[x] = raw_to_int(ins->sarg[x], 0, ins->args[x]);
 		} else
 		if (arg_types[x] == BTOT)
 		{

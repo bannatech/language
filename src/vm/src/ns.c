@@ -45,8 +45,8 @@ ns_t* ns_init(ns_addr size)
  */
 void ns_cont_del(ns_cont* container)
 {
-	N_ASSERT(container);
-	N_ASSERT(container->names);
+	N_ASSERT(container, "ns_cont_del\n");
+	N_ASSERT(container->names, "ns_cont_del\n");
 
 	for (int i = 0; i < container->size; i++)
 	{
@@ -63,7 +63,7 @@ void ns_cont_del(ns_cont* container)
  */
 void ns_del(ns_t* ns)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_del\n");
 
 	if (ns->last != NULL)
 		while (ns->last->next != NULL)
@@ -78,7 +78,7 @@ void ns_del(ns_t* ns)
  */
 void ns_push(ns_t* ns, ns_addr size)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_push\n");
 
 	ns_cont* new = ns_cont_init(size);
 
@@ -98,7 +98,7 @@ void ns_push(ns_t* ns, ns_addr size)
  */
 void ns_pop(ns_t* ns)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_pop\n");
 
 	if (ns->last->next != NULL) {
 		ns_cont* newlast = ns->last->next;
@@ -121,7 +121,7 @@ void ns_pop(ns_t* ns)
  */
 void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_dec\n");
 
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
 
@@ -136,7 +136,7 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 
 void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_cont_dec\n");
 
 	SIZE_ASSERT( ns->size > address );
 
@@ -155,8 +155,8 @@ void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
  */
 void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
 {
-	N_ASSERT(ns);
-	N_ASSERT(var);
+	N_ASSERT(ns, "ns_set\n");
+	N_ASSERT(var, "ns_set\n");
 
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
 
@@ -170,8 +170,8 @@ void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
  */
 void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
 {
-	N_ASSERT(ns);
-	N_ASSERT(var);
+	N_ASSERT(ns, "ns_cont_set\n");
+	N_ASSERT(var, "ns_cont_set\n");
 	SIZE_ASSERT( ns->size > address );
 
 	var_set(ns->names[ address ], var->data, var->type);
@@ -189,7 +189,7 @@ void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
  */
 var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_get\n");
 
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
 
@@ -202,7 +202,7 @@ var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
  */
 var_cont* ns_cont_get(ns_cont* ns, ns_addr address)
 {
-	N_ASSERT(ns);
+	N_ASSERT(ns, "ns_cont_get\n");
 	SIZE_ASSERT( ns->size > address );
 
 	return ns->names[ address ];

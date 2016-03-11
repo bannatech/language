@@ -62,14 +62,16 @@ void _ins_def_ISIN     (rt_t*, bc_cont*);
 void _ins_def_ICOS     (rt_t*, bc_cont*);
 void _ins_def_ITAN     (rt_t*, bc_cont*);
 void _ins_def_MOD      (rt_t*, bc_cont*);
-void _ins_def_OR       (rt_t*, bc_cont*);
-void _ins_def_XOR      (rt_t*, bc_cont*);
-void _ins_def_NAND     (rt_t*, bc_cont*);
+void _ins_def_BOR      (rt_t*, bc_cont*);
+void _ins_def_BXOR     (rt_t*, bc_cont*);
+void _ins_def_BNAND    (rt_t*, bc_cont*);
 
 void _ins_def_GTHAN    (rt_t*, bc_cont*);
 void _ins_def_LTHAN    (rt_t*, bc_cont*);
 void _ins_def_EQ       (rt_t*, bc_cont*);
 void _ins_def_NOT      (rt_t*, bc_cont*);
+void _ins_def_OR       (rt_t*, bc_cont*);
+void _ins_def_AND      (rt_t*, bc_cont*);
 
 void _ins_def_STARTL   (rt_t*, bc_cont*);
 void _ins_def_CLOOP    (rt_t*, bc_cont*);

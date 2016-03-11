@@ -26,4 +26,16 @@ var_cont* var_div_float(var_cont*, var_cont*);
 var_cont* var_div_int(var_cont*, var_cont*);
 var_cont* var_div(var_cont*, var_cont*);
 
+var_cont* var_gthan_float(var_cont*, var_cont*);
+var_cont* var_gthan_int(var_cont*, var_cont*);
+var_cont* var_gthan(var_cont*, var_cont*);
+
+var_cont* var_lthan_float(var_cont*, var_cont*);
+var_cont* var_lthan_int(var_cont*, var_cont*);
+var_cont* var_lthan(var_cont*, var_cont*);
+
+var_cont* var_eq_float(var_cont*, var_cont*);
+var_cont* var_eq_int(var_cont*, var_cont*);
+var_cont* var_eq(var_cont*, var_cont*);
+
 #endif //VAR_OPS_H

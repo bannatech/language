@@ -17,7 +17,7 @@
  */
 rt_t* proc_init(char* fname)
 {
-	N_ASSERT(fname);
+	N_ASSERT(fname, "proc_init\n");
 	rt_t* ctx = rt_ctx_new(fname, stk_new());
 
 	return ctx;
@@ -28,13 +28,13 @@ rt_t* proc_init(char* fname)
  */
 void proc_run(rt_t* ctx)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_run\n");
 
 	int n;
 	
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
-		//printf("%i - %i: %x\n", n, ctx->pc->stk->address, ctx->pc->line->op);
+//		printf("%i - %i: %x\n", n, ctx->pc->stk->address, ctx->pc->line->op);
 
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 
@@ -47,7 +47,7 @@ void proc_run(rt_t* ctx)
  */
 void proc_clean(rt_t* ctx)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_clean\n");
 	rt_ctx_del(ctx);
 }
 
@@ -59,7 +59,7 @@ void proc_clean(rt_t* ctx)
  */
 var_cont* proc_callfun(rt_t* ctx, var_cont* func)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_callfun\n");
 	return 0;
 }
 
@@ -73,7 +73,7 @@ var_cont* proc_callfun(rt_t* ctx, var_cont* func)
  */
 void proc_decvar(rt_t* ctx, b_type type, int scope, ns_addr name)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_decvar\n");
 	ns_dec(ctx->vars, type, scope, name);
 }
 
@@ -87,7 +87,7 @@ void proc_decvar(rt_t* ctx, b_type type, int scope, ns_addr name)
  */
 void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_setvar\n");
 	ns_set(ctx->vars, scope, name, var);
 }
 
@@ -98,9 +98,9 @@ void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
  */
 var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "proc_getvar\n");
 	var_cont* rv;
-	
+
 	rv = ns_get(ctx->vars, scope, name);
 
 	return rv;

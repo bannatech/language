@@ -95,7 +95,7 @@ var_cont* var_new(b_type type)
 
 void var_del(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_del\n");
 
 	if (var->data != NULL)
 		var_data_free(var->data, var->type);
@@ -105,7 +105,7 @@ void var_del(var_cont* var)
 
 void var_data_free(void* data, b_type type)
 {
-	N_ASSERT(data);
+	N_ASSERT(data, "var_data_free\n");
 
 	if (type == FUNC)
 	{
@@ -161,7 +161,7 @@ void var_set(var_cont* var, void* data, b_type type)
 
 b_type var_data_get_TYPE(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_TYPE\n");
 	ASSERT( var->type == TYPE, "TypeError" );
 
 	var_data_type* t = var->data;
@@ -171,10 +171,10 @@ b_type var_data_get_TYPE(var_cont* var)
 
 b_type* var_data_get_PLIST(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_PLIST\n");
 	ASSERT( var->type == PLIST, "TypeError" );
 
-	N_ASSERT(var->data);
+	N_ASSERT(var->data, "var_data_get_PLIST\n");
 
 	var_data_plist* t = var->data;
 
@@ -183,7 +183,7 @@ b_type* var_data_get_PLIST(var_cont* var)
 
 var_data_func* var_data_get_FUNC(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_FUNC\n");
 	ASSERT( var->type == FUNC, "TypeError" );
 
 	var_data_func* t = var->data;
@@ -193,10 +193,10 @@ var_data_func* var_data_get_FUNC(var_cont* var)
 
 int var_data_get_G_INT(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_G_INT\n");
 	ASSERT( var->type == G_INT, "TypeError" );
 
-	N_ASSERT(var->data);
+	N_ASSERT(var->data, "var_data_get_G_INT\n");
 
 	var_data_int* t = var->data;
 
@@ -205,10 +205,10 @@ int var_data_get_G_INT(var_cont* var)
 
 double var_data_get_G_FLOAT(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_G_FLOAT\n");
 	ASSERT( var->type == G_FLOAT, "TypeError" );
 
-	N_ASSERT(var->data);
+	N_ASSERT(var->data, "var_data_get_G_FLOAT\n");
 
 	var_data_float* t = var->data;
 
@@ -217,10 +217,10 @@ double var_data_get_G_FLOAT(var_cont* var)
 
 char var_data_get_G_CHAR(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_G_CHAR\n");
 	ASSERT( var->type == G_CHAR, "TypeError" );
 
-	N_ASSERT(var->data);
+	N_ASSERT(var->data, "var_data_get_G_CHAR\n");
 
 	var_data_char* t = var->data;
 
@@ -229,10 +229,10 @@ char var_data_get_G_CHAR(var_cont* var)
 
 char* var_data_get_G_STR(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_get_G_STR\n");
 	ASSERT( var->type == G_STR, "TypeError" );
 
-	N_ASSERT(var->data);
+	N_ASSERT(var->data, "var_data_get_G_STR\n");
 
 	var_data_str* t = var->data;
 
@@ -280,7 +280,7 @@ void* var_data_cpy_G_STR(var_data_str* data)
  */
 var_cont* var_data_cpy(var_cont* var)
 {
-	N_ASSERT(var);
+	N_ASSERT(var, "var_data_cpy\n");
 
 	var_cont* rv = var_new(var->type);
 
@@ -313,15 +313,14 @@ var_cont* var_data_cpy(var_cont* var)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_int(int size, byte_t* bytes)
+var_cont* raw_to_int(int size, int start, byte_t* bytes)
 {
 	var_cont* rv = var_new(G_INT);
 
 	int i,
 	    data;
-
 	data = 0;
-	for ( i = 0; i < size; i++)
+	for ( i = start; i < size; i++)
 	{
 		data = (data << 8 | bytes[i]);
 	}
@@ -366,16 +365,24 @@ var_cont* raw_to_plist(int n, byte_t* bytes)
 	return rv;
 }
 
-var_data_str* raw_to_str(int n, byte_t* bytes)
+/* Converts raw (ascii) string into normal string type
+ * int     - sizeof(bytes)
+ * int     - offset
+ * byte_t* - array of bytes
+ */
+var_cont* raw_to_str(int n, int offset, byte_t* bytes)
 {
+	var_cont* rv = var_new(G_STR);
 	var_data_str* data = var_data_alloc_G_STR(n);
 	int i;
-	for (i = 0; n > i; i++)
+	for (i = offset; n > i; i++)
 	{
 		data->v[i] = (char)bytes[i];
 	}
 
-	return data;
+	var_set(rv, data, G_STR);
+
+	return rv;
 }
 
 /* Raw variable to var_cont
@@ -385,27 +392,26 @@ var_data_str* raw_to_str(int n, byte_t* bytes)
  */
 var_cont* raw_to_var(int n, byte_t* bytes)
 {
-	N_ASSERT(bytes);
+	N_ASSERT(bytes, "raw_to_var\n");
 
 	b_type type = (b_type)bytes[0];
 
-	var_cont* rv = var_new(type);
-
-	byte_t* data = ++bytes;
+	var_cont* rv;
 
 	if (type == G_INT)
 	{
-		rv->data = raw_to_int(n - 1, data);
+		rv = raw_to_int(n, 1, bytes);
 	} else
 	if (type == G_STR)
 	{
-		rv->data = raw_to_str(n - 1, data);
+		
+		rv= raw_to_str(n, 1, bytes);
 	} else
 	{
 		printf("Type {%x} is not a seralizeable type\n", type);
 	}
 
-	N_ASSERT(rv->data);
+	N_ASSERT(rv, "raw_to_var");
 
 	return rv;
 }

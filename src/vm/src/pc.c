@@ -13,7 +13,7 @@
  */
 pc_t* pc_new(char* fname)
 {
-	N_ASSERT(fname);
+	N_ASSERT(fname, "pc_new\n");
 
 	pc_t* pc = (pc_t*)malloc(sizeof(pc_t));
 	M_ASSERT(pc);
@@ -45,9 +45,9 @@ pc_stk* pc_stk_new(ns_addr address)
  */
 void pc_del(pc_t* pc)
 {
-	N_ASSERT(pc);
-	N_ASSERT(pc->stk);
-	N_ASSERT(pc->root);
+	N_ASSERT(pc, "pc_del\n");
+	N_ASSERT(pc->stk, "pc_del\n");
+	N_ASSERT(pc->root, "pc_del\n");
 
 	bc_cont_del(pc->root);
 
@@ -58,7 +58,7 @@ void pc_del(pc_t* pc)
 
 void pc_stk_del(pc_stk* stk)
 {
-	N_ASSERT(stk);
+	N_ASSERT(stk, "pc_stk_del\n");
 
 	if (stk->next != NULL)
 	{
@@ -71,7 +71,7 @@ void pc_stk_del(pc_stk* stk)
  */
 void pc_update(pc_t* pc)
 {
-	N_ASSERT(pc);
+	N_ASSERT(pc, "pc_update\n");
 	pc->line = bc_scan(pc->line, (pc->stk->address - pc->line->real_addr) );
 }
 
@@ -79,7 +79,7 @@ void pc_update(pc_t* pc)
  */
 void pc_inc(pc_t* pc, pc_addr addr)
 {
-	N_ASSERT(pc);
+	N_ASSERT(pc, "pc_inc\n");
 
 	pc->stk->address = pc->stk->address + addr;
 }
@@ -88,7 +88,7 @@ void pc_inc(pc_t* pc, pc_addr addr)
  */
 void pc_branch(pc_t* pc, pc_addr address)
 {
-	N_ASSERT(pc);
+	N_ASSERT(pc, "pc_branch\n");
 
 	pc_stk* new = pc_stk_new(address);
 
@@ -101,7 +101,7 @@ void pc_branch(pc_t* pc, pc_addr address)
  */
 void pc_return(pc_t* pc)
 {
-	N_ASSERT(pc);
+	N_ASSERT(pc, "pc_return\n");
 
 	pc_stk* tmp = pc->stk;
 	pc->stk = pc->stk->next;

@@ -50,14 +50,16 @@ void init_ins_def( void )
 	INS_DEF[0x4A] = _ins_def_ICOS;
 	INS_DEF[0x4B] = _ins_def_ITAN;
 	INS_DEF[0x4C] = _ins_def_MOD;
-	INS_DEF[0x4D] = _ins_def_OR;
-	INS_DEF[0x4E] = _ins_def_XOR;
-	INS_DEF[0x4F] = _ins_def_NAND;
+	INS_DEF[0x4D] = _ins_def_BOR;
+	INS_DEF[0x4E] = _ins_def_BXOR;
+	INS_DEF[0x4F] = _ins_def_BNAND;
 
 	INS_DEF[0x50] = _ins_def_GTHAN;
 	INS_DEF[0x51] = _ins_def_LTHAN;
 	INS_DEF[0x52] = _ins_def_EQ;
 	INS_DEF[0x53] = _ins_def_NOT;
+	INS_DEF[0x54] = _ins_def_OR;
+	INS_DEF[0x55] = _ins_def_AND;
 
 	INS_DEF[0x60] = _ins_def_STARTL;
 	INS_DEF[0x61] = _ins_def_CLOOP;
@@ -98,12 +100,22 @@ void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
 {
-	var_cont* var = stk_at(ctx->stack, 0);
+	var_cont* var = stk_pop(&ctx->stack);
 
 	if (var->type == G_STR)
 	{
 		char* str = var_data_get_G_STR(var);
 		printf("%s\n", str);
+	} else
+	if (var->type == G_INT)
+	{
+		int val = var_data_get_G_INT(var);
+		printf("%i\n", val);
+	} else
+	if (var->type == G_FLOAT)
+	{
+		double val = var_data_get_G_FLOAT(var);
+		printf("%f\n", val);
 	}
 
 	pc_inc(ctx->pc, 1);
@@ -304,25 +316,39 @@ void _ins_def_MOD      (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
-void _ins_def_OR       (rt_t* ctx, bc_cont* line)
+void _ins_def_BOR      (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
-void _ins_def_XOR      (rt_t* ctx, bc_cont* line)
+void _ins_def_BXOR     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
-void _ins_def_NAND     (rt_t* ctx, bc_cont* line)
+void _ins_def_BNAND    (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
 
 void _ins_def_GTHAN    (rt_t* ctx, bc_cont* line)
 {
+	var_cont* A = stk_pop(&ctx->stack);
+	var_cont* B = stk_pop(&ctx->stack);
+
+	var_cont* C = var_gthan(A, B);
+
+	stk_push(&ctx->stack, C);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_LTHAN    (rt_t* ctx, bc_cont* line)
 {
+	var_cont* A = stk_pop(&ctx->stack);
+	var_cont* B = stk_pop(&ctx->stack);
+
+	var_cont* C = var_lthan(A, B);
+
+	stk_push(&ctx->stack, C);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_EQ       (rt_t* ctx, bc_cont* line)
@@ -330,10 +356,21 @@ void _ins_def_EQ       (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(&ctx->stack);
 	var_cont* B = stk_pop(&ctx->stack);
 
+	var_cont* C = var_eq(A, B);
+
+	stk_push(&ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_NOT      (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_OR       (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_AND      (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
@@ -349,7 +386,7 @@ void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 
 	int value = var_data_get_G_INT(var);
 
-	if (value <= 0)
+	if (value < 1)
 	{
 		pc_return(ctx->pc);
 		while (pc_safe(ctx->pc))
@@ -362,11 +399,13 @@ void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 				break;
 			}
 		}
+	} else
+	{
+		pc_inc(ctx->pc, 1);
 	}
 }
 void _ins_def_BREAK    (rt_t* ctx, bc_cont* line)
 {
-	
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ENDL     (rt_t* ctx, bc_cont* line)
@@ -388,7 +427,7 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 
 	int value = var_data_get_G_INT(var);
 
-	if (value <= 0)
+	if (value < 1)
 	{
 		while (pc_safe(ctx->pc))
 		{

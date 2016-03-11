@@ -119,9 +119,10 @@ var_cont* var_data_cpy(var_cont*);
 
 /* Lovely little function to take bytes and turn it into an integer.
  *  int     - sizeof(bytes)
+ *  int     - offset
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_int(int, byte_t*);
+var_cont* raw_to_int(int, int, byte_t*);
 
 /* Byte to b_type.
  *  byte_t - value maps to enum b_type
@@ -134,6 +135,14 @@ var_cont* byte_to_type(byte_t);
  *  byte_t* - array of bytes
  */
 var_cont* raw_to_plist(int, byte_t*);
+
+/* Converts raw (ascii) string into normal string type
+ * int     - sizeof(bytes)
+ * int     - offset
+ * byte_t* - array of bytes
+ */
+var_cont* raw_to_str(int, int, byte_t*);
+
 /* Raw variable to var_cont
  *
  *  int     - sizeof(bytes)

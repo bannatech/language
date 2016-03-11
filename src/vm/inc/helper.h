@@ -20,16 +20,18 @@
 		exit(1);                  \
 	}
 
-#define M_ASSERT(x)                                    \
+#define M_ASSERT(x)                                   \
 	if (x == NULL)                                     \
 	{                                                  \
 		fprintf(stderr, "Could not allocate memory\n");\
+		exit(1);                                       \
 	}
 
-#define N_ASSERT(x)                         \
+#define N_ASSERT(x, id)                     \
 	if (x == NULL)                          \
 	{                                       \
 		fprintf(stderr, "Null Exception\n");\
+		fprintf(stderr, id);                \
 		exit(1);                            \
 	}                                       \
 

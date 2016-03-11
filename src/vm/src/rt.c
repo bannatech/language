@@ -16,8 +16,8 @@
  */
 rt_t* rt_ctx_new(char* fname, stk_t* args)
 {
-	N_ASSERT(fname);
-	N_ASSERT(args);
+	N_ASSERT(fname, "rt_ctx_new\n");
+	N_ASSERT(args, "rt_ctx_new\n");
 
 	rt_t* ctx = (rt_t*)malloc(sizeof(rt_t));
 	M_ASSERT(ctx);
@@ -34,18 +34,18 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
  */
 void rt_ctx_del(rt_t* ctx)
 {
-	N_ASSERT(ctx);
+	N_ASSERT(ctx, "rt_ctx_del\n");
 
-	N_ASSERT(ctx->stack);
+	N_ASSERT(ctx->stack, "rt_ctx_del\n");
 	stk_del(ctx->stack);
 
-	N_ASSERT(ctx->argstk);
+	N_ASSERT(ctx->argstk, "rt_ctx_del\n");
 	stk_del(ctx->argstk);
 
-	N_ASSERT(ctx->vars);
+	N_ASSERT(ctx->vars, "rt_ctx_del\n");
 	ns_del(ctx->vars);
 
-	N_ASSERT(ctx->pc);
+	N_ASSERT(ctx->pc, "rt_ctx_del\n");
 	pc_del(ctx->pc);
 }
 

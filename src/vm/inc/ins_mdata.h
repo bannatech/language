@@ -36,7 +36,7 @@
 /* DEC       */ INS_MDATA[0x20] = encode(3, A_BYTE, A_BYTE, A_NAME); \
 /* LOV       */ INS_MDATA[0x21] = encode(2, A_BYTE, A_NAME, A_BYTE); \
 /* STV       */ INS_MDATA[0x22] = encode(2, A_BYTE, A_NAME, A_BYTE); \
-/* LOC       */ INS_MDATA[0x23] = encode(3, A_BYTE, A_NAME, A_DYNC); \
+/* CTV       */ INS_MDATA[0x23] = encode(3, A_BYTE, A_NAME, A_DYNC); \
 /* CTS       */ INS_MDATA[0x24] = encode(1, A_DYNC, A_BYTE, A_BYTE); \
                                                                      \
 /* TYPEOF    */ INS_MDATA[0x30] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
@@ -55,14 +55,16 @@
 /* ICOS      */ INS_MDATA[0x4A] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* ITAN      */ INS_MDATA[0x4B] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* MOD       */ INS_MDATA[0x4C] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* OR        */ INS_MDATA[0x4D] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* XOR       */ INS_MDATA[0x4E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* NAND      */ INS_MDATA[0x4F] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* BOR       */ INS_MDATA[0x4D] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* BXOR      */ INS_MDATA[0x4E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* BNAND     */ INS_MDATA[0x4F] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* GTHAN     */ INS_MDATA[0x50] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* LTHAN     */ INS_MDATA[0x51] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* EQ        */ INS_MDATA[0x52] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* NOT       */ INS_MDATA[0x53] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* OR        */ INS_MDATA[0x54] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* AND       */ INS_MDATA[0x55] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* STARTL    */ INS_MDATA[0x60] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* CLOOP     */ INS_MDATA[0x61] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
@@ -111,7 +113,7 @@
 /* DEC       */ INS_ADATA[0x20] = encode(3, BTOI, BTOI, BTOI); \
 /* LOV       */ INS_ADATA[0x21] = encode(2, BTOI, BTOI, BTOI); \
 /* STV       */ INS_ADATA[0x22] = encode(2, BTOI, BTOI, BTOI); \
-/* CTV       */ INS_ADATA[0x23] = encode(3, BTOI, BTOI, BTOI); \
+/* CTV       */ INS_ADATA[0x23] = encode(3, BTOI, BTOI, DTOV); \
 /* CTS       */ INS_ADATA[0x24] = encode(1, DTOV, BTOI, BTOI); \
                                                                \
 /* TYPEOF    */ INS_ADATA[0x30] = encode(0, BTOI, BTOI, BTOI); \
@@ -138,6 +140,8 @@
 /* LTHAN     */ INS_ADATA[0x51] = encode(0, BTOI, BTOI, BTOI); \
 /* EQ        */ INS_ADATA[0x52] = encode(0, BTOI, BTOI, BTOI); \
 /* NOT       */ INS_ADATA[0x53] = encode(0, BTOI, BTOI, BTOI); \
+/* OR        */ INS_ADATA[0x54] = encode(0, BTOI, BTOI, BTOI); \
+/* AND       */ INS_ADATA[0x55] = encode(0, BTOI, BTOI, BTOI); \
                                                                \
 /* STARTL    */ INS_ADATA[0x60] = encode(0, BTOI, BTOI, BTOI); \
 /* CLOOP     */ INS_ADATA[0x61] = encode(0, BTOI, BTOI, BTOI); \
