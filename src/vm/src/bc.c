@@ -27,31 +27,11 @@ bc_cont* bc_cont_new(void)
 	new->sarg[1] = 0;
 	new->sarg[2] = 0;
 
-	new->next = NULL;
-	new->prev = NULL;
-
 	return new;
-}
-
-/* Pushes new bc_cont to the chain.
- * bc_cont* - bytecode container
- *
- * -> bc_cont* - push new bytecode container on chain
- */
-void bc_cont_push(bc_cont** head)
-{
-	(*head)->next = bc_cont_new();
-	(*head)->next->prev = *head;
-	*head = (*head)->next;
 }
 
 void bc_cont_del(bc_cont* root)
 {
-	if (root->next != NULL)
-	{
-		bc_cont_del(root->next);
-	}
-
 	if (root != NULL)
 	{
 		if (root->args[0] != NULL) free(root->args[0]);
@@ -160,71 +140,36 @@ void process_args(bc_cont* ins)
 		}
 	}
 }
-
-/* Scan to +/- int in bytecode chain
- *  bc_cont* - bytecode container [0]
- *  int      - +/- up/down        [1]
- *
- * -> bc_cont* - Bytecode @param[0]'s location +/- @param[1]
+/* Gets bytecode size
+ *  char* - filename
  */
-bc_cont* bc_scan(bc_cont* ptr, int scanto)
+size_t bc_getsize(char* fname)
 {
-	while (scanto != 0)
-	{
-		if (scanto > 0 && ptr->next != NULL)
-		{
-			ptr = ptr->next;
-			scanto--;
-		} else
-		if (scanto < 0 && ptr->prev != NULL)
-		{
-			ptr = ptr->prev;
-			scanto++;
-		} else
-		if (ptr->next == NULL || ptr->prev == NULL)
-		{
-			scanto = 0;
-		}
-	}
-
-	return ptr;
-}
-
-/* Initiates the first pass to take a raw binary file and translate it into a
- * basic datastructure
- */
-bc_cont* bc_read(char* fname)
-{
-	FILE* f;
+	FILE*  f;
+	size_t rv = 0;
+	size_t fsize;
 	byte_t byte;
-	long fsize;
-	
+	bc_cont* ptr;
+
 	f = fopen(fname, "rb");
 	fsize = read_size(f);
-	
-	bc_cont *root = bc_cont_new();
-	bc_cont *ptr  = root;
-	bc_addr addr  = 0;
 
-	/* Loop through file byte-by-byte */
-	while (ftell(f)<fsize)
+	while (ftell(f) < fsize)
 	{
+		ptr = bc_cont_new();
+
 		byte = read_byte(f);
 
 		get_opcode(byte, ptr);
 
 		get_args(f, ptr);
 
-		process_args(ptr);
+		bc_cont_del(ptr);
 
-		ptr->real_addr = addr;
-
-		bc_cont_push(&ptr);
-
-		addr++;
+		rv++;
 	}
 
 	fclose(f);
 
-	return root;
+	return rv;
 }

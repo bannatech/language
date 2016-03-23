@@ -13,6 +13,12 @@ typedef unsigned int bc_addr;
 typedef unsigned int ns_addr;
 
 typedef enum {
+	NAMESPACE,
+	CONSTANT,
+	TEMPORARY
+} var_state;
+
+typedef enum {
 	VOID,   // 0
 	ADDR,   // 1
 	TYPE,   // 2
@@ -30,6 +36,7 @@ typedef enum {
 } b_type;
 
 typedef struct var_cont {
+	var_state state;
 	b_type type;
 	void*  data;
 } var_cont;
@@ -47,6 +54,7 @@ typedef struct var_data_func {
 	bc_addr end;
 	b_type  type;
 	ns_addr size;
+	size_t  paramlen;
 	b_type* param;
 } var_data_func;
 
@@ -76,7 +84,7 @@ typedef struct var_data_array {
 
 /* Initialze variable with type
  */
-var_cont* var_new(b_type);
+var_cont* var_new(var_state, b_type);
 
 void* var_data_alloc_TYPE(b_type);
 void* var_data_alloc_PLIST(size_t);

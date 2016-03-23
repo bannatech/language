@@ -13,39 +13,27 @@ are deemed inferior.
     #TO BE DETERMINED#
 
  TYPES
-    Providing basic types, such as:
- * integer
- * float
- * character
- * boolean
 
-Types are structured in memory with an integer representing types, along with a
-null pointer to a space in memory containing the data. Building on top of basic
-types, there will be more complex data structures built into the virtual machine
-such as static Arrays, dynamic Arrays, and a hashtable implementation. Functions
-and Classes have their own type, which acts as a pointer to an address within
-the program space. For example, variables would be accessed in the runtime, in
-code would be like so:
+ 0 VOID    - Null, no data
+ 1 ADDR    - Address type (bytecode)
+ 2 TYPE    - A type type
+ 3 PLIST   - Parameter list
+ 4 FUNC    - Function
+ 5 OBJECT  - Object/Class
+ 6 G_INT   - Generic integer
+ 7 G_FLOAT - Generic double
+ 8 G_CHAR  - Generic character
+ 9 G_STR   - Generic string
+10 S_ARRAY - Static array
+11 D_ARRAY - Dynamic array
+12 H_TABLE - Hashtable
+13 G_FIFO  - Stack
 
-    var_cont* get_variable(ns_cont* namespace, int x)
-    {
-    	var_cont* var = namespace->names[x];
-    	return var;
-    }
-
-To set variable:
-
-    void set_variable(ns_cont* namespace, var_cont* var, int x)
-    {
-    	var_cont* c_var = namespace->names[x];
-
-    	del_var(c_var);
-
-    	var_cont* c_var = var;
-    }
-
-Both of these functions require some safeguards against hard crashes, where the
-program will segfault if given incorrect values.
+Types are a structure in memory with an enumeration representing types, along
+with a null pointer to a space in memory containing the data structure that
+corresponds with the enumerated data type. Functions and Classes are both data-
+types that behave like normal variables, although their data structure contains
+references to addresses/subsets of namespaces.
 
 ________________________________________________________________________________
 RUNTIME
@@ -73,8 +61,9 @@ variables declared in the global scope.
 
  +---------+
  |Function | -> Functions are defined with a reference, called with the same
- +---------+    reference. The top elements on the stack are used as arguements
-                when calling a function, which must align with the parameter
+ +---------+    reference. A special stack called the "arguement stack", built
+                pre-call the are used as arguements.
+                When calling a function, the order must align with the parameter
                 types.
 
  +---------------+

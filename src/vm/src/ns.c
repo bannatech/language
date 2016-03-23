@@ -140,7 +140,7 @@ void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
 
 	SIZE_ASSERT( ns->size > address );
 
-	ns->names[ address ] = var_new(type);
+	ns->names[ address ] = var_new(NAMESPACE, type);
 }
 
 /* Sets variable to value, at root or last namespace

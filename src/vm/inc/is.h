@@ -9,14 +9,14 @@
 #define IS_H
 
 #include "ins_mdata.h"
-#include "bc.h"
 #include "fh.h"
+#include "bc.h"
 
 // This array is populated by inc/ins_mdata.h
-byte_t INS_MDATA[0xFF];
+byte_t INS_MDATA[0x100];
 
 // This array is populated by inc/ins_adata.h
-byte_t INS_ADATA[0xFF];
+byte_t INS_ADATA[0x100];
 
 /* Takes an opcode, fills metadata about that opcode (given that it exists) in
  * the `bc_cont` structure

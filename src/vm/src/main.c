@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
 	ASSERT(argc > 1, "C'mon, man! Gimme some args\n");
 
-	init_mdata();                       // Initalize the instruction definitions
+	init_mdata();                       // Initalize the instruction defs
 	init_adata();
 	init_ins_def();
 
@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
 	proc_run(runtime);                  // Execute runtime
 
-	proc_clean(runtime);                // Once `proc_run` returns, try to clean
+	proc_clean(runtime);                // Once `proc_run` returns, clean
 	                                    // what sort of mess it made.
 
 	return 0;

@@ -81,12 +81,14 @@ void* var_data_alloc_G_STR(size_t size)
 	return rv;
 }
 
-var_cont* var_new(b_type type)
+var_cont* var_new(var_state state, b_type type)
 {
 	var_cont* new = (var_cont*)malloc(sizeof(var_cont));
 	M_ASSERT(new);
 
 	new->type = type;
+
+	new->state = state;
 
 	new->data = NULL;
 
@@ -282,7 +284,7 @@ var_cont* var_data_cpy(var_cont* var)
 {
 	N_ASSERT(var, "var_data_cpy\n");
 
-	var_cont* rv = var_new(var->type);
+	var_cont* rv = var_new(var->state, var->type);
 
 	if (var->type == G_INT)
 	{
@@ -315,7 +317,7 @@ var_cont* var_data_cpy(var_cont* var)
  */
 var_cont* raw_to_int(int size, int start, byte_t* bytes)
 {
-	var_cont* rv = var_new(G_INT);
+	var_cont* rv = var_new(CONSTANT, G_INT);
 
 	int i,
 	    data;
@@ -335,7 +337,7 @@ var_cont* raw_to_int(int size, int start, byte_t* bytes)
  */
 var_cont* byte_to_type(byte_t byte)
 {
-	var_cont* rv = var_new(TYPE);
+	var_cont* rv = var_new(CONSTANT, TYPE);
 
 	var_set(rv, var_data_alloc_TYPE((b_type)byte), TYPE);
 
@@ -349,7 +351,7 @@ var_cont* byte_to_type(byte_t byte)
  */
 var_cont* raw_to_plist(int n, byte_t* bytes)
 {
-	var_cont* rv = var_new(PLIST);
+	var_cont* rv = var_new(CONSTANT, PLIST);
 
 	var_set(rv, var_data_alloc_PLIST(n), PLIST);
 
@@ -372,7 +374,7 @@ var_cont* raw_to_plist(int n, byte_t* bytes)
  */
 var_cont* raw_to_str(int n, int offset, byte_t* bytes)
 {
-	var_cont* rv = var_new(G_STR);
+	var_cont* rv = var_new(CONSTANT, G_STR);
 	var_data_str* data = var_data_alloc_G_STR(n);
 	int i;
 	for (i = offset; n > i; i++)

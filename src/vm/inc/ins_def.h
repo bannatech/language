@@ -17,7 +17,7 @@
 #include "helper.h"
 
 // This array is populated by init_ins_def( void );
-void (*INS_DEF[0xFF])(rt_t*, bc_cont*);
+void (*INS_DEF[0x100])(rt_t*, bc_cont*);
 
 /* Initializes INS_DEF with pointers to each instructions function
  * Populates INS_DEF

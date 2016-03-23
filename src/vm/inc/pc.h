@@ -4,45 +4,53 @@
 #ifndef PC_H
 #define PC_H
 
+#define PC_RETURN_DEPTH 0xFF
+
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "bc.h"
 #include "is.h"
 #include "fh.h"
+#include "bc.h"
 #include "helper.h"
 
 typedef unsigned short int pc_addr;
 
-typedef struct pc_stk {
-	pc_addr address;
-	struct pc_stk* next;
-} pc_stk;
+typedef struct pc_addr_stk {
+	size_t   size;
+	int      ptr;
+	pc_addr* addresses;
+} pc_addr_stk;
 
 /* pc_t structure
- *
- * bc_cont* root - First instruction
- * bc_cont* line - Current instruction
- * pc_stk*  stk  - Address stack
  */
 typedef struct pc_t {
-	bc_cont* root;
-	bc_cont* line;
-	pc_stk*  stk;
+	size_t       size;
+	pc_addr      address;
+	bc_cont*     line;
+	pc_addr_stk* stk;
+	bc_cont**    heap;
 } pc_t;
 
 /* Initalizes program counter, returns pc_t* instance
  * char* - filename of file containing bytecode
  */
 pc_t* pc_new(char*);
-pc_stk* pc_stk_new(ns_addr);
+
+void pc_read(char*, pc_t*);
+
+pc_addr_stk* pc_addr_stk_new(ns_addr);
 
 /* Frees memory assosiated with pc_t* instance
  */
 void pc_del(pc_t*);
-void pc_stk_del(pc_stk*);
+void pc_addr_stk_del(pc_addr_stk*);
 
-/* Updates program counter on changes
+/* Pushes instruction to heap
+ */
+void pc_push(pc_t*, bc_cont*);
+
+/* Updates program counter on changes in address
  */
 void pc_update(pc_t*);
 

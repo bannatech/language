@@ -100,7 +100,7 @@ void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
 {
-	var_cont* var = stk_pop(&ctx->stack);
+	var_cont* var = stk_pop(ctx->stack);
 
 	if (var->type == G_STR)
 	{
@@ -128,7 +128,7 @@ void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_at(ctx->stack, 0);
 
-	stk_push(&ctx->argstk, var);
+	stk_push(ctx->argstk, var);
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)
@@ -144,14 +144,14 @@ void _ins_def_POP      (rt_t* ctx, bc_cont* line)
 	while (n > i)
 	{
 		i++;
-		stk_pop(&ctx->stack);
+		stk_pop(ctx->stack);
 	}
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ROT      (rt_t* ctx, bc_cont* line)
 {
-	stk_rot_top(&ctx->stack);
+	stk_rot_top(ctx->stack);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -159,12 +159,12 @@ void _ins_def_DUP      (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_at(ctx->stack, 0);
 	var_cont* dup = var_data_cpy(var);
-	stk_push(&ctx->stack, dup);
+	stk_push(ctx->stack, dup);
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ROT_THREE(rt_t* ctx, bc_cont* line)
 {
-	stk_rot_three(&ctx->stack);
+	stk_rot_three(ctx->stack);
 	pc_inc(ctx->pc, 1);
 }
 
@@ -187,7 +187,7 @@ void _ins_def_LOV      (rt_t* ctx, bc_cont* line)
 
 	var = proc_getvar(ctx, scope, name);
 
-	stk_push(&ctx->stack, var);
+	stk_push(ctx->stack, var);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -196,7 +196,7 @@ void _ins_def_STV      (rt_t* ctx, bc_cont* line)
 	int scope = var_data_get_G_INT(line->varg[0]);
 	int name  = var_data_get_G_INT(line->varg[1]);
 
-	var_cont* var = stk_pop(&ctx->stack);
+	var_cont* var = stk_pop(ctx->stack);
 
 	proc_setvar(ctx, scope, name, var);
 
@@ -214,20 +214,20 @@ void _ins_def_CTV      (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 {
-	stk_push(&ctx->stack, line->varg[0]);
+	stk_push(ctx->stack, line->varg[0]);
 	pc_inc(ctx->pc, 1);
 }
 
 void _ins_def_TYPEOF   (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_at(ctx->stack, 0);
-	var_cont* new = var_new(TYPE);
+	var_cont* new = var_new(TYPE, TEMPORARY);
 
 	var_data_type* data = var_data_alloc_TYPE(var->type);
 
 	var_set(new, data, TYPE);
 
-	stk_push(&ctx->stack, new);
+	stk_push(ctx->stack, new);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -238,45 +238,45 @@ void _ins_def_CAST     (rt_t* ctx, bc_cont* line)
 
 void _ins_def_ADD      (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* var = var_add(A, B);
 
-	stk_push(&ctx->stack, var);
+	stk_push(ctx->stack, var);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_SUB      (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* var = var_sub(A, B);
 
-	stk_push(&ctx->stack, var);
+	stk_push(ctx->stack, var);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_MULT     (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* var = var_mult(A, B);
 
-	stk_push(&ctx->stack, var);
+	stk_push(ctx->stack, var);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_DIV      (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* var = var_mult(A, B);
 
-	stk_push(&ctx->stack, var);
+	stk_push(ctx->stack, var);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -331,34 +331,34 @@ void _ins_def_BNAND    (rt_t* ctx, bc_cont* line)
 
 void _ins_def_GTHAN    (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* C = var_gthan(A, B);
 
-	stk_push(&ctx->stack, C);
+	stk_push(ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_LTHAN    (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* C = var_lthan(A, B);
 
-	stk_push(&ctx->stack, C);
+	stk_push(ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_EQ       (rt_t* ctx, bc_cont* line)
 {
-	var_cont* A = stk_pop(&ctx->stack);
-	var_cont* B = stk_pop(&ctx->stack);
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* C = var_eq(A, B);
 
-	stk_push(&ctx->stack, C);
+	stk_push(ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -377,12 +377,12 @@ void _ins_def_AND      (rt_t* ctx, bc_cont* line)
 
 void _ins_def_STARTL   (rt_t* ctx, bc_cont* line)
 {
-	pc_branch(ctx->pc, ctx->pc->stk->address);
+	pc_branch(ctx->pc, ctx->pc->address);
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 {
-	var_cont* var = stk_pop(&ctx->stack);
+	var_cont* var = stk_pop(ctx->stack);
 
 	int value = var_data_get_G_INT(var);
 
@@ -423,7 +423,7 @@ void _ins_def_JUMPF    (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 {
-	var_cont* var = stk_pop(&ctx->stack);
+	var_cont* var = stk_pop(ctx->stack);
 
 	int value = var_data_get_G_INT(var);
 
@@ -451,7 +451,23 @@ void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	int name = var_data_get_G_INT(line->varg[0]);
+	var_cont* var = proc_getvar(ctx, 1, name);
+
+	var_data_func* func = var_data_get_FUNC(var);
+
+	ns_push(ctx->vars, func->size);
+
+	int i;
+	for (i = 0; i < func->paramlen; i++)
+	{
+		var_cont* arg = stk_pop(ctx->argstk);
+		ASSERT(arg->type == func->param[i], "Invalid function call\n");
+		ns_dec(ctx->vars, 0, i, arg->type);
+		ns_set(ctx->vars, 0, i, arg);
+	}
+
+	pc_branch(ctx->pc, func->loc);
 }
 
 void _ins_def_PUSH     (rt_t* ctx, bc_cont* line)
@@ -492,6 +508,7 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	int     name = var_data_get_G_INT(line->varg[0]);
 	b_type  type = var_data_get_TYPE(line->varg[1]);
 	b_type* args = var_data_get_PLIST(line->varg[2]);
+	size_t  alen = line->sarg[2];
 
 	var_data_func* data = var_data_alloc_FUNC(type);
 
@@ -511,10 +528,12 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 			nsize++;
 		}
 	}
-	
-	data->size = nsize;
-	data->type = type;
-	data->param = args;
+
+	data->end      = ctx->pc->line->real_addr;
+	data->size     = nsize;
+	data->type     = type;
+	data->paramlen = alen;
+	data->param    = args;
 
 	proc_decvar(ctx, 1, name, FUNC);
 
