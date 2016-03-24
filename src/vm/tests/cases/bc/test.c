@@ -17,20 +17,19 @@ void print_op(bc_cont* op)
 	printf("%x: ", op->op);
 	for (int i = 0; i < num_args && num_args != 0; i++)
 	{
-		if (arg_types[i] == 1)
+		if (arg_types[i] == A_BYTE)
 		{
-			printf("%x", op->args[i][0]);
+			printf("%x, ", op->args[i][0]);
 		} else
-		if (arg_types[i] == 2)
+		if (arg_types[i] == A_NAME)
 		{
-			printf("%x %x", op->args[i][1], op->args[i][0]);
+			printf("%x %x, ", op->args[i][1], op->args[i][0]);
 		} else
-		if (arg_types[i] == 3)
+		if (arg_types[i] == A_DYNC)
 		{
 			for (int x = 0; x < op->sarg[i]; x++)
 				printf("%x ", op->args[i][x]);
 		}
-		printf(", ");
 	}
 
 	printf("\n");
@@ -41,16 +40,14 @@ int main(int argc, char** argv)
 	init_mdata();
 	init_adata();
 
-	// start testing
-	bc_cont* bc = bc_read("bytecode");
-	bc_cont* ptr;
+	bc_t* bc = bc_init("bytecode");
 	
-	for (ptr = bc; ptr->next != NULL; ptr = ptr->next)
+	int i;
+	for (i = 0; i < bc->size; i++)
 	{
-		print_op(ptr);
+		print_op(bc->heap[i]);
 	}
 
-	bc_cont_del(bc);
-	// end testing
+	bc_del(bc);
 	return 0;
 }

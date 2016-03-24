@@ -19,9 +19,8 @@
  *  stack - `stk.h` stack instance[0]
  *  argstk- `stk.h` stack instance[1]
  *  vars  - `ns.h` namespace instance
- *  gvars - `ns.h` namespace container instance
  *
- *  [0] This is the stack register used at runtime to push/pop variable 
+ *  [0] This is the stack register used at runtime to push/pop variable
  *      containers.
  *  [1] Function calls implement this stack to load variables as arguements.
  */

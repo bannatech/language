@@ -25,6 +25,11 @@ typedef struct bc_cont {
 	int       sarg[3];
 } bc_cont;
 
+typedef struct bc_t {
+	bc_addr   size;
+	bc_cont** heap;
+} bc_t;
+
 #include "is.h"
 
 /* Handles allocation for new `bc_cont` instances
@@ -50,9 +55,19 @@ byte_t* get_dync_arg(FILE*, int*);
  */
 void process_args(bc_cont*);
 
-/* Gets bytecode size
+/* Reads program into bc_cont instances
+ *  FILE*    - File descriptor
+ *  bc_addr* - pointer to size variable
+ */
+bc_cont** bc_read(FILE* f, bc_addr*);
+
+/* Reads program into bc_t instance
  *  char* - filename
  */
-size_t bc_getsize(char*);
+bc_t* bc_init(char*);
+
+/* Deletes instance of bc_t*
+ */
+void bc_del(bc_t*);
 
 #endif // BC_H

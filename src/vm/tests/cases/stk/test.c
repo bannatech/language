@@ -18,28 +18,35 @@ int main(int argc, char* argv[])
 {
 	stk_t* new = stk_new();
 
-	new->data = var_new(VOID);
+	stk_push(new, var_new(TEMPORARY, VOID));
+	stk_push(new, var_new(TEMPORARY, G_INT));
+	stk_push(new, var_new(TEMPORARY, G_FLOAT));
+	stk_push(new, var_new(TEMPORARY, G_CHAR));
+	stk_push(new, var_new(TEMPORARY, G_STR));
 
-	stk_push(&new, var_new(VOID));
-	stk_push(&new, var_new(G_INT));
-	stk_push(&new, var_new(G_FLOAT));
-	stk_push(&new, var_new(G_CHAR));
-	stk_push(&new, var_new(G_STR));
-
+	printf("init: \n");
 	printstk(new);
 
-	stk_pop(&new);
+	stk_pop(new);
 
+	printf("stk_pop: \n");
 	printstk(new);
 
-	stk_rot_top(&new);
+	stk_rot_top(new);
 
+	printf("stk_rot_top: \n");
 	printstk(new);
 
-	stk_rot_top(&new);
+	stk_rot_top(new);
 
-	stk_rot_three(&new);
+	stk_rot_three(new);
 
+	printf("stk_rot_top + stk_rot_three: \n");
+	printstk(new);
+
+	stk_rot_three(new);
+
+	printf("stk_rot_three: \n");
 	printstk(new);
 
 	stk_del(new);

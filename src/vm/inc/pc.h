@@ -25,11 +25,11 @@ typedef struct pc_addr_stk {
 /* pc_t structure
  */
 typedef struct pc_t {
-	size_t       size;
+	pc_addr      limit;
 	pc_addr      address;
-	bc_cont*     line;
 	pc_addr_stk* stk;
-	bc_cont**    heap;
+	bc_cont*     line;
+	bc_t         program;
 } pc_t;
 
 /* Initalizes program counter, returns pc_t* instance

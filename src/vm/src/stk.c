@@ -109,15 +109,17 @@ void stk_scale(stk_line* stack)
 var_cont* stk_pop(stk_t* stack)
 {
 	N_ASSERT(stack, "stk_pop\n");
-	
-	ASSERT(((stack->stack->ptr - 1) > 1), "Stack Underflow\n");
+
+	ASSERT(((stack->stack->ptr - 1) > 0), "Stack Underflow\n");
+
+	var_cont* rv = stack->stack->data[stack->stack->ptr];
 
 	stack->stack->ptr = stack->stack->ptr - 1;
 
 	N_ASSERT(stack->stack->data[stack->stack->ptr],
 	         "Found NULL value in stack, running away for obvious reasons.\n");
 
-	return stack->stack->data[stack->stack->ptr];
+	return rv;
 }
 
 /* Pushes var_cont* to the stack
@@ -143,7 +145,7 @@ var_cont* stk_at(stk_t* stack, int n)
 {
 	ASSERT(((stack->stack->ptr + n) < stack->stack->size), "Out of Bounds\n");
 
-	var_cont* rv = stack->stack->data[stack->stack->ptr + n];
+	var_cont* rv = stack->stack->data[stack->stack->ptr - n];
 
 	return rv;
 }
@@ -155,6 +157,14 @@ var_cont* stk_at(stk_t* stack, int n)
 void stk_rot_top(stk_t* stack)
 {
 	N_ASSERT(stack, "stk_rot_top\n");
+
+	var_cont* a;
+	var_cont* b;
+
+	a = stk_pop(stack);
+	b = stk_pop(stack);
+	stk_push(stack, a);
+	stk_push(stack, b);
 }
 
 /* Rotates the top three elements of the stack
@@ -164,4 +174,15 @@ void stk_rot_top(stk_t* stack)
 void stk_rot_three(stk_t* stack)
 {
 	N_ASSERT(stack, "stk_rot_three\n");
+
+	var_cont* a;
+	var_cont* b;
+	var_cont* c;
+
+	a = stk_pop(stack);
+	b = stk_pop(stack);
+	c = stk_pop(stack);
+	stk_push(stack, a);
+	stk_push(stack, b);
+	stk_push(stack, c);
 }

@@ -3,10 +3,10 @@
 
 #include "bc.h"
 
-#include "is.h"
 #include "fh.h"
 #include "var.h"
 #include "helper.h"
+#include "is.h"
 
 /* Handles allocation for new `bc_cont` instances
  */
@@ -30,19 +30,19 @@ bc_cont* bc_cont_new(void)
 	return new;
 }
 
-void bc_cont_del(bc_cont* root)
+void bc_cont_del(bc_cont* ins)
 {
-	if (root != NULL)
+	if (ins != NULL)
 	{
-		if (root->args[0] != NULL) free(root->args[0]);
-		if (root->args[1] != NULL) free(root->args[1]);
-		if (root->args[2] != NULL) free(root->args[2]);
+		if (ins->args[0] != NULL) free(ins->args[0]);
+		if (ins->args[1] != NULL) free(ins->args[1]);
+		if (ins->args[2] != NULL) free(ins->args[2]);
 
-		if (root->varg[0] != NULL) var_del(root->varg[0]);
-		if (root->varg[1] != NULL) var_del(root->varg[1]);
-		if (root->varg[2] != NULL) var_del(root->varg[2]);
+		if (ins->varg[0] != NULL) var_del(ins->varg[0]);
+		if (ins->varg[1] != NULL) var_del(ins->varg[1]);
+		if (ins->varg[2] != NULL) var_del(ins->varg[2]);
 	
-		free(root);
+		free(ins);
 	}
 }
 
@@ -140,20 +140,25 @@ void process_args(bc_cont* ins)
 		}
 	}
 }
-/* Gets bytecode size
- *  char* - filename
+
+/* Reads program into bc_cont instances
+ *  FILE*    - File descriptor
+ *  bc_addr* - pointer to size variable
  */
-size_t bc_getsize(char* fname)
+bc_cont** bc_read(FILE* f, bc_addr* len)
 {
-	FILE*  f;
-	size_t rv = 0;
-	size_t fsize;
-	byte_t byte;
+	N_ASSERT(f, "bc_read\n");
+
+	long fsize = read_size(f);
+
+	bc_addr addr = 0;
 	bc_cont* ptr;
+	byte_t byte;
 
-	f = fopen(fname, "rb");
-	fsize = read_size(f);
+	bc_cont** heap = (bc_cont**)malloc(sizeof(bc_cont*)*fsize);
+	N_ASSERT(heap, "bc_read\n");
 
+	/* Loop through file byte-by-byte */
 	while (ftell(f) < fsize)
 	{
 		ptr = bc_cont_new();
@@ -164,12 +169,56 @@ size_t bc_getsize(char* fname)
 
 		get_args(f, ptr);
 
-		bc_cont_del(ptr);
+		process_args(ptr);
 
-		rv++;
+		ptr->real_addr = addr;
+
+		heap[addr] = ptr;
+
+		addr++;
 	}
+
+	*len = addr;
+	return heap;
+}
+
+/* Reads program into bc_t instance
+ *  char* - filename
+ */
+bc_t* bc_init(char* fname)
+{
+	N_ASSERT(fname, "bc_init\n");
+
+	FILE* f;
+
+	bc_t* program;
+	
+	f = fopen(fname, "rb");
+
+	program = (bc_t*)malloc(sizeof(bc_t));
+	N_ASSERT(program, "bc_read\n");
+
+	program->heap = bc_read(f, &program->size);
 
 	fclose(f);
 
-	return rv;
+	return program;
+}
+
+/* Deletes instance of bc_t*
+ */
+void bc_del(bc_t* program)
+{
+	N_ASSERT(program, "bc_del\n");
+
+	int i;
+	for (i=0; i < program->size; i++)
+	{
+		if (program->heap[i] != NULL)
+			bc_cont_del(program->heap[i]);
+	}
+
+	free(program->heap);
+
+	free(program);
 }

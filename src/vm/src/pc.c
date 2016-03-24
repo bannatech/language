@@ -20,53 +20,13 @@ pc_t* pc_new(char* fname)
 
 	pc->stk = pc_addr_stk_new(0);
 
-	pc->size = bc_getsize(fname);
-
-	pc->heap = (bc_cont**)malloc(sizeof(bc_cont*)*pc->size);
-
-	pc_read(fname, pc);
+	pc->program = bc_init(fname);
 
 	pc_update(pc);
 
+	N_ASSERT(pc->line, "Error in creating new program counter\n");
+
 	return pc;
-}
-
-/* Initiates the first pass to take a raw binary file and translate it into a
- * basic datastructure
- */
-void pc_read(char* fname, pc_t* program)
-{
-	FILE* f;
-	byte_t byte;
-	long fsize;
-	
-	f = fopen(fname, "rb");
-	fsize = read_size(f);
-
-	bc_cont* ptr;
-	bc_addr addr = 0;
-
-	/* Loop through file byte-by-byte */
-	while (ftell(f) < fsize)
-	{
-		ptr = bc_cont_new();
-
-		byte = read_byte(f);
-
-		get_opcode(byte, ptr);
-
-		get_args(f, ptr);
-
-		process_args(ptr);
-
-		ptr->real_addr = addr;
-
-		pc_push(program, ptr);
-
-		addr++;
-	}
-
-	fclose(f);
 }
 
 pc_addr_stk* pc_addr_stk_new(ns_addr address)
