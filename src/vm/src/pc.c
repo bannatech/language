@@ -20,7 +20,9 @@ pc_t* pc_new(char* fname)
 
 	pc->stk = pc_addr_stk_new(0);
 
-	pc->program = bc_init(fname);
+	pc_branch(pc, 0);
+
+	pc->bc = bc_init(fname);
 
 	pc_update(pc);
 
@@ -49,30 +51,32 @@ void pc_del(pc_t* pc)
 {
 	N_ASSERT(pc, "pc_del\n");
 	N_ASSERT(pc->stk, "pc_del\n");
-// gotta actually handle this realquick
+	N_ASSERT(pc->bc, "pc_del\n");
+
+	pc_addr_stk_del(pc->stk);
+	bc_del(pc->bc);
+
 	free(pc);
 }
 
 void pc_addr_stk_del(pc_addr_stk* stk)
 {
 	N_ASSERT(stk, "pc_addr_stk_del\n");
-// and this
-}
+	N_ASSERT(stk->addresses, "pc_addr_stk_del\n");
 
-void pc_push(pc_t* pc, bc_cont* bytecode)
-{
-	N_ASSERT(pc, "pc_push\n");
+	free(stk->addresses);
+	free(stk);
 }
 
 /* Updates currently reading line
  *
- * When called, pc_t->line will reflect pc_t->heap[pc_t->address]
+ * When called, pc_t->line will reflect pc_t->bc[pc_t->address]
  */
 void pc_update(pc_t* pc)
 {
 	N_ASSERT(pc, "pc_update\n");
-	
-	pc->line = pc->heap[pc->address];
+	ASSERT((pc->address <= pc->bc->size), "Uhoh\n");
+	pc->line = pc->bc->heap[pc->address];
 }
 
 /* Increment program counter by +-addr
@@ -90,6 +94,11 @@ void pc_branch(pc_t* pc, pc_addr address)
 {
 	N_ASSERT(pc, "pc_branch\n");
 
+	ASSERT(((pc->stk->ptr + 1) < pc->stk->size), "Address Stack Overflow\n");
+
+	pc->stk->addresses[pc->stk->ptr] = pc->address;
+	pc->stk->ptr = pc->stk->ptr + 1;
+
 	pc->address = address;
 }
 
@@ -98,6 +107,21 @@ void pc_branch(pc_t* pc, pc_addr address)
 void pc_return(pc_t* pc)
 {
 	N_ASSERT(pc, "pc_return\n");
+
+	ASSERT(((pc->stk->ptr - 1) > 0), "Address Stack Underflow\n");
+
+	pc->stk->ptr = pc->stk->ptr - 1;
+
+	pc->address = pc->stk->addresses[pc->stk->ptr];
+}
+
+/* Simply goto that address
+ */
+void pc_goto(pc_t* pc, pc_addr addr)
+{
+	N_ASSERT(pc, "pc_goto\n");
+
+	pc->address = addr;
 }
 
 /* For now, a simple function that returns true if the next instruction is not
@@ -105,6 +129,7 @@ void pc_return(pc_t* pc)
  */
 int pc_safe(pc_t* pc)
 {
-	return 0;
+	int rv = (pc->address >= pc->bc->size) ? 0 : 1;
+	return rv;
 }
 

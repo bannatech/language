@@ -1,3 +1,7 @@
-OP: ff
-OP: 20
-OP: f0
+Loading file 'bytecode'
+ADDR: 0, OP: ff
+ADDR: 1, OP: 20
+ADDR: 2, OP: f0
+ADDR: 1, OP: 20
+ADDR: 2, OP: f0
+ADDR: 2, OP: f0

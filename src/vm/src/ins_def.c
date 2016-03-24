@@ -452,21 +452,27 @@ void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 {
 	int name = var_data_get_G_INT(line->varg[0]);
+
 	var_cont* var = proc_getvar(ctx, 1, name);
 
 	var_data_func* func = var_data_get_FUNC(var);
 
 	ns_push(ctx->vars, func->size);
 
+	ns_dec(ctx->vars, func->type, 0, 0);
+
+	int offset = 1;
 	int i;
 	for (i = 0; i < func->paramlen; i++)
 	{
 		var_cont* arg = stk_pop(ctx->argstk);
 		ASSERT(arg->type == func->param[i], "Invalid function call\n");
-		ns_dec(ctx->vars, 0, i, arg->type);
-		ns_set(ctx->vars, 0, i, arg);
+		ns_dec(ctx->vars, arg->type, 0, i+offset);
+		ns_set(ctx->vars, 0, i+offset, arg);
 	}
 
+	stk_newlevel(&ctx->stack);
+	stk_newlevel(&ctx->argstk);
 	pc_branch(ctx->pc, func->loc);
 }
 
@@ -493,6 +499,15 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 
 void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 {
+	var_cont* return_value = ns_pop(ctx->vars);
+
+	stk_poplevel(&ctx->stack);
+	stk_poplevel(&ctx->argstk);
+
+	stk_push(ctx->stack, return_value);
+
+	pc_return(ctx->pc);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
@@ -509,6 +524,8 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	b_type  type = var_data_get_TYPE(line->varg[1]);
 	b_type* args = var_data_get_PLIST(line->varg[2]);
 	size_t  alen = line->sarg[2];
+
+	var_cont* func = var_new(NAMESPACE, FUNC);
 
 	var_data_func* data = var_data_alloc_FUNC(type);
 
@@ -530,13 +547,13 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	}
 
 	data->end      = ctx->pc->line->real_addr;
-	data->size     = nsize;
-	data->type     = type;
+	data->size     = nsize + alen + 1;// How many names will this function have?
+	data->type     = type;            // Return type
 	data->paramlen = alen;
 	data->param    = args;
 
-	proc_decvar(ctx, 1, name, FUNC);
+	var_set(func, data, FUNC);
 
-	var_cont* var = proc_getvar(ctx, 1, name);
-	var_set(var, data, FUNC);
+	proc_decvar(ctx, FUNC, 1, name);
+	proc_setvar(ctx, 1, name, func);
 }

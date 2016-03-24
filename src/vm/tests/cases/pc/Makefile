@@ -9,12 +9,14 @@ DEPS    = i$(INC_DIR)/is_mdata.h \
                       fh.h       \
                       is.h       \
                       bc.h       \
+                      var.h      \
                       pc.h
 
 OBJ     = test.o          \
           $(SRC_DIR)/fh.o \
           $(SRC_DIR)/is.o \
           $(SRC_DIR)/bc.o \
+          $(SRC_DIR)/var.o\
           $(SRC_DIR)/pc.o
 
 OUT     = test

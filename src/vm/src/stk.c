@@ -42,13 +42,11 @@ void stk_del(stk_t* stack)
 {
 	N_ASSERT(stack, "stk_del");
 
-	while (stk_poplevel(&stack))
+	while (stack->next != NULL)
 	{
-		if (stack->stack != NULL)
-		{
-			stk_line_del(stack->stack);
-		}
+		stk_poplevel(&stack);
 	}
+
 	free(stack);
 }
 
@@ -70,7 +68,6 @@ void stk_line_del(stk_line* stack)
 	free(stack);
 }
 
-
 /* Pushes a new stack level
  *  stk_t** - stack instances
  */
@@ -78,17 +75,27 @@ void stk_newlevel(stk_t** stack)
 {
 	N_ASSERT(stack, "stk_newlevel\n");
 
+	stk_t* new = stk_new();
+
+	new->next = *stack;
+
+	*stack = new;
 }
 
 /* Pops a stack level
  *  stk_t* - stack instance
- *
- * This function returns FALSE if stk_t->stack is on the last element
  */
-int stk_poplevel(stk_t** stack)
+void stk_poplevel(stk_t** stack)
 {
 	N_ASSERT(stack, "stk_poplevel\n");
-	return 0;
+
+	if ((*stack)->next != NULL)
+	{
+		stk_t* tmp = (*stack)->next;
+		stk_line_del((*stack)->stack);
+		free(*stack);
+		*stack = tmp;
+	}
 }
 
 /* Scales the stack by n^2
@@ -110,14 +117,10 @@ var_cont* stk_pop(stk_t* stack)
 {
 	N_ASSERT(stack, "stk_pop\n");
 
-	ASSERT(((stack->stack->ptr - 1) > 0), "Stack Underflow\n");
-
-	var_cont* rv = stack->stack->data[stack->stack->ptr];
+	ASSERT(((stack->stack->ptr - 1) >= 0), "Stack Underflow\n");
 
 	stack->stack->ptr = stack->stack->ptr - 1;
-
-	N_ASSERT(stack->stack->data[stack->stack->ptr],
-	         "Found NULL value in stack, running away for obvious reasons.\n");
+	var_cont* rv = stack->stack->data[stack->stack->ptr];
 
 	return rv;
 }
@@ -136,14 +139,19 @@ void stk_push(stk_t* stack, var_cont* data)
 		stk_scale(stack->stack);
 	}
 
-	stack->stack->ptr = stack->stack->ptr + 1;
-
 	stack->stack->data[stack->stack->ptr] = data;
+	stack->stack->ptr = stack->stack->ptr + 1;
 }
 
+/* Returns the data at location in the stack
+ *  stk_line* - Stack line instance
+ *  int       - (integer + 1) < (STK_SIZE_LIMIT - stk_line->ptr)
+ */
 var_cont* stk_at(stk_t* stack, int n)
 {
-	ASSERT(((stack->stack->ptr + n) < stack->stack->size), "Out of Bounds\n");
+	n = n + 1;
+
+	ASSERT(((stack->stack->ptr - n) >= 0), "Out of Bounds\n");
 
 	var_cont* rv = stack->stack->data[stack->stack->ptr - n];
 

@@ -35,7 +35,7 @@ ns_cont* ns_cont_init(ns_addr);
 /* Cleans up memory
  */
 void ns_del(ns_t*);
-void ns_cont_del(ns_cont*);
+var_cont* ns_cont_del(ns_cont*, ns_addr);
 
 /* Pushes namespace of size
  * ns_t*   - namespace instance
@@ -45,7 +45,7 @@ void ns_push(ns_t*, ns_addr);
 
 /* Pops last namespace level
  */
-void ns_pop(ns_t*);
+var_cont* ns_pop(ns_t*);
 
 /* Declares a variable, at root or last namespace
  *  ns_t*     - Namespace instance

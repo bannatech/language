@@ -41,22 +41,28 @@ ns_t* ns_init(ns_addr size)
 	return ns;
 }
 
-/* Cleans up memory
+/* Cleans up memory, returns variable with label exclude
  */
-void ns_cont_del(ns_cont* container)
+var_cont* ns_cont_del(ns_cont* container, ns_addr exclude)
 {
 	N_ASSERT(container, "ns_cont_del\n");
 	N_ASSERT(container->names, "ns_cont_del\n");
 
+	var_cont* rv;
+
 	for (int i = 0; i < container->size; i++)
 	{
-		if (container->names[i] != NULL)
+		if (container->names[i] != NULL && i != exclude)
 			var_del(container->names[i]);
+		else if (i == exclude)
+			rv = container->names[i];
 	}
 	
 	free(container->names);
 
 	free(container);
+
+	return rv;
 }
 
 /* Cleans up memory
@@ -67,7 +73,7 @@ void ns_del(ns_t* ns)
 
 	if (ns->last != NULL)
 		while (ns->last->next != NULL)
-			ns_pop(ns);
+			var_del(ns_pop(ns));
 	
 	free(ns);
 }
@@ -96,17 +102,19 @@ void ns_push(ns_t* ns, ns_addr size)
 
 /* Pops last namespace level
  */
-void ns_pop(ns_t* ns)
+var_cont* ns_pop(ns_t* ns)
 {
 	N_ASSERT(ns, "ns_pop\n");
 
+	var_cont* rv;
 	if (ns->last->next != NULL) {
 		ns_cont* newlast = ns->last->next;
 
-		ns_cont_del(ns->last);
+		rv = ns_cont_del(ns->last, 0);
 
 		ns->last = newlast;
 	}
+	return rv;
 }
 
 /* Declares a variable, at root or last namespace

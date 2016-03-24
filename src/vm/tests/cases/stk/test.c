@@ -14,10 +14,8 @@ void printstk(stk_t* stk)
 	       test0->type, test1->type, test2->type, test3->type);
 }
 
-int main(int argc, char* argv[])
+void playstk(stk_t* new)
 {
-	stk_t* new = stk_new();
-
 	stk_push(new, var_new(TEMPORARY, VOID));
 	stk_push(new, var_new(TEMPORARY, G_INT));
 	stk_push(new, var_new(TEMPORARY, G_FLOAT));
@@ -48,6 +46,29 @@ int main(int argc, char* argv[])
 
 	printf("stk_rot_three: \n");
 	printstk(new);
+}
+
+int main(int argc, char* argv[])
+{
+	stk_t* new = stk_new();
+
+	playstk(new);
+
+	printf("-- NEW STACK LEVEL --\n");
+	stk_newlevel(&new);
+
+	playstk(new);
+
+	printf("-- LEVEL 1: ");
+	printstk(new);
+
+	stk_poplevel(&new);
+
+	printf("-- LEVEL 0: ");
+	printstk(new);
+
+	stk_newlevel(&new);
+	stk_newlevel(&new);
 
 	stk_del(new);
 

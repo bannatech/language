@@ -40,7 +40,7 @@ void stk_newlevel(stk_t**);
 
 /* Pops a stack level
  */
-int stk_poplevel(stk_t**);
+void stk_poplevel(stk_t**);
 
 /* Scales the stack by n^2
  *  stk_t* - stack instance

@@ -97,12 +97,13 @@ var_cont* var_new(var_state state, b_type type)
 
 void var_del(var_cont* var)
 {
-	N_ASSERT(var, "var_del\n");
+	if (var != NULL)
+	{
+		if (var->data != NULL)
+			var_data_free(var->data, var->type);
 
-	if (var->data != NULL)
-		var_data_free(var->data, var->type);
-
-	free(var);
+		free(var);
+	}
 }
 
 void var_data_free(void* data, b_type type)

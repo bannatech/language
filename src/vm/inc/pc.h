@@ -29,15 +29,13 @@ typedef struct pc_t {
 	pc_addr      address;
 	pc_addr_stk* stk;
 	bc_cont*     line;
-	bc_t         program;
+	bc_t*        bc;
 } pc_t;
 
 /* Initalizes program counter, returns pc_t* instance
  * char* - filename of file containing bytecode
  */
 pc_t* pc_new(char*);
-
-void pc_read(char*, pc_t*);
 
 pc_addr_stk* pc_addr_stk_new(ns_addr);
 
@@ -65,6 +63,10 @@ void pc_branch(pc_t*, pc_addr);
 /* Return from branch
  */
 void pc_return(pc_t*);
+
+/* Simply goto that address
+ */
+void pc_goto(pc_t*, pc_addr);
 
 /* For now, a simple function that returns true if the next instruction is not
  * NULL.
