@@ -14,9 +14,10 @@ are deemed inferior.
 
  TYPES
 
+    The following types are paraphrased to give you a breif overview:
  0 VOID    - Null, no data
  1 ADDR    - Address type (bytecode)
- 2 TYPE    - A type type
+ 2 TYPE    - A `type` type
  3 PLIST   - Parameter list
  4 FUNC    - Function
  5 OBJECT  - Object/Class
@@ -29,35 +30,73 @@ are deemed inferior.
 12 H_TABLE - Hashtable
 13 G_FIFO  - Stack
 
-Types are a structure in memory with an enumeration representing types, along
-with a null pointer to a space in memory containing the data structure that
-corresponds with the enumerated data type. Functions and Classes are both data-
-types that behave like normal variables, although their data structure contains
-references to addresses/subsets of namespaces.
+ RUNTIME
 
-________________________________________________________________________________
-RUNTIME
+    The runtime architecture is based off of stack machines. If you don't know
+about stack machines, go refresh yourself on stack machines along with basic
+computer architecture / turing machines. Then come back here, I'm not explaining
+that stuff for you.
+
 --------------------------------------------------------------------------------
+General Architecture Overview
+--------------------------------------------------------------------------------
+RUNTIME CONTEXT
 
-TODO: SPEC VARIABLE SERIALZATION
+    The runtime context keeps track of a invidual threads metadata, such as:
 
+ * The operating stack
+    The operating stack where current running instructions push/pop to.
+
+ * Namespace instance
+    Data structure that holds the references to variable containers, also provi
+    ing the interface for Namespace Levels.
+
+ * Arguement stack
+    Arguements to function calls are pushed on to this stack, flushed on call.
+
+ * Program counter
+    The abstract interface with bytecode instructions that handles the program
+    space.
+
+RUNTIME CODE STRUCTURE/NAMESPACE
 
     Code in the runtime is organized on a per-function basis.
 
-'Function' in this case means a callable block of code which may or may not retu
-rn a value.
+'Function' in this case means a callable block of code that returns a typed
+value. A function is a wrapper around a collection of instructions that operate
+within the context of the function, i.e. the functions parameters, the concept
+of scopes, references, etc.
+
+Parameters are handled by the callee, pushing variables to an arguement stack
+pre-call. Variables on the arguement stack are loaded into local references on
+the new local namespace. Parameters are locally allocated as the first n labels
+of the new local namespace.
 
 Scopes are handled by referencing to either the Global Scope, Local Scope.
 Local Scope is denoted by '1' in the scope arguement when handling variables,
 and this scope is initialized when evaluating any new block of code. When a diff
-erent block of code is called, a new scope is initialized and the old scope is
-pushed on to the local scope stack. The local scope stack keeps track of previou
-s-level scopes, such as when a function returns the local scope stack is popped,
-deconstructing variables on the popped local stack.
+erent block of code is called, a new scope is added as a new Namespace level.
+Namespace levels act as context switches within function contexts. For example,
+the local namespace must be 'returned to' if that local namespace context needs
+to be preserved on return. Pushing 'Namespace levels' ensures that for every n
+function calls, you can traverse n instances of previous namespaces.
+For example, take this namespace level graphic, where each Level is a namespace
+instance:
+
+ Level 0: Global namespace, denoted by '0'.
+ Level 1: Namespace level, where Local Level is at 1, denoted by '1'.
+
+When a function is called, another namespace level is created and the local
+level increases, like so:
+
+ Level 0: Global namespace, denoted by '0'.
+ Level 1: Namespace level.
+ Level 2: Namespace level, where Local Level is at 2, denoted by '1'.
 
 Global scope variables (denoted by a '0' in the scope arguement) are persistient
-through the runtime as they handle all function definitions, objects, and 
-variables declared in the global scope.
+through the runtime as they handle all function definitions, objects, and
+variables declared in the global scope. The "Local Level" is at where references
+that have a scope arguement of '1' refer to when accessing variables.
 
  +---------+
  |Function | -> Functions are defined with a reference, called with the same
@@ -73,36 +112,64 @@ variables declared in the global scope.
  | +---------+   |    ructor exist to initialze/clean up properties.
  +---------------+
 
+See section F
 
 
     A stack is used to keep a local group of values to manipulate. Values are
 pushed on to the stack and are operated upon, and the values in the stack can
-be assigned or re-assigned to variables.
+be assigned or re-assigned to variables. This is what is known as the "Current
+operating stack".
 
  Bytecode Instructions
 
-  Interpreting Bytecode Instructions
+    Bytecode instructions are single byte, 3 (max) arguement calls to various
+subroutines that manipulate various components of the running system. i.e.
+(current operating stack, program counter, etc). The instruction types come in
+the following forms:
 
-   Bytecode arguements - After the opcode byte, set-length bytes are used as
-                         arguements for the opcode.
+* 0 arguement instruction:
 
-   Dynamic Bytecode args - After the opcode byte, a series of bytes terminated
-                           by NULL defines a single dynamic-length arguement.
-                           NULL can be escaped using the escape byte (encoded)
+    <opcode>
 
-   Function identifier - 0xFF initiates the beginning of a function, followed by
-                         a single dynamic arguement.
+* 1 arguement instruction:
 
+    <opcode> <arg 0>
+
+* 2 arguement instruction:
+
+    <opcode> <arg 0> <arg 1>
+
+* 3 arguement instruction:
+
+    <opcode> <arg 0> <arg 1> <arg 2>
+
+ Interpreting Bytecode Instructions
+
+    A bytecode instruction is a single-byte opcode, followed by at maximum 3
+arguements, which can be in the following forms:
+
+ * Static (single byte)
+ * Name (single word)
+ * Address (depending on runtime state)
+ * Dynamic (size terminated by NULL, followed by (size)*bytes of data)
+
+Below is the specification of all the instructions with a short description for
+each instruction, and instruction category:
+________________________________________________________________________________
+OPCODE SPEC
+--------------------------------------------------------------------------------
 Keywords:
  TOS           - 'Top Of Stack' The top element
- S<[variable]> - Static Arguement. (1 byte)
- N<[variable]> - Name, word in length
- A<[variable]> - Address Arguement. Address width will vary on file size,
-                 decided on compile time. (for now, a word)
- D<[variable]> - Dynamic bytecode arguement. Arguements terminated with NULL
-                 byte. Two null bytes escapes terminator.
+ S<[variable]> - Static Arguement.
+ N<[variable]> - Name.
+ A<[variable]> - Address Arguement.
+ D<[variable]> - Dynamic bytecode arguement.
+-------------------------------------------------------------------------------
+Hex | Memnonic | arguments - description
 -------------------------------------------------------------------------------
 1 - Stack manipulation
+
+    These subroutines operate on the current-working stack(1).
 -------------------------------------------------------------------------------
 10 POP S<n>  - pops the stack n times.
 11 ROT       - rotates top of stack
@@ -225,33 +292,7 @@ F0 RETURN                       - Returns from function
 
 0F LIBC A<ref>   - Library call
 
--------------------------------------------------------------------------------
-General Architecture Overview
--------------------------------------------------------------------------------
-RUNTIME CONTEXT
-
-    The runtime context keeps track of a invidual threads metadata, such as:
-
- * The operating stack
-
- * Local namespace scope stack
-
- * Arguement stack
-
- * Thread instance
-
- * Global Namespace cache
-
- * Program counter
-
-
-FUNCTION CALL PROCEDURE
-
-    When calling a function, arguements are assumed to be built up using the
-`ARGB` instruction. TOS is popped into a special stack, named 'arguement stack'
-which is a member of the runtime context.
-
-________________________________________________________________________________
+_______________________________________________________________________________
 COMPILER/TRANSLATOR/ASSEMBLER SHINDIGS
 --------------------------------------------------------------------------------
 
