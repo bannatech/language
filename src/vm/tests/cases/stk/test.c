@@ -16,11 +16,11 @@ void printstk(stk_t* stk)
 
 void playstk(stk_t* new)
 {
-	stk_push(new, var_new(TEMPORARY, VOID));
-	stk_push(new, var_new(TEMPORARY, G_INT));
-	stk_push(new, var_new(TEMPORARY, G_FLOAT));
-	stk_push(new, var_new(TEMPORARY, G_CHAR));
-	stk_push(new, var_new(TEMPORARY, G_STR));
+	stk_push(new, var_new(VOID));
+	stk_push(new, var_new(G_INT));
+	stk_push(new, var_new(G_FLOAT));
+	stk_push(new, var_new(G_CHAR));
+	stk_push(new, var_new(G_STR));
 
 	printf("init: \n");
 	printstk(new);

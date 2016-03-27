@@ -8,7 +8,7 @@
 
 var_cont* var_add_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_FLOAT);
+	var_cont* var = var_new(G_FLOAT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -22,7 +22,7 @@ var_cont* var_add_float(var_cont* A, var_cont* B)
 }
 var_cont* var_add_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -55,7 +55,7 @@ var_cont* var_add(var_cont* A, var_cont* B)
 
 var_cont* var_sub_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_FLOAT);
+	var_cont* var = var_new(G_FLOAT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -69,7 +69,7 @@ var_cont* var_sub_float(var_cont* A, var_cont* B)
 }
 var_cont* var_sub_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -102,7 +102,7 @@ var_cont* var_sub(var_cont* A, var_cont* B)
 
 var_cont* var_mult_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_FLOAT);
+	var_cont* var = var_new(G_FLOAT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -116,7 +116,7 @@ var_cont* var_mult_float(var_cont* A, var_cont* B)
 }
 var_cont* var_mult_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -149,7 +149,7 @@ var_cont* var_mult(var_cont* A, var_cont* B)
 
 var_cont* var_div_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_FLOAT);
+	var_cont* var = var_new(G_FLOAT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -163,7 +163,7 @@ var_cont* var_div_float(var_cont* A, var_cont* B)
 }
 var_cont* var_div_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -196,7 +196,7 @@ var_cont* var_div(var_cont* A, var_cont* B)
 
 var_cont* var_gthan_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -210,7 +210,7 @@ var_cont* var_gthan_float(var_cont* A, var_cont* B)
 }
 var_cont* var_gthan_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -244,7 +244,7 @@ var_cont* var_gthan(var_cont* A, var_cont* B)
 
 var_cont* var_lthan_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -258,7 +258,7 @@ var_cont* var_lthan_float(var_cont* A, var_cont* B)
 }
 var_cont* var_lthan_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -291,7 +291,7 @@ var_cont* var_lthan(var_cont* A, var_cont* B)
 
 var_cont* var_eq_float(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
@@ -305,7 +305,7 @@ var_cont* var_eq_float(var_cont* A, var_cont* B)
 }
 var_cont* var_eq_int(var_cont* A, var_cont* B)
 {
-	var_cont* var = var_new(NAMESPACE, G_INT);
+	var_cont* var = var_new(G_INT);
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 

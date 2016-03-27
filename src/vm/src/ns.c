@@ -6,8 +6,9 @@
 
 /* Initialize namespace container of size
  *  ns_addr - name limit
+ *  int     - Namespace level
  */
-ns_cont* ns_cont_init(ns_addr size)
+ns_cont* ns_cont_init(ns_addr size, int level)
 {
 	ns_cont* new = (ns_cont*)malloc(sizeof(ns_cont));
 	M_ASSERT(new);
@@ -16,6 +17,7 @@ ns_cont* ns_cont_init(ns_addr size)
 	M_ASSERT(new->names);
 
 	new->size = size;
+	new->level = level;
 
 	for (int i = 0; i < size; i++)
 	{
@@ -35,15 +37,15 @@ ns_t* ns_init(ns_addr size)
 	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
 	M_ASSERT(ns);
 	
-	ns->root = ns_cont_init(size);
-	ns->last = NULL;
+	ns->root = ns_cont_init(size, 0);
+	ns->last = ns->root;
 
 	return ns;
 }
 
-/* Cleans up memory, returns variable with label exclude
+/* Cleans up memory, returns variable with label to_return
  */
-var_cont* ns_cont_del(ns_cont* container, ns_addr exclude)
+var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 {
 	N_ASSERT(container, "ns_cont_del\n");
 	N_ASSERT(container->names, "ns_cont_del\n");
@@ -52,10 +54,24 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr exclude)
 
 	for (int i = 0; i < container->size; i++)
 	{
-		if (container->names[i] != NULL && i != exclude)
-			var_del(container->names[i]);
-		else if (i == exclude)
-			rv = container->names[i];
+		if (container->names[i] != NULL && i != to_return)
+		{
+			if (container->names[i]->ownership == container->level)
+			{
+				var_del(container->names[i]);
+			}
+		}
+		else if (i == to_return)
+		{
+			if (container->names[i] != NULL)
+			{
+				rv = container->names[i];
+				if (rv->ownership == container->level)
+				{
+					rv->ownership = -1;
+				}
+			}
+		}
 	}
 	
 	free(container->names);
@@ -71,9 +87,18 @@ void ns_del(ns_t* ns)
 {
 	N_ASSERT(ns, "ns_del\n");
 
+	var_cont* var;
 	if (ns->last != NULL)
+	{
 		while (ns->last->next != NULL)
-			var_del(ns_pop(ns));
+		{
+			var = ns_pop(ns);
+			if (var != NULL)
+			{
+				var_del(var);
+			}
+		}
+	}
 	
 	free(ns);
 }
@@ -86,18 +111,10 @@ void ns_push(ns_t* ns, ns_addr size)
 {
 	N_ASSERT(ns, "ns_push\n");
 
-	ns_cont* new = ns_cont_init(size);
+	ns_cont* new = ns_cont_init(size, ns->last->level + 1);
 
-	if (ns->last == NULL)
-	{
-		new->next = ns->root;
-		ns->last = new;
-	}
-	else
-	{
-		new->next = ns->last;
-		ns->last = new;
-	}
+	new->next = ns->last;
+	ns->last = new;
 }
 
 /* Pops last namespace level
@@ -142,13 +159,14 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
  *  ns_addr   - Variable name
  */
 
-void ns_cont_dec(ns_cont* ns, b_type type, ns_addr address)
+void ns_cont_dec(ns_cont* container, b_type type, ns_addr address)
 {
-	N_ASSERT(ns, "ns_cont_dec\n");
+	N_ASSERT(container, "ns_cont_dec\n");
 
-	SIZE_ASSERT( ns->size > address );
+	SIZE_ASSERT( container->size > address );
 
-	ns->names[ address ] = var_new(NAMESPACE, type);
+	container->names[ address ] = var_new(type);
+	container->names[ address ]->ownership = container->level;
 }
 
 /* Sets variable to value, at root or last namespace
@@ -176,13 +194,21 @@ void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
  *  var_cont* - Variable
  *  ns_addr   - Variable name
  */
-void ns_cont_set(ns_cont* ns, var_cont* var, ns_addr address)
+void ns_cont_set(ns_cont* container, var_cont* var, ns_addr address)
 {
-	N_ASSERT(ns, "ns_cont_set\n");
+	N_ASSERT(container, "ns_cont_set\n");
 	N_ASSERT(var, "ns_cont_set\n");
-	SIZE_ASSERT( ns->size > address );
+	SIZE_ASSERT( container->size > address );
+	N_ASSERT(container->names[ address ], "Attempt to set an undeclared variable\n");
 
-	var_set(ns->names[ address ], var->data, var->type);
+	if (var->ownership < 0)
+	{
+		var->ownership = container->level;
+	}
+
+	container->names[ address ]->ownership = var->ownership;
+
+	var_set(container->names[ address ], var->data, var->type);
 }
 
 /* Gets variable from address
@@ -208,10 +234,10 @@ var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
  *  ns_t*     - namespace instance
  *  ns_addr   - Variable name
  */
-var_cont* ns_cont_get(ns_cont* ns, ns_addr address)
+var_cont* ns_cont_get(ns_cont* container, ns_addr address)
 {
-	N_ASSERT(ns, "ns_cont_get\n");
-	SIZE_ASSERT( ns->size > address );
+	N_ASSERT(container, "ns_cont_get\n");
+	SIZE_ASSERT( container->size > address );
 
-	return ns->names[ address ];
+	return container->names[ address ];
 }

@@ -125,18 +125,22 @@ void process_args(bc_cont* ins)
 		if (arg_types[x] == BTOI)
 		{
 			ins->varg[x] = raw_to_int(ins->sarg[x], 0, ins->args[x]);
+			ins->varg[x]->ownership = 0;
 		} else
 		if (arg_types[x] == BTOT)
 		{
 			ins->varg[x] = byte_to_type(ins->args[x][0]);
+			ins->varg[x]->ownership = 0;
 		} else
 		if (arg_types[x] == DTOL)
 		{
 			ins->varg[x] = raw_to_plist(ins->sarg[x], ins->args[x]);
+			ins->varg[x]->ownership = 0;
 		} else
 		if (arg_types[x] == DTOV)
 		{
 			ins->varg[x] = raw_to_var(ins->sarg[x], ins->args[x]);
+			ins->varg[x]->ownership = 0;
 		}
 	}
 }

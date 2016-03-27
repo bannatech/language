@@ -40,40 +40,53 @@ that stuff for you.
 --------------------------------------------------------------------------------
 General Architecture Overview
 --------------------------------------------------------------------------------
-RUNTIME CONTEXT
+RUNTIME ELEMENTS
 
-    The runtime context keeps track of a invidual threads metadata, such as:
+    RUNTIME CONTEXT DEFINITION
+
+The runtime context keeps track of a invidual threads metadata, such as:
 
  * The operating stack
     The operating stack where current running instructions push/pop to.
+    - refer to STACK DEFINITION
 
  * Namespace instance
     Data structure that holds the references to variable containers, also provi
     ing the interface for Namespace Levels.
+    - refer to NAMESPACE DEFINITION
 
  * Arguement stack
     Arguements to function calls are pushed on to this stack, flushed on call.
+    - refer to STACK DEFINITION, FUNCTION DEFINTION
 
  * Program counter
-    The abstract interface with bytecode instructions that handles the program
-    space.
+    An interface around bytecode to keep track of traversing line-numbered
+    instructions.
+    - refer to PROGRAM COUNTER DEFINITION
 
-RUNTIME CODE STRUCTURE/NAMESPACE
+This context gives definition to an 'environment' where code is executed.
 
-    Code in the runtime is organized on a per-function basis.
+    NAMESPACE DEFINITION
 
-'Function' in this case means a callable block of code that returns a typed
-value. A function is a wrapper around a collection of instructions that operate
-within the context of the function, i.e. the functions parameters, the concept
-of scopes, references, etc.
+A key part to any operational computer language is the notion of a 'Namespace'.
+This notion of a 'Namespace' refers to the ability to declare a name, along with
+needed metadata, and call upon the same name to retrieve the values assosaited
+with that name.
 
-Parameters are handled by the callee, pushing variables to an arguement stack
-pre-call. Variables on the arguement stack are loaded into local references on
-the new local namespace. Parameters are locally allocated as the first n labels
-of the new local namespace.
+In this definition, the namespace will provide the following key mechanisms:
 
-Scopes are handled by referencing to either the Global Scope, Local Scope.
-Local Scope is denoted by '1' in the scope arguement when handling variables,
+ * Declaring a name
+
+ * Assigning a name to a value
+
+ * Retreiving a name's value
+
+ * Handle a name's scope
+
+ * Implicitly move in/out of scopes
+
+Scopes are handled by referencing to either the Global Scope or the Local Scope.
+The Local Scope is denoted by '1' in the scope arguement when refering to names,
 and this scope is initialized when evaluating any new block of code. When a diff
 erent block of code is called, a new scope is added as a new Namespace level.
 Namespace levels act as context switches within function contexts. For example,
@@ -93,55 +106,54 @@ level increases, like so:
  Level 1: Namespace level.
  Level 2: Namespace level, where Local Level is at 2, denoted by '1'.
 
-Global scope variables (denoted by a '0' in the scope arguement) are persistient
+Global scope names (denoted by a '0' in the scope arguement) are persistient
 through the runtime as they handle all function definitions, objects, and
-variables declared in the global scope. The "Local Level" is at where references
-that have a scope arguement of '1' refer to when accessing variables.
+names declared in the global scope. The "Local Level" is at where references
+that have a scope arguement of '1' refer to when accessing names.
 
- +---------+
- |Function | -> Functions are defined with a reference, called with the same
- +---------+    reference. A special stack called the "arguement stack", built
-                pre-call the are used as arguements.
-                When calling a function, the order must align with the parameter
-                types.
+    VARIABLE DEFINITION
 
- +---------------+
- |Class          |
- | +---------+   | -> Classes are defined as wrappers around functions. Special
- | |Function |   |    functions such as the Constructor function and the Deconst
- | +---------+   |    ructor exist to initialze/clean up properties.
- +---------------+
+Variables in this definiton provide the following mechanims:
 
-See section F
+ * Provide a distinguishable area of typed data
 
+ * Provide a generic container around typed data, to allow for labeling
 
-    A stack is used to keep a local group of values to manipulate. Values are
-pushed on to the stack and are operated upon, and the values in the stack can
-be assigned or re-assigned to variables. This is what is known as the "Current
-operating stack".
+ * Declare a set of fundemental datatypes, and methods to:
 
- Bytecode Instructions
+   * Allocate the proper space of memory for the given data type,
 
-    Bytecode instructions are single byte, 3 (max) arguement calls to various
-subroutines that manipulate various components of the running system. i.e.
-(current operating stack, program counter, etc). The instruction types come in
-the following forms:
+   * Deallocate the space of memory a variables data may take up, and
 
-* 0 arguement instruction:
+   * Set in place a notion of ownership
 
-    <opcode>
+For a given variable V, V defines the following attributes
 
-* 1 arguement instruction:
+    V -> Ownership
+    V -> Type
+    V -> Pointer to typed space in memory
 
-    <opcode> <arg 0>
+Each variable then can be handled as a generic container.
 
-* 2 arguement instruction:
+In the previous section, the notion of Namespace levels was introduced. Much
+like how names are scoped, generic variable containers must communicate their
+scope in terms of location within a given set of scopes. This is what is called
+'Ownership'. In a given runtime, variable containers can exist in the following
+structures: A stack instance, Bytecode arguements, and Namespaces
 
-    <opcode> <arg 0> <arg 1>
+The concept of ownership differentiates variables existing on one or more of the
+structures. This is set in place to prevent accidental deallocation of variable
+containers that are not copied, but instead passed as references to these
+structures.
 
-* 3 arguement instruction:
+    BYTECODE SPEC
 
-    <opcode> <arg 0> <arg 1> <arg 2>
+Bytecode is organised in the following manner:
+
+    <opcode> (arg 0... (arg n < 3 ) )
+
+Where the <opcode> is a single byte denoting which subroutine to call with the
+following arguements when executed.
 
  Interpreting Bytecode Instructions
 
@@ -150,8 +162,11 @@ arguements, which can be in the following forms:
 
  * Static (single byte)
  * Name (single word)
- * Address (depending on runtime state)
+ * Address (depending on runtime state, usually a word)
  * Dynamic (size terminated by NULL, followed by (size)*bytes of data)
+   * i.e. FF FF 00 <0xFFFF bytes of data>,
+          01 00 <0x1 bytes of data>,
+          06 00 <0x6 bytes of data>, etc
 
 Below is the specification of all the instructions with a short description for
 each instruction, and instruction category:

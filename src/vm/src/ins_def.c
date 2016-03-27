@@ -206,22 +206,25 @@ void _ins_def_CTV      (rt_t* ctx, bc_cont* line)
 {
 	int scope     = var_data_get_G_INT(line->varg[0]);
 	int name      = var_data_get_G_INT(line->varg[1]);
-	var_cont* var = line->varg[2];
 
-	proc_setvar(ctx, scope, name, var);
+	var_cont* new = var_data_cpy(line->varg[2]);
+
+	proc_setvar(ctx, scope, name, new);
 
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 {
-	stk_push(ctx->stack, line->varg[0]);
+	var_cont* new = var_data_cpy(line->varg[0]);
+
+	stk_push(ctx->stack, new);
 	pc_inc(ctx->pc, 1);
 }
 
 void _ins_def_TYPEOF   (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_at(ctx->stack, 0);
-	var_cont* new = var_new(TYPE, TEMPORARY);
+	var_cont* new = var_new(TYPE);
 
 	var_data_type* data = var_data_alloc_TYPE(var->type);
 
@@ -525,7 +528,7 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	b_type* args = var_data_get_PLIST(line->varg[2]);
 	size_t  alen = line->sarg[2];
 
-	var_cont* func = var_new(NAMESPACE, FUNC);
+	var_cont* func = var_new(FUNC);
 
 	var_data_func* data = var_data_alloc_FUNC(type);
 

@@ -59,7 +59,7 @@ void stk_line_del(stk_line* stack)
 	{
 		if (stack->data[i] != NULL)
 		{
-			if (stack->data[i]->state == TEMPORARY)
+			if (stack->data[i]->ownership < 0)
 				var_del(stack->data[i]);
 		}
 	}

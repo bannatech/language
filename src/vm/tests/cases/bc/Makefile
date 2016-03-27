@@ -26,5 +26,5 @@ $(OUT): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm $(SRC_DIR)/*.o
+	rm *.o
 	rm $(OUT)

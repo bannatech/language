@@ -10,7 +10,7 @@ do
 		total=$((total + 1))
 
 		cd $i
-		make
+		make &> /dev/null
 
 		printf "\nTESTCASE: $(basename $PWD)\n"
 		

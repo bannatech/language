@@ -12,6 +12,7 @@
 typedef unsigned int ns_addr;
 
 typedef struct ns_cont {
+	int        level;
 	ns_addr    size;
 	var_cont** names;
 	struct ns_cont* next;
@@ -29,8 +30,9 @@ ns_t* ns_init(ns_addr);
 
 /* Initialize namespace container of size
  *  ns_addr - name limit
+ *  int     - level
  */
-ns_cont* ns_cont_init(ns_addr);
+ns_cont* ns_cont_init(ns_addr, int);
 
 /* Cleans up memory
  */
@@ -86,7 +88,6 @@ void ns_set(ns_t*, int, ns_addr, var_cont*);
 void ns_cont_set(ns_cont*, var_cont*, ns_addr);
 
 /* Gets variable from address
-
  *  ns_t*     - namespace instance
  *  int       - mux value         [0]
  *  ns_addr   - Variable name
