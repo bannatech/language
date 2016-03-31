@@ -1,0 +1,20 @@
+func some_important_function (int x, int y, int z) -> int:
+{
+	int c = (x * y) + z;
+	if c > 3:
+	{
+		c = c - 3;
+	}
+	return(c);
+}
+
+int x = 3;
+
+array y = [ "Symbols suck", 32, "I know, right?" ];
+
+if x == 3:
+{
+	print("Potatoes are good for \"the\" soul.");
+}
+
+some_important_function(3, 4, 2);

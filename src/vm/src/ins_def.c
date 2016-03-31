@@ -68,6 +68,7 @@ void init_ins_def( void )
 
 	INS_DEF[0x70] = _ins_def_GOTO;
 	INS_DEF[0x71] = _ins_def_JUMPF;
+	INS_DEF[0x73] = _ins_def_ELSE;
 	INS_DEF[0x7E] = _ins_def_DONE;
 	INS_DEF[0x7F] = _ins_def_CALL;
 
@@ -426,27 +427,35 @@ void _ins_def_JUMPF    (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 {
+	// Get the value off the stack
 	var_cont* var = stk_pop(ctx->stack);
-
 	int value = var_data_get_G_INT(var);
 
+	// If the value is false, find an ELSE statement or DONE statement.
 	if (value < 1)
 	{
 		while (pc_safe(ctx->pc))
 		{
 			pc_update(ctx->pc);
 			pc_inc(ctx->pc, 1);
-
+			// Is the instruction an ELSE statement?
 			if (ctx->pc->line->op == 0x73)
 			{
+				// We're done here.
 				break;
 			} else
+			// Is the instruction a DONE statement?
 			if (ctx->pc->line->op == 0x7E)
 			{
+				// We're done here.
 				break;
 			}
 		}
 	}
+}
+void _ins_def_ELSE     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
 }
 void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 {
@@ -456,26 +465,36 @@ void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 {
 	int name = var_data_get_G_INT(line->varg[0]);
 
+	// Get the function's variable container
 	var_cont* var = proc_getvar(ctx, 1, name);
-
 	var_data_func* func = var_data_get_FUNC(var);
 
+	// Push a new namespace of specified size
 	ns_push(ctx->vars, func->size);
-
+	// Declare the return value
 	ns_dec(ctx->vars, func->type, 0, 0);
 
+	// Throw in the arguements on the arguement stack into the new namespace
 	int offset = 1;
 	int i;
 	for (i = 0; i < func->paramlen; i++)
 	{
+		// Pop the arguement stack
 		var_cont* arg = stk_pop(ctx->argstk);
+
+		// Is the arguement of the right type?
 		ASSERT(arg->type == func->param[i], "Invalid function call\n");
+
+		// Declare the name in the new namespace and pass the arguements
 		ns_dec(ctx->vars, arg->type, 0, i+offset);
 		ns_set(ctx->vars, 0, i+offset, arg);
 	}
 
+	// Push new stack levels for the stack and the arguement stack
 	stk_newlevel(&ctx->stack);
 	stk_newlevel(&ctx->argstk);
+
+	// Branch to functions body
 	pc_branch(ctx->pc, func->loc);
 }
 
@@ -502,15 +521,20 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 
 void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 {
+	// Pop the namespace and get the return value
 	var_cont* return_value = ns_pop(ctx->vars);
 
+	// Pop a level in the stack and arguement stack
 	stk_poplevel(&ctx->stack);
 	stk_poplevel(&ctx->argstk);
 
+	// Push the return value to the stack
 	stk_push(ctx->stack, return_value);
 
+	// Return to the callee
 	pc_return(ctx->pc);
 
+	// And increment the program counter
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
@@ -528,35 +552,49 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	b_type* args = var_data_get_PLIST(line->varg[2]);
 	size_t  alen = line->sarg[2];
 
+	// Create a new variable for the new function
 	var_cont* func = var_new(FUNC);
 
+	// Allocate the data.
 	var_data_func* data = var_data_alloc_FUNC(type);
 
+	// Set the location of the functions body
 	data->loc = line->real_addr + 1;
 
 	int nsize;
-
+	/* Determine the namespace size by finding variable declarations in the functions body,
+	   Along with determining the end of the function.
+	 */
 	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
+		// Increment the program counter
 		pc_inc(ctx->pc, 1);
+
+		// Is this the end?
 		if (ctx->pc->line->op == 0xF0)
 		{
 			break;
 		} else
+		// Are we declaring a variable?
 		if (ctx->pc->line->op == 0x20)
 		{
+			// If so, increment the namespace size.
 			nsize++;
 		}
 	}
 
-	data->end      = ctx->pc->line->real_addr;
-	data->size     = nsize + alen + 1;// How many names will this function have?
-	data->type     = type;            // Return type
-	data->paramlen = alen;
-	data->param    = args;
+	// Set all the values.
+	data->end      = ctx->pc->line->real_addr; // This is the end!
+	data->size     = nsize + alen + 1;         // How many names will this function have?
+	data->type     = type;                     // Return type
+	data->paramlen = alen;                     // Set the arguement length
+	data->param    = args;                     // Set the parameter list
 
+	// Throw the data in a variable container
 	var_set(func, data, FUNC);
 
+	// Declare a name
 	proc_decvar(ctx, FUNC, 1, name);
+	// Set the name's value to the function we just defined
 	proc_setvar(ctx, 1, name, func);
 }

@@ -16,18 +16,18 @@ typedef unsigned int bc_addr;
 /* 'Bytecode Container'
  */
 typedef struct bc_cont {
-	bc_addr   real_addr;
-	byte_t    op;
-	byte_t    mdata;
-	byte_t    adata;
-	byte_t*   args[3];
-	var_cont* varg[3];
-	int       sarg[3];
+	bc_addr   real_addr; // Real address of instruction
+	byte_t    op;        // Opcode of instruction
+	byte_t    mdata;     // Opcode metadata
+	byte_t    adata;     // Opcode arguement metadata
+	byte_t*   args[3];   // Raw arguements
+	int       sarg[3];   // Size of arguements
+	var_cont* varg[3];   // Typed arguements
 } bc_cont;
 
 typedef struct bc_t {
-	bc_addr   size;
-	bc_cont** heap;
+	bc_addr   size;   // Size of program
+	bc_cont** heap;   // Heap of instructions
 } bc_t;
 
 #include "is.h"

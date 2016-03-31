@@ -29,6 +29,10 @@ void init_ins_def( void );
  */
 int ins_def_is_valid(bc_cont*);
 
+/* Instruction subroutines. Each subroutine takes the following arguements:
+ *  rt_t*    - Runtime context
+ *  bc_cont* - Instruction data
+ */
 void _ins_def_NULL     (rt_t*, bc_cont*);
 void _ins_def_SYNC     (rt_t*, bc_cont*);
 void _ins_def_PRINT    (rt_t*, bc_cont*);
