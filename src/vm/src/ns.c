@@ -123,12 +123,15 @@ var_cont* ns_pop(ns_t* ns)
 {
 	N_ASSERT(ns, "ns_pop\n");
 
+	// Define our return value
 	var_cont* rv;
+	// Is this the last link on the chain?
 	if (ns->last->next != NULL) {
+		// Get the next to last link on the chain
 		ns_cont* newlast = ns->last->next;
-
+		// Try to delete that namespace container
 		rv = ns_cont_del(ns->last, 0);
-
+		// Set the new last to the last link on the chain
 		ns->last = newlast;
 	}
 	return rv;
@@ -148,8 +151,9 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 {
 	N_ASSERT(ns, "ns_dec\n");
 
+	// Which namespace are we searching in? (scope == 0 -> local)
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
-
+	// Declare the name in the correct namespace
 	ns_cont_dec(scoped_ns, type, address);
 }
 
@@ -162,10 +166,11 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
 void ns_cont_dec(ns_cont* container, b_type type, ns_addr address)
 {
 	N_ASSERT(container, "ns_cont_dec\n");
-
+	// Address must be in range
 	SIZE_ASSERT( container->size > address );
-
+	// Initalize a variable container
 	container->names[ address ] = var_new(type);
+	// Set the ownership of this 
 	container->names[ address ]->ownership = container->level;
 }
 
@@ -197,12 +202,15 @@ void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)
 void ns_cont_set(ns_cont* container, var_cont* var, ns_addr address)
 {
 	N_ASSERT(container, "ns_cont_set\n");
-	N_ASSERT(var, "ns_cont_set\n");
+	N_ASSERT(var,       "ns_cont_set\n");
+	// Addresss must be in range
 	SIZE_ASSERT( container->size > address );
-	N_ASSERT(container->names[ address ], "Attempt to set an undeclared variable\n");
+	N_ASSERT(container->names[ address ],
+	         "Attempt to set an undeclared variable\n");
 
 	if (var->ownership < 0)
 	{
+		// This is my variable now
 		var->ownership = container->level;
 	}
 

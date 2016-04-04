@@ -17,4 +17,13 @@ if x == 3:
 	print("Potatoes are good for \"the\" soul.");
 }
 
+for x in y:
+{
+	print(x);
+}
+
 some_important_function(3, 4, 2);
+
+ptr something *= ObjectClass();
+
+something.potato();
