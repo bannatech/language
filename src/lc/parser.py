@@ -75,14 +75,14 @@ class Parser():
 				expression=[
 					AtomicSymbol("{")
 				],
-				func=(lambda x: [])
+				init=(lambda x: [])
 			),
 			Statement(
 				"codeblock_end",
 				expression=[
 					AtomicSymbol("}")
 				],
-				func=(lambda x: [])
+				init=(lambda x: [])
 			),
 			Statement(
 				"if",
@@ -91,7 +91,7 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(":")
 				],
-				func=(lambda x: [x.eval_expr(1)])
+				init=(lambda x: [x.eval_expr(1)])
 			),
 			Statement(
 				"else",
@@ -99,7 +99,7 @@ class Parser():
 					AtomicSymbol("else"),
 					AtomicSymbol(":")
 				],
-				func=(lambda x: [])
+				init=(lambda x: [])
 			),
 			Statement(
 				"for",
@@ -108,7 +108,7 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(":")
 				],
-				func=(lambda x: [x.eval_expr(1)])
+				init=(lambda x: [x.eval_expr(1)])
 			),
 			Statement(
 				"while",
@@ -117,7 +117,7 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(":")
 				],
-				func=(lambda x: [x.eval_expr(1)])
+				init=(lambda x: [x.eval_expr(1)])
 			),
 			Statement(
 				"function",
@@ -129,7 +129,12 @@ class Parser():
 					self.type_def,
 					AtomicSymbol(":")
 				],
-				func=(lambda x: [x.eval_label(1), x.eval_param(2), x.eval_type(5)])
+				init=(
+					lambda x: [
+					           x.eval_label(1),
+					           x.eval_param(2),
+					           x.eval_type(4)
+					          ])
 			),
 			Statement(
 				"instantiation",
@@ -140,7 +145,11 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(";")
 				],
-				func=(lambda x: [x.eval_type(0), x.eval_label(1), x.eval_expr(3)])
+				init=(lambda x: [
+					             x.eval_type(0),
+					             x.eval_label(1),
+					             x.eval_expr(3)
+					            ])
 			),
 			Statement(
 				"assignment",
@@ -150,7 +159,10 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(";")
 				],
-				func=(lambda x: [x.eval_label(0), x.eval_expr(2)])
+				init=(lambda x: [
+				                 x.eval_label(0),
+				                 x.eval_expr(2)
+				                ])
 			),
 			Statement(
 				"func_call",
@@ -159,7 +171,10 @@ class Parser():
 					self.paramlist_def,
 					AtomicSymbol(";")
 				],
-				func=(lambda x: [x.eval_label(0), x.eval_args(1)])
+				init=(lambda x: [
+				                 x.eval_label(0),
+				                 x.eval_args(1)
+				                ])
 			),
 			Statement(
 				"expression",
@@ -167,7 +182,7 @@ class Parser():
 					self.expr_def,
 					AtomicSymbol(";")
 				],
-				func=(lambda x: [x.eval_expr(0)])
+				init=(lambda x: [x.eval_expr(0)])
 			)
 		]
 		data=""
@@ -186,7 +201,7 @@ class Parser():
 			for a in self.active_tokens:
 				r = a.match(l)
 				if r:
-					rv.append((a,r))
+					rv.append([a,r])
 					break
 
 		return rv

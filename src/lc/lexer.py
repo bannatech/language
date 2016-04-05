@@ -81,12 +81,21 @@ class GroupingSymbol(PolySymbol):
 		if r[0]:
 			rv.extend(r[1])
 			index = r[0]
+			ignore = 0
 			while index < len(tokenstring):
+				r = self.symbols[0].match(tokenstring, index)
+				if r[0]:
+					ignore += 1
+					rv.extend(r[1])
+					index = r[0]
 				r = self.symbols[1].match(tokenstring, index)
 				if r[0]:
 					index = r[0]
 					rv.extend(r[1])
-					break
+					if not ignore > 0:
+						break
+					else:
+						ignore -= 1
 				else:
 					rv.append(tokenstring[index])
 					index += 1
@@ -94,10 +103,10 @@ class GroupingSymbol(PolySymbol):
 		return [index, rv] if len(rv) > 0 else [False, None]
 
 class Statement():
-	def __init__(self, name, expression=[], func=None):
+	def __init__(self, name, expression=[], init=None):
 		self.name   = name
 		self.expr   = expression
-		self.action = func
+		self.action = init
 	
 	def match(self, tokenstring):
 		rv = []

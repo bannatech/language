@@ -17,13 +17,11 @@ if x == 3:
 	print("Potatoes are good for \"the\" soul.");
 }
 
-for x in y:
+for x in test(y):
 {
 	print(x);
 }
 
-some_important_function(3, 4, 2);
+some_important_function(3, 4, some_important_function(2, 3));
 
-ptr something *= ObjectClass();
-
-something.potato();
+test(test());
