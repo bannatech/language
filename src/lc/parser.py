@@ -1,5 +1,4 @@
 from lexer import *
-
 class Parser():
 	def __init__(self, file_name):
 		self.splitters = [
@@ -12,6 +11,10 @@ class Parser():
 			"{",
 			"}",
 			",",
+			"\+",
+			"\-",
+			"\*",
+			"\/",
 			" "
 		]
 		self.end_statements = [
@@ -30,14 +33,23 @@ class Parser():
 		]
 	
 		self.defined_types = [
+			"void",
+			"_addr",
+			"_type",
+			"_plist",
+			"_sub",
+			"object",
 			"int",
 			"float",
+			"char",
+			"string",
+			"s_array",
 			"array",
-			"object",
-			"ptr"
+			"hashtable",
+			"stack"
 		]
 	
-		self.number_def    = AtomicSymbol("[0-9]+")
+		self.int_def       = AtomicSymbol("[0-9]+")
 	
 		self.type_def      = InclusiveSymbol(self.defined_types)
 		self.label_def     = ExclusiveSymbol(self.defined_types +
@@ -50,7 +62,7 @@ class Parser():
 	
 		self.expr_def = PolySymbol( [
 		                             self.label_def,
-		                             self.number_def,
+		                             self.int_def,
 		                             AtomicSymbol("\("),
 		                             AtomicSymbol("\)"),
 		                             AtomicSymbol("\+"),
@@ -69,22 +81,23 @@ class Parser():
 		                                           AtomicSymbol(":")
 		                                          ])
 
-		self.active_tokens = [
-			Statement(
+		self.statement_codeblock_begin = Statement(
 				"codeblock_begin",
 				expression=[
 					AtomicSymbol("{")
 				],
 				init=(lambda x: [])
-			),
-			Statement(
+			)
+
+		self.statement_codeblock_end = Statement(
 				"codeblock_end",
 				expression=[
 					AtomicSymbol("}")
 				],
 				init=(lambda x: [])
-			),
-			Statement(
+			)
+
+		self.statement_if = Statement(
 				"if",
 				expression=[
 					AtomicSymbol("if"),
@@ -92,16 +105,18 @@ class Parser():
 					AtomicSymbol(":")
 				],
 				init=(lambda x: [x.eval_expr(1)])
-			),
-			Statement(
+			)
+
+		self.statement_else = Statement(
 				"else",
 				expression=[
 					AtomicSymbol("else"),
 					AtomicSymbol(":")
 				],
 				init=(lambda x: [])
-			),
-			Statement(
+			)
+
+		self.statement_for = Statement(
 				"for",
 				expression=[
 					AtomicSymbol("for"),
@@ -109,8 +124,9 @@ class Parser():
 					AtomicSymbol(":")
 				],
 				init=(lambda x: [x.eval_expr(1)])
-			),
-			Statement(
+			)
+
+		self.statement_while = Statement(
 				"while",
 				expression=[
 					AtomicSymbol("while"),
@@ -118,14 +134,16 @@ class Parser():
 					AtomicSymbol(":")
 				],
 				init=(lambda x: [x.eval_expr(1)])
-			),
-			Statement(
+			)
+
+		self.statement_func = Statement(
 				"function",
 				expression=[
 					AtomicSymbol("func"),
 					self.label_def,
 					self.paramlist_def,
-					AtomicSymbol("->"),
+					AtomicSymbol("-"),
+					AtomicSymbol(">"),
 					self.type_def,
 					AtomicSymbol(":")
 				],
@@ -133,10 +151,11 @@ class Parser():
 					lambda x: [
 					           x.eval_label(1),
 					           x.eval_param(2),
-					           x.eval_type(4)
+					           x.eval_type(5)
 					          ])
-			),
-			Statement(
+			)
+
+		self.statement_inst = Statement(
 				"instantiation",
 				expression=[
 					self.type_def,
@@ -150,8 +169,9 @@ class Parser():
 					             x.eval_label(1),
 					             x.eval_expr(3)
 					            ])
-			),
-			Statement(
+			)
+
+		self.statement_assign = Statement(
 				"assignment",
 				expression=[
 					self.label_def,
@@ -163,8 +183,9 @@ class Parser():
 				                 x.eval_label(0),
 				                 x.eval_expr(2)
 				                ])
-			),
-			Statement(
+			)
+
+		self.statement_call = Statement(
 				"func_call",
 				expression=[
 					self.label_def,
@@ -175,8 +196,9 @@ class Parser():
 				                 x.eval_label(0),
 				                 x.eval_args(1)
 				                ])
-			),
-			Statement(
+			)
+
+		self.statement_expression = Statement(
 				"expression",
 				expression=[
 					self.expr_def,
@@ -184,6 +206,19 @@ class Parser():
 				],
 				init=(lambda x: [x.eval_expr(0)])
 			)
+
+		self.active_tokens = [
+			self.statement_codeblock_begin,
+			self.statement_codeblock_end,
+			self.statement_if,
+			self.statement_else,
+			self.statement_for,
+			self.statement_while,
+			self.statement_func,
+			self.statement_inst,
+			self.statement_assign,
+			self.statement_call,
+			self.statement_expression
 		]
 		data=""
 		with open(file_name, 'r') as program:
@@ -197,7 +232,7 @@ class Parser():
 
 	def get_statements(self):
 		rv = []
-		for l in self.lines:
+		for num, l in enumerate(self.lines):
 			for a in self.active_tokens:
 				r = a.match(l)
 				if r:

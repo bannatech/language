@@ -2,6 +2,7 @@ import re
 
 class AtomicSymbol():
 	def __init__(self, symbol):
+		self.raw = symbol
 		self.symbol = re.compile(symbol)
 	
 	def match(self, tokenstring, index):
@@ -112,6 +113,8 @@ class Statement():
 		rv = []
 		index = 0
 		for e in self.expr:
+			if index >= len(tokenstring):
+				return False
 			r = e.match(tokenstring, index)
 			if r[0]:
 				rv.append(r[1])

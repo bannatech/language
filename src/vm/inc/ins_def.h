@@ -72,6 +72,8 @@ void _ins_def_BNAND    (rt_t*, bc_cont*);
 
 void _ins_def_GTHAN    (rt_t*, bc_cont*);
 void _ins_def_LTHAN    (rt_t*, bc_cont*);
+void _ins_def_GTHAN_EQ (rt_t*, bc_cont*);
+void _ins_def_LTHAN_EQ (rt_t*, bc_cont*);
 void _ins_def_EQ       (rt_t*, bc_cont*);
 void _ins_def_NOT      (rt_t*, bc_cont*);
 void _ins_def_OR       (rt_t*, bc_cont*);

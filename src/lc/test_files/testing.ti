@@ -1,4 +1,4 @@
-func some_important_function (int x, int y, int z) -> int:
+func test (int x, int y, int z) -> int:
 {
 	int c = (x * y) + z;
 	if c > 3:
@@ -10,18 +10,14 @@ func some_important_function (int x, int y, int z) -> int:
 
 int x = 3;
 
-array y = [ "Symbols suck", 32, "I know, right?" ];
+string y = "strings";
 
 if x == 3:
 {
 	print("Potatoes are good for \"the\" soul.");
 }
 
-for x in test(y):
-{
-	print(x);
-}
+int z = test(3, test(2*3, 2, 6), 1 * 2);
 
-some_important_function(3, 4, some_important_function(2, 3));
-
-test(test());
+print(y);
+print(z);

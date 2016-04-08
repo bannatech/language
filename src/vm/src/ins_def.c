@@ -56,10 +56,12 @@ void init_ins_def( void )
 
 	INS_DEF[0x50] = _ins_def_GTHAN;
 	INS_DEF[0x51] = _ins_def_LTHAN;
-	INS_DEF[0x52] = _ins_def_EQ;
-	INS_DEF[0x53] = _ins_def_NOT;
-	INS_DEF[0x54] = _ins_def_OR;
-	INS_DEF[0x55] = _ins_def_AND;
+	INS_DEF[0x51] = _ins_def_GTHAN_EQ;
+	INS_DEF[0x52] = _ins_def_LTHAN_EQ;
+	INS_DEF[0x53] = _ins_def_EQ;
+	INS_DEF[0x54] = _ins_def_NOT;
+	INS_DEF[0x55] = _ins_def_OR;
+	INS_DEF[0x56] = _ins_def_AND;
 
 	INS_DEF[0x60] = _ins_def_STARTL;
 	INS_DEF[0x61] = _ins_def_CLOOP;
@@ -350,6 +352,28 @@ void _ins_def_LTHAN    (rt_t* ctx, bc_cont* line)
 	var_cont* B = stk_pop(ctx->stack);
 
 	var_cont* C = var_lthan(A, B);
+
+	stk_push(ctx->stack, C);
+
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_GTHAN_EQ (rt_t* ctx, bc_cont* line)
+{
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
+
+	var_cont* C = (var_gthan(A, B) || var_eq(A, B));
+
+	stk_push(ctx->stack, C);
+
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_LTHAN_EQ (rt_t* ctx, bc_cont* line)
+{
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
+
+	var_cont* C = (var_lthan(A, B) || var_eq(A, B));
 
 	stk_push(ctx->stack, C);
 

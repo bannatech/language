@@ -21,14 +21,15 @@ are deemed inferior.
  3 PLIST   - Parameter list
  4 FUNC    - Function
  5 OBJECT  - Object/Class
- 6 G_INT   - Generic integer
- 7 G_FLOAT - Generic double
- 8 G_CHAR  - Generic character
- 9 G_STR   - Generic string
-10 S_ARRAY - Static array
-11 D_ARRAY - Dynamic array
-12 H_TABLE - Hashtable
-13 G_FIFO  - Stack
+ 6 G_PTR   - Generic pointer
+ 7 G_INT   - Generic integer
+ 8 G_FLOAT - Generic double
+ 9 G_CHAR  - Generic character
+10 G_STR   - Generic string
+11 S_ARRAY - Static array
+12 D_ARRAY - Dynamic array
+13 H_TABLE - Hashtable
+14 G_FIFO  - Stack
 
  RUNTIME
 
@@ -175,6 +176,7 @@ OPCODE SPEC
 --------------------------------------------------------------------------------
 Keywords:
  TOS           - 'Top Of Stack' The top element
+ TBI           - 'To be Implemented'
  S<[variable]> - Static Arguement.
  N<[variable]> - Name.
  A<[variable]> - Address Arguement.
@@ -204,9 +206,8 @@ Hex | Memnonic | arguments - description
    Types are in the air at this moment. I'll detail what types there are when
 the time comes
 -------------------------------------------------------------------------------
-30 TYPEOF              - returns type structure on TOS
-                         (used for comparing types)
-31 CAST S<type>        - Tries to cast TOS to <type>
+30 TYPEOF       - pushes type of TOS on to the stack TBI
+31 CAST S<type> - Tries to cast TOS to <type>        TBI
 -------------------------------------------------------------------------------
 4 - Binary Ops
     OPS take the two top elements of the stack, preform an operation and push
@@ -216,18 +217,18 @@ the result on the stack.
 41 SUB  - subtracts
 42 MULT - multiplies
 43 DIV  - divides
-44 POW  - power, TOS^TOS1
-45 BRT  - base root, TOS root TOS1
-46 SIN  - sine
-47 COS  - cosine
-48 TAN  - tangent
-49 ISIN - inverse sine
-4A ICOS - inverse consine
-4B ITAN - inverse tangent
-4C MOD  - modulus
-4D OR   - or's
-4E XOR  - xor's
-4F NAND - and's
+44 POW  - power, TOS^TOS1           TBI
+45 BRT  - base root, TOS root TOS1  TBI
+46 SIN  - sine                      TBI
+47 COS  - cosine                    TBI
+48 TAN  - tangent                   TBI
+49 ISIN - inverse sine              TBI
+4A ICOS - inverse consine           TBI
+4B ITAN - inverse tangent           TBI
+4C MOD  - modulus                   TBI
+4D OR   - or's                      TBI
+4E XOR  - xor's                     TBI
+4F NAND - and's                     TBI
 -------------------------------------------------------------------------------
 5 - Conditional Expressions
 
@@ -258,27 +259,27 @@ to TOS
 72 IFDO         - If TOS is TRUE, do until done, if not, jump to done
 73 ELSE         - Chained with an IFDO statement, if IFDO fails, execute ELSE
                   block until DONE is reached.
+74 JTR          - jump-to-return.                                           TBI
+75 JTE          - jump-to-error. Error object on TOS                        TBI
+7D ERR          - Start error block, uses TOS to evaluate error             TBI
 7E DONE         - End of block
 7F CALL N<ref>  - Calls function, pushes return value on to STACK.
 -------------------------------------------------------------------------------
-8 - Manipulating High-order Object Variables
+8 - Generic object interface
 
     For arrays, key-value arrays, etc
 -------------------------------------------------------------------------------
-80 PUSH         - Push TOS on to TOS1, expects TOS1 to be an object hat
-                supports the scheme.
+80 PUSH N<ref>  - Call 'push' method of <ref>                               TBI
 
-81 DEL          - Delete element in structure at TOS (assumes index of
-                sorts) for <ref> object.
+81 DEL N<ref>   - Call 'delete' method of <ref>                             TBI
 
-82 GET          - Gets key, TOS must be a keyed datastructure, and TOS1 must be
-                a string that is a key in TOS.
+82 GET N<ref>   - Call 'get' method of <ref>                                TBI
 
-83 GETP N<ref>  - Get property of <ref> in object contained in TOS. pushes
-                to stack
+83 GETP N<ref>  - Get property of <ref> in object contained in TOS. pushes  TBI
+                  to stack
 
-84 CALLM N<ref> - Call method of <ref> in object contained in TOS. Uses
-                arguement stack
+84 CALLM N<ref> - Call method of <ref> in object contained in TOS. Uses     TBI
+                  arguement stack
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
@@ -286,26 +287,26 @@ FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   function. D<ref> is its name, S<type> is the
                                   return value, D<args> is the args.
 
-FE DECLASS N<ref> D<args>       - Defines a class.
+FE DECLASS N<ref> D<args>       - Defines a class.                          TBI
 
-F1 NEW N<ref>                   - Instantiates class
+F1 NEW N<ref>                   - Instantiates class                        TBI
 
 F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------
 0 - SPECIAL BYTES
 -------------------------------------------------------------------------------
-00 NULL          - Terminator byte
+00 NULL          -
 
-01 SYNC S<level> - Updates global namespace with global namespace cache of
+01 SYNC S<level> - Updates global namespace with global namespace cache of  TBI
                    current thread
 
-02 PRINT         - Prints whatever is on the TOS.
+02 PRINT         - Prints whatever is on the TOS.                           TBI
 
 03 FREE          - Pops & Deletes TOS
 
 0E ARGB          - Builds arguement stack
 
-0F LIBC A<ref>   - Library call
+0F LIBC A<ref>   - Library call                                             TBI
 
 _______________________________________________________________________________
 COMPILER/TRANSLATOR/ASSEMBLER SHINDIGS

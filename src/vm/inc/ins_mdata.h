@@ -61,10 +61,12 @@
                                                                      \
 /* GTHAN     */ INS_MDATA[0x50] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* LTHAN     */ INS_MDATA[0x51] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* EQ        */ INS_MDATA[0x52] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* NOT       */ INS_MDATA[0x53] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* OR        */ INS_MDATA[0x54] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* AND       */ INS_MDATA[0x55] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* G_THAN_EQ */ INS_MDATA[0x52] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* G_LHAN_EQ */ INS_MDATA[0x53] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* EQ        */ INS_MDATA[0x54] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* NOT       */ INS_MDATA[0x55] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* OR        */ INS_MDATA[0x56] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* AND       */ INS_MDATA[0x57] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* STARTL    */ INS_MDATA[0x60] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* CLOOP     */ INS_MDATA[0x61] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
@@ -138,10 +140,12 @@
                                                                \
 /* GTHAN     */ INS_ADATA[0x50] = encode(0, BTOI, BTOI, BTOI); \
 /* LTHAN     */ INS_ADATA[0x51] = encode(0, BTOI, BTOI, BTOI); \
-/* EQ        */ INS_ADATA[0x52] = encode(0, BTOI, BTOI, BTOI); \
-/* NOT       */ INS_ADATA[0x53] = encode(0, BTOI, BTOI, BTOI); \
-/* OR        */ INS_ADATA[0x54] = encode(0, BTOI, BTOI, BTOI); \
-/* AND       */ INS_ADATA[0x55] = encode(0, BTOI, BTOI, BTOI); \
+/* G_THAN_EQ */ INS_ADATA[0x52] = encode(0, BTOI, BTOI, BTOI); \
+/* G_LHAN_EQ */ INS_ADATA[0x53] = encode(0, BTOI, BTOI, BTOI); \
+/* EQ        */ INS_ADATA[0x54] = encode(0, BTOI, BTOI, BTOI); \
+/* NOT       */ INS_ADATA[0x55] = encode(0, BTOI, BTOI, BTOI); \
+/* OR        */ INS_ADATA[0x56] = encode(0, BTOI, BTOI, BTOI); \
+/* AND       */ INS_ADATA[0x57] = encode(0, BTOI, BTOI, BTOI); \
                                                                \
 /* STARTL    */ INS_ADATA[0x60] = encode(0, BTOI, BTOI, BTOI); \
 /* CLOOP     */ INS_ADATA[0x61] = encode(0, BTOI, BTOI, BTOI); \
