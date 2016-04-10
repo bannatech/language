@@ -46,8 +46,8 @@ OP_AND       = 0x57
 
 OP_STARTL    = 0x60
 OP_CLOOP     = 0x61
-OP_BREAK     = 0x62
-OP_ENDL      = 0x63
+OP_BREAK     = 0x6E
+OP_ENDL      = 0x6F
 
 OP_GOTO      = 0x70
 OP_JUMPF     = 0x71

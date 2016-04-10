@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "var.h"
-
 #include "bc.h"
 #include "helper.h"
 
@@ -407,8 +406,7 @@ var_cont* raw_to_var(int n, byte_t* bytes)
 	} else
 	if (type == G_STR)
 	{
-		
-		rv= raw_to_str(n, 1, bytes);
+		rv = raw_to_str(n, 1, bytes);
 	} else
 	{
 		printf("Type {%x} is not a seralizeable type\n", type);

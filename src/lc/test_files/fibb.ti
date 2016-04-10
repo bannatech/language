@@ -1,0 +1,10 @@
+int a = 0;
+int b = 1;
+
+while a > 254:
+{
+	a = a + b;
+	print b;
+	b = a + b;
+	print a;
+}

@@ -42,10 +42,23 @@ class AbstractToken():
 
 class Label(AbstractToken):
 	def update(self):
-		self.expr.append(self.data)
-	
-	def action(self):
-		pass
+		f = lambda y, x: y(y, x[0]) if type(x) is list else x
+
+		self.data = f(f, self.data)
+
+		self.scope = 0 if self.i.scope > 0 else 1
+		self.expr  = 0
+
+		for i in self.i.names:
+			if self.data in i:
+				self.expr = i.index(self.data) + 1
+				break
+
+	def action(self, scope=False):
+		if scope:
+			return(self.scope)
+		else:
+			return([0x00, self.expr])
 
 class Arguements(AbstractToken):
 	def update(self):
@@ -57,8 +70,10 @@ class Arguements(AbstractToken):
 			self.expr.append(Expression(self.i, t))
 
 	def action(self):
+		rv = []
 		for i in self.expr:
-			i.action()
+			rv.append([i.action(), OP_ARGB])
+		return rv
 
 class Type(AbstractToken):
 	def update(self):
@@ -71,10 +86,10 @@ class Type(AbstractToken):
 		if n == None:
 			print("INVALID TYPE")
 
-		self.expr.append(n)
+		self.expr = n
 
 	def action(self):
-		pass
+		return(self.expr)
 
 class Parameters(AbstractToken):
 	def update(self):
@@ -83,16 +98,37 @@ class Parameters(AbstractToken):
 			if x != "(" and x != ")" and x != ",":
 				tmp.append(x)
 			elif x == "," or x == ")":
+				self.i.name_dec(tmp[1:])
 				t = Type(self.i, tmp[:-1])
 				l = Label(self.i, tmp[1:])
 				self.expr.append([t, l])
 				tmp = []
 
 	def action(self):
-		pass
+		types = map(lambda x: x[0].action(), self.expr)
+		return([
+		        len(types),
+		        0x0,
+		        types
+		       ])
+
 
 class Expression(AbstractToken):
 	def update(self):
+		self.operators = [
+			["+", Opcode(OP_ADD)],
+			["-", Opcode(OP_SUB)],
+			["*", Opcode(OP_MULT)],
+			["/", Opcode(OP_DIV)],
+			["==", Opcode(OP_EQ)],
+			[">", Opcode(OP_GTHAN)],
+			["<", Opcode(OP_LTHAN)],
+			[">=", Opcode(OP_GTHAN_EQ)],
+			["=<", Opcode(OP_LTHAN_EQ)]
+		]
+
+		self.operator_names = map(lambda x: x[0], self.operators)
+
 		self.func_call = Statement(
 			"func_call",
 			expression=[
@@ -100,7 +136,21 @@ class Expression(AbstractToken):
 				self.i.p.paramlist_def,
 			],
 			init=(lambda x,y: FunctionCall(Label(x,y[0]),
-			                              Arguements(x,y[1])))
+			                               Arguements(x,y[1:])))
+		)
+		self.subexpr = Statement(
+			"subexpr",
+			expression=[
+				self.i.p.paramlist_def
+			],
+			init=(lambda x,y: Expression(x, y[1:-1]))
+		)
+		self.string = Statement(
+			"string",
+			expression=[
+				AtomicSymbol("^\0")
+			],
+			init=(lambda x,y: StringConstant(y))
 		)
 		self.integer = Statement(
 			"integer",
@@ -114,64 +164,75 @@ class Expression(AbstractToken):
 			expression=[
 				self.i.p.label_def
 			],
-			init=(lambda x,y: Label(x, y))
+			init=(lambda x,y: VariableGet(Label(x, y)))
 		)
 
 		self.identifiers = [
 			self.func_call,
+			self.subexpr,
+			self.string,
 			self.integer,
 			self.label
 		]
 
-		self.operators = [
-			["+", OP_ADD],
-			["-", OP_SUB],
-			["*", OP_MULT],
-			["/", OP_DIV],
-			["==", OP_EQ],
-			[">", OP_GTHAN],
-			["<", OP_LTHAN],
-			[">=", OP_GTHAN_EQ],
-			["=<", OP_LTHAN_EQ]
-		]
-		self.operator_names = map(lambda x: x[0], self.operators)
-
 		self.group_char = [["[", "("], ["]", ")"]]
-
 		t = token_split(self.data,
 		                self.group_char,
 		                self.operator_names)
 
 		if len(t) == 0:
 			t = self.data
+		if len(t) > 2:
+			print("Expression Error ({})".format(self.data))
+			return False
 
-		subexpr = []
-		for n,x in enumerate(t):
-			if x[-1] in self.operator_names:
-				subexpr.append(
-					self.operators[ self.operator_names.index(x[-1]) ][1])
-				d = x[:-1]
+		next_op = False
+		for thing in t:
+			if thing[-1] in self.operator_names:
+				ex = thing[:-1]
+				op = thing[-1]
 			else:
-				d = x
+				ex = thing
+				op = None
 
-			if d[0] == "(":
-				subexpr.append(Expression(self.i, d[1:-1]))
+			obj = None
+			for i in self.identifiers:
+				r = i.match(ex)
+				if r:
+					obj = i.action(self.i, ex)
+
+			if obj == None:
+				print("Unknown Expression Error ({})".format(ex))
+				break
+
+			if next_op:
+				self.expr[-1].vals.append(obj)
+				next_op = False
 			else:
-				for o in self.identifiers:
-					r = o.match(d)
-					if r:
-						subexpr.append(o.action(self.i, r))
-			if len(subexpr) == 3:
-				self.expr.append(subexpr)
-				self.subexpr = []
+				if op in self.operator_names:
+					index = self.operator_names.index(op)
+					self.expr.append(BinaryOp(obj, self.operators[index][1]))
+					next_op = True
+				else:
+					self.expr.append(obj)
 
-		if len(subexpr) > 0:
-			self.expr.append(subexpr)
-
-		print(self.expr)
 
 	def action(self):
-		pass
+		return([
+		        self.expr[0].action()
+		       ])
+
+class Opcode():
+	def __init__(self, opcode):
+		self.opcode = opcode
+	
+	def action(self):
+		return([self.opcode])
+
+class Directive():
+	def __init__(self, function, conditional):
+		self.action = function
+		self.cond = conditional
 
 class Interpreter():
 	def __init__(self, filename):
@@ -181,14 +242,79 @@ class Interpreter():
 
 		self.line = (None, None)
 
-		self.contex = {}
+		self.ln   = 0
+
+		self.names = [[]]
+		self.scope = 0
+
+		self.cur_directives = []
+
+		self.directives = [self.cur_directives]
 
 		#initalizes values n' stuff
-		for self.line in self.program:
-			self.line.append(self.line[0].action(self))
+		for self.ln, self.line in enumerate(self.program):
+			t = self.line[0].action(self)
+			for i in t:
+				if i != False:
+					self.line[2].append(i)
 
+	def nxt(self):
+		if len(self.program) >= self.ln + 1:
+			return self.program[self.ln]
+		return self.program[self.ln + 1]
+
+	def new_name(self, index):
+		self.name_dec(self.line[1][index])
+		return False
+
+	def name_dec(self, token):
+		f = lambda y, x: y(y, x[0]) if type(x) is list else x
+		t = f(f, token)
+	
+		for scope in range(0, self.scope):
+			if t in self.names[scope]:
+				print("Can't do that")
+
+		self.names[self.scope].append(t)
+
+	def inc_scope(self):
+		self.names.append([])
+		self.scope += 1
+		return False
+
+	def dec_scope(self):
+		self.names.pop()
+		self.scope -= 1
+		return False
+
+	def push_directives(self):
+		self.directives.append(self.cur_directives)
+		self.cur_directives = []
+		return False
+
+	def pop_directives(self):
+		t = self.directives.pop()
+		for x in t:
+			if x.cond(self):
+				self.cur_directives.append(x)
+			else:
+				r = x.action(self)
+				for i in r:
+					if i != False:
+						self.line[2].append(i)
+
+		return False
+
+	def add_directive(self, directive, cond=(lambda x: False)):
+		d = Directive(directive, cond)
+		self.cur_directives.append(d)
+		return False
+
+	def op(self, opcode):
+		return(Opcode(opcode))
+	
 	def eval_label(self, index):
-		return(Label(self, self.line[1][index][0]))
+		return(Label(self, self.line[1][index]))
 
 	def eval_args(self, index):
 		return(Arguements(self, self.line[1][index]))

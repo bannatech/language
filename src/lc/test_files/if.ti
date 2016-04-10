@@ -1,0 +1,14 @@
+func test (int y) -> int:
+{
+	int z = 2;
+	return y * z;
+}
+
+int x = 3;
+
+if 3 == x:
+{
+	x = x + 1;
+}
+
+print test(x);

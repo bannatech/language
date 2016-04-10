@@ -1,4 +1,0 @@
-func testing (int i, int x) -> int:
-{
-	return(0);
-}

@@ -87,7 +87,7 @@ In this definition, the namespace will provide the following key mechanisms:
  * Implicitly move in/out of scopes
 
 Scopes are handled by referencing to either the Global Scope or the Local Scope.
-The Local Scope is denoted by '1' in the scope arguement when refering to names,
+The Local Scope is denoted by '0' in the scope arguement when refering to names,
 and this scope is initialized when evaluating any new block of code. When a diff
 erent block of code is called, a new scope is added as a new Namespace level.
 Namespace levels act as context switches within function contexts. For example,
@@ -97,20 +97,20 @@ function calls, you can traverse n instances of previous namespaces.
 For example, take this namespace level graphic, where each Level is a namespace
 instance:
 
- Level 0: Global namespace, denoted by '0'.
- Level 1: Namespace level, where Local Level is at 1, denoted by '1'.
+ Level 0: Global namespace, denoted by '1'.
+ Level 1: Namespace level, where Local Level is at 1, denoted by '0'.
 
 When a function is called, another namespace level is created and the local
 level increases, like so:
 
- Level 0: Global namespace, denoted by '0'.
+ Level 0: Global namespace, denoted by '1'.
  Level 1: Namespace level.
- Level 2: Namespace level, where Local Level is at 2, denoted by '1'.
+ Level 2: Namespace level, where Local Level is at 2, denoted by '0'.
 
-Global scope names (denoted by a '0' in the scope arguement) are persistient
+Global scope names (denoted by a '1' in the scope arguement) are persistient
 through the runtime as they handle all function definitions, objects, and
 names declared in the global scope. The "Local Level" is at where references
-that have a scope arguement of '1' refer to when accessing names.
+that have a scope arguement of '0' refer to when accessing names.
 
     VARIABLE DEFINITION
 

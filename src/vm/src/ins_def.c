@@ -70,6 +70,7 @@ void init_ins_def( void )
 
 	INS_DEF[0x70] = _ins_def_GOTO;
 	INS_DEF[0x71] = _ins_def_JUMPF;
+	INS_DEF[0x72] = _ins_def_IFDO;
 	INS_DEF[0x73] = _ins_def_ELSE;
 	INS_DEF[0x7E] = _ins_def_DONE;
 	INS_DEF[0x7F] = _ins_def_CALL;
@@ -105,21 +106,7 @@ void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_pop(ctx->stack);
 
-	if (var->type == G_STR)
-	{
-		char* str = var_data_get_G_STR(var);
-		printf("%s\n", str);
-	} else
-	if (var->type == G_INT)
-	{
-		int val = var_data_get_G_INT(var);
-		printf("%i\n", val);
-	} else
-	if (var->type == G_FLOAT)
-	{
-		double val = var_data_get_G_FLOAT(var);
-		printf("%f\n", val);
-	}
+	var_pprint(var);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -132,6 +119,7 @@ void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
 	var_cont* var = stk_at(ctx->stack, 0);
 
 	stk_push(ctx->argstk, var);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)
@@ -221,6 +209,7 @@ void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 	var_cont* new = var_data_cpy(line->varg[0]);
 
 	stk_push(ctx->stack, new);
+
 	pc_inc(ctx->pc, 1);
 }
 
@@ -362,9 +351,7 @@ void _ins_def_GTHAN_EQ (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(ctx->stack);
 	var_cont* B = stk_pop(ctx->stack);
 
-	var_cont* C = (var_gthan(A, B) || var_eq(A, B));
-
-	stk_push(ctx->stack, C);
+	// TODO
 
 	pc_inc(ctx->pc, 1);
 }
@@ -373,9 +360,7 @@ void _ins_def_LTHAN_EQ (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(ctx->stack);
 	var_cont* B = stk_pop(ctx->stack);
 
-	var_cont* C = (var_lthan(A, B) || var_eq(A, B));
-
-	stk_push(ctx->stack, C);
+	// TODO
 
 	pc_inc(ctx->pc, 1);
 }
@@ -475,6 +460,9 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 				break;
 			}
 		}
+	} else
+	{
+		pc_inc(ctx->pc, 1);
 	}
 }
 void _ins_def_ELSE     (rt_t* ctx, bc_cont* line)
@@ -545,12 +533,12 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 
 void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 {
-	// Pop the namespace and get the return value
-	var_cont* return_value = ns_pop(ctx->vars);
-
 	// Pop a level in the stack and arguement stack
 	stk_poplevel(&ctx->stack);
 	stk_poplevel(&ctx->argstk);
+
+	// Pop the namespace and get the return value
+	var_cont* return_value = ns_pop(ctx->vars);
 
 	// Push the return value to the stack
 	stk_push(ctx->stack, return_value);
@@ -573,7 +561,7 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
 	int     name = var_data_get_G_INT(line->varg[0]);
 	b_type  type = var_data_get_TYPE(line->varg[1]);
-	b_type* args = var_data_get_PLIST(line->varg[2]);
+	b_type* args = var_data_get_PLIST(line->varg[2]);	
 	size_t  alen = line->sarg[2];
 
 	// Create a new variable for the new function
@@ -586,8 +574,8 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	data->loc = line->real_addr + 1;
 
 	int nsize;
-	/* Determine the namespace size by finding variable declarations in the functions body,
-	   Along with determining the end of the function.
+	/* Determine the namespace size by finding variable declarations in the
+	   functions body, Along with determining the end of the function.
 	 */
 	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
@@ -606,10 +594,10 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 			nsize++;
 		}
 	}
-
 	// Set all the values.
 	data->end      = ctx->pc->line->real_addr; // This is the end!
-	data->size     = nsize + alen + 1;         // How many names will this function have?
+	data->size     = nsize + alen + 1;         // How many names will this
+	                                           // function have?
 	data->type     = type;                     // Return type
 	data->paramlen = alen;                     // Set the arguement length
 	data->param    = args;                     // Set the parameter list

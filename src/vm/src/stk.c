@@ -121,7 +121,6 @@ var_cont* stk_pop(stk_t* stack)
 
 	stack->stack->ptr = stack->stack->ptr - 1;
 	var_cont* rv = stack->stack->data[stack->stack->ptr];
-
 	return rv;
 }
 
@@ -140,6 +139,7 @@ void stk_push(stk_t* stack, var_cont* data)
 	}
 
 	stack->stack->data[stack->stack->ptr] = data;
+
 	stack->stack->ptr = stack->stack->ptr + 1;
 }
 

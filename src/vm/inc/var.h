@@ -26,7 +26,9 @@ typedef enum {
 	S_ARRAY,// A
 	D_ARRAY,// B
 	H_TABLE,// C
-	G_FIFO  // D
+	G_FIFO, // D
+	G_IO,   // E
+	G_PTR   // F
 } b_type;
 
 typedef struct var_cont {
@@ -51,6 +53,10 @@ typedef struct var_data_func {
 	size_t  paramlen;
 	b_type* param;
 } var_data_func;
+
+typedef struct var_data_ptr {
+	var_cont* v;
+} var_data_ptr;
 
 typedef struct var_data_int {
 	int v;

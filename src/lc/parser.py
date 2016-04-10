@@ -1,4 +1,7 @@
 from lexer import *
+from memonic import *
+from bytecode import *
+
 class Parser():
 	def __init__(self, file_name):
 		self.splitters = [
@@ -25,6 +28,8 @@ class Parser():
 		]
 	
 		self.known_tokens = [
+			"return",
+			"print",
 			"if",
 			"else",
 			"for",
@@ -49,10 +54,13 @@ class Parser():
 			"stack"
 		]
 	
-		self.int_def       = AtomicSymbol("[0-9]+")
+		self.int_def       = AtomicSymbol("^[0-9]+$")
+		self.str_def       = AtomicSymbol("^\0+")
 	
 		self.type_def      = InclusiveSymbol(self.defined_types)
 		self.label_def     = ExclusiveSymbol(self.defined_types +
+		                                     [self.int_def]     +
+		                                     [self.str_def]     +
 		                                     self.known_tokens   )
 	
 		self.paramlist_def = GroupingSymbol( [
@@ -82,142 +90,222 @@ class Parser():
 		                                          ])
 
 		self.statement_codeblock_begin = Statement(
-				"codeblock_begin",
-				expression=[
-					AtomicSymbol("{")
-				],
-				init=(lambda x: [])
-			)
+			"codeblock_begin",
+			expression=[
+				AtomicSymbol("{")
+			],
+			init=(lambda x: [x.push_directives()])
+		)
 
 		self.statement_codeblock_end = Statement(
-				"codeblock_end",
-				expression=[
-					AtomicSymbol("}")
-				],
-				init=(lambda x: [])
-			)
+			"codeblock_end",
+			expression=[
+				AtomicSymbol("}")
+			],
+			init=(lambda x: [x.pop_directives()])
+		)
+
+		self.statement_return = Statement(
+			"return",
+			expression=[
+				AtomicSymbol("return"),
+				self.expr_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.eval_expr(1),
+			                 x.op(OP_STV),
+			                 x.op(0x00),
+			                 x.op(0x00),
+			                 x.op(0x00)
+			                ])
+		)
+
+		self.statement_print = Statement(
+			"print",
+			expression=[
+				AtomicSymbol("print"),
+				self.expr_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.eval_expr(1),
+			                 x.op(OP_PRINT)
+			                ])
+		)
 
 		self.statement_if = Statement(
-				"if",
-				expression=[
-					AtomicSymbol("if"),
-					self.expr_def,
-					AtomicSymbol(":")
-				],
-				init=(lambda x: [x.eval_expr(1)])
-			)
+			"if",
+			expression=[
+				AtomicSymbol("if"),
+				self.expr_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.eval_expr(1),
+			                 x.op(OP_IFDO),
+			                 x.add_directive(lambda x: [x.op(OP_DONE)],
+			                                 cond=(
+			                 lambda x: x.nxt()[0].name in ["else", "else_if"]))
+			                ])
+		)
+
+		self.statement_else_if = Statement(
+			"else_if",
+			expression=[
+				AtomicSymbol("else"),
+				AtomicSymbol("if"),
+				self.expr_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.op(OP_ELSE),
+			                 x.eval_expr(2),
+			                 x.op(OP_IFDO),
+			                 x.add_directive(lambda x: [x.op(OP_DONE)],
+			                                 cond=(
+			                 lambda x: x.nxt()[0].name in ["else", "else_if"]))
+			                ])
+		)
 
 		self.statement_else = Statement(
-				"else",
-				expression=[
-					AtomicSymbol("else"),
-					AtomicSymbol(":")
-				],
-				init=(lambda x: [])
-			)
+			"else",
+			expression=[
+				AtomicSymbol("else"),
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.op(OP_ELSE),
+			                 x.add_directive(lambda x: [x.op(OP_DONE)])
+			                ])
+		)
 
 		self.statement_for = Statement(
-				"for",
-				expression=[
-					AtomicSymbol("for"),
-					self.expr_def,
-					AtomicSymbol(":")
-				],
-				init=(lambda x: [x.eval_expr(1)])
-			)
+			"for",
+			expression=[
+				AtomicSymbol("for"),
+				self.expr_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 ForLoop(x.eval_expr(1))
+			                ])
+		)
 
 		self.statement_while = Statement(
-				"while",
-				expression=[
-					AtomicSymbol("while"),
-					self.expr_def,
-					AtomicSymbol(":")
-				],
-				init=(lambda x: [x.eval_expr(1)])
-			)
+			"while",
+			expression=[
+				AtomicSymbol("while"),
+				self.expr_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.op(OP_STARTL),
+			                 x.eval_expr(1),
+			                 x.op(OP_CLOOP),
+			                 x.add_directive(lambda x: [x.op(OP_ENDL)])
+			                ])
+		)
 
 		self.statement_func = Statement(
-				"function",
-				expression=[
-					AtomicSymbol("func"),
-					self.label_def,
-					self.paramlist_def,
-					AtomicSymbol("-"),
-					AtomicSymbol(">"),
-					self.type_def,
-					AtomicSymbol(":")
-				],
-				init=(
-					lambda x: [
-					           x.eval_label(1),
-					           x.eval_param(2),
-					           x.eval_type(5)
-					          ])
-			)
+			"function",
+			expression=[
+				AtomicSymbol("func"),
+				self.label_def,
+				self.paramlist_def,
+				AtomicSymbol("-"),
+				AtomicSymbol(">"),
+				self.type_def,
+				AtomicSymbol(":")
+			],
+			init=(
+				lambda x: [
+				           x.new_name(1),
+				           x.inc_scope(),
+				           FunctionDef(x.eval_label(1),
+				                       x.eval_param(2),
+				                       x.eval_type(5)),
+				           x.add_directive(lambda x: [x.op(OP_RETURN),
+				                                      x.dec_scope()])
+				          ])
+		)
+
+		self.statement_proc = Statement(
+			"procedure",
+			expression=[
+				AtomicSymbol("func"),
+				self.label_def,
+				AtomicSymbol("-"),
+				AtomicSymbol(">"),
+				self.type_def,
+				AtomicSymbol(":")
+			],
+			init=(
+				lambda x: [
+				           x.new_name(1),
+				           x.inc_scope(),
+				           FunctionDef(x.eval_label(1),
+				                       None,
+				                       x.eval_type(4)),
+				           x.add_directive(lambda x: [x.op(OP_RETURN),
+				                                      x.dec_scope()])
+				          ])
+		)
 
 		self.statement_inst = Statement(
-				"instantiation",
-				expression=[
-					self.type_def,
-					self.label_def,
-					AtomicSymbol("="),
-					self.expr_def,
-					AtomicSymbol(";")
-				],
-				init=(lambda x: [
-					             x.eval_type(0),
-					             x.eval_label(1),
-					             x.eval_expr(3)
-					            ])
-			)
+			"instantiation",
+			expression=[
+				self.type_def,
+				self.label_def,
+				AtomicSymbol("="),
+				self.expr_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 VariableNew(x.eval_label(1),
+			                             x.eval_type(0)),
+			                 VariableAssignment(x.eval_label(1),
+			                                    x.eval_expr(3))
+			                ])
+		)
 
 		self.statement_assign = Statement(
-				"assignment",
-				expression=[
-					self.label_def,
-					AtomicSymbol("="),
-					self.expr_def,
-					AtomicSymbol(";")
-				],
-				init=(lambda x: [
-				                 x.eval_label(0),
-				                 x.eval_expr(2)
-				                ])
-			)
-
-		self.statement_call = Statement(
-				"func_call",
-				expression=[
-					self.label_def,
-					self.paramlist_def,
-					AtomicSymbol(";")
-				],
-				init=(lambda x: [
-				                 x.eval_label(0),
-				                 x.eval_args(1)
-				                ])
-			)
+			"assignment",
+			expression=[
+				self.label_def,
+				AtomicSymbol("="),
+				self.expr_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 VariableAssignment(x.eval_label(0),
+			                                    x.eval_expr(2))
+			                ])
+		)
 
 		self.statement_expression = Statement(
-				"expression",
-				expression=[
-					self.expr_def,
-					AtomicSymbol(";")
-				],
-				init=(lambda x: [x.eval_expr(0)])
-			)
+			"expression",
+			expression=[
+				self.expr_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [x.eval_expr(0)])
+		)
 
 		self.active_tokens = [
 			self.statement_codeblock_begin,
 			self.statement_codeblock_end,
+			self.statement_return,
+			self.statement_print,
 			self.statement_if,
 			self.statement_else,
 			self.statement_for,
 			self.statement_while,
 			self.statement_func,
+			self.statement_proc,
 			self.statement_inst,
 			self.statement_assign,
-			self.statement_call,
 			self.statement_expression
 		]
 		data=""
@@ -236,7 +324,7 @@ class Parser():
 			for a in self.active_tokens:
 				r = a.match(l)
 				if r:
-					rv.append([a,r])
+					rv.append([a,r,[]])
 					break
 
 		return rv

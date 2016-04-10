@@ -10,6 +10,8 @@
 #include "var.h"
 #include "helper.h"
 
+void var_pprint(var_cont*);
+
 var_cont* var_add_float(var_cont*, var_cont*);
 var_cont* var_add_int(var_cont*, var_cont*);
 var_cont* var_add(var_cont*, var_cont*);

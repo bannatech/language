@@ -6,6 +6,25 @@
 #include "var.h"
 #include "helper.h"
 
+void var_pprint(var_cont* var)
+{
+	if (var->type == G_STR)
+	{
+		var_data_str* data = var->data;
+		for (int i = 0; i < data->size; i++) printf("%c", data->v[i]);
+	} else
+	if (var->type == G_INT)
+	{
+		int val = var_data_get_G_INT(var);
+		printf("%i\n", val);
+	} else
+	if (var->type == G_FLOAT)
+	{
+		double val = var_data_get_G_FLOAT(var);
+		printf("%f\n", val);
+	}
+}
+
 var_cont* var_add_float(var_cont* A, var_cont* B)
 {
 	var_cont* var = var_new(G_FLOAT);
