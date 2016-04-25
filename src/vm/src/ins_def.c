@@ -351,7 +351,9 @@ void _ins_def_GTHAN_EQ (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(ctx->stack);
 	var_cont* B = stk_pop(ctx->stack);
 
-	// TODO
+	var_cont* C = var_gthan_eq(A, B);
+
+	stk_push(ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -360,7 +362,9 @@ void _ins_def_LTHAN_EQ (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(ctx->stack);
 	var_cont* B = stk_pop(ctx->stack);
 
-	// TODO
+	var_cont* C = var_gthan_eq(A, B);
+
+	stk_push(ctx->stack, C);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -443,10 +447,18 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 	// If the value is false, find an ELSE statement or DONE statement.
 	if (value < 1)
 	{
+		int level = 0;
 		while (pc_safe(ctx->pc))
 		{
 			pc_update(ctx->pc);
 			pc_inc(ctx->pc, 1);
+
+			// Is this instruction another IF statement?
+			if (ctx->pc->line->op == 0x72)
+			{
+				// Increment the if statement depth counter
+				level++;
+			} else
 			// Is the instruction an ELSE statement?
 			if (ctx->pc->line->op == 0x73)
 			{
@@ -456,8 +468,10 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 			// Is the instruction a DONE statement?
 			if (ctx->pc->line->op == 0x7E)
 			{
-				// We're done here.
-				break;
+				// And we're not in another if statement, we're done here
+				if (level == 0) break;
+
+				level--;
 			}
 		}
 	} else

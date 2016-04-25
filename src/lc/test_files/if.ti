@@ -9,6 +9,17 @@ int x = 3;
 if 3 == x:
 {
 	x = x + 1;
+
+	if 4 == x:
+	{
+		print "I will die";
+	} else if 5 == x:
+	{
+		print "If this works";
+	} else:
+	{
+		print "God help me";
+	}
 }
 
 print test(x);

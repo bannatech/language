@@ -4,3 +4,5 @@
 toi
 
 *.pyc
+
+__pycache__

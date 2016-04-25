@@ -83,7 +83,8 @@ class Parser():
 		                             AtomicSymbol("\>="),
 		                             AtomicSymbol("=="),
 		                             AtomicSymbol("\""),
-		                             AtomicSymbol("'")
+		                             AtomicSymbol("'"),
+		                             AtomicSymbol("\0")
 		                            ], terminator=[
 		                                           AtomicSymbol(";"),
 		                                           AtomicSymbol(":")

@@ -1,4 +1,5 @@
 from memonic import *
+from helper import *
 
 class VariableNew():
 	def __init__(self, label, typed):
@@ -64,6 +65,7 @@ class FunctionCall():
 		        self.label.action()
 		       ])
 
+#TODO: Implement this
 class ForLoop():
 	def __init__(self, expression):
 		self.expr = expression
@@ -77,25 +79,29 @@ class SerializeableType():
 
 class StringConstant(SerializeableType):
 	def __init__(self, value):
-		self.value = value[1:-1]
-	
+		self.value = []
+		for i in value:
+			self.value.append(ord(i))
+
 	def action(self):
 		return([
-		        len(value),
+		        OP_CTS,
+		        int_to_bytes(len(self.value) + 1),
 		        0x00,
-		        value
+		        0x09,
+		        self.value
 		       ])
 
 class IntegerConstant(SerializeableType):
 	def __init__(self, value):
-		self.value = int(value[0])
-		if self.value > 0xFF:
-			print("ONE BYTE PLEASE THIS IS A PROTOTYPE!!")
+		t = int(value[0])
+		self.raw = t
+		self.value = int_to_bytes(t)
 	
 	def action(self):
 		return([
 		        OP_CTS,
-		        0x02,
+		        int_to_bytes(len(self.value) + 1),
 		        0x00,
 		        0x06,
 		        self.value
@@ -112,3 +118,12 @@ class BinaryOp():
 		        self.vals[1].action(),
 		        self.op.action()
 		       ])
+
+class Opcode():
+	def __init__(self, opcode):
+		self.opcode = opcode
+	
+	def action(self):
+		return(self.opcode)
+
+

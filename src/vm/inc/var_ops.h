@@ -36,6 +36,14 @@ var_cont* var_lthan_float(var_cont*, var_cont*);
 var_cont* var_lthan_int(var_cont*, var_cont*);
 var_cont* var_lthan(var_cont*, var_cont*);
 
+var_cont* var_gthan_eq_float(var_cont*, var_cont*);
+var_cont* var_gthan_eq_int(var_cont*, var_cont*);
+var_cont* var_gthan_eq(var_cont*, var_cont*);
+
+var_cont* var_lthan_eq_float(var_cont*, var_cont*);
+var_cont* var_lthan_eq_int(var_cont*, var_cont*);
+var_cont* var_lthan_eq(var_cont*, var_cont*);
+
 var_cont* var_eq_float(var_cont*, var_cont*);
 var_cont* var_eq_int(var_cont*, var_cont*);
 var_cont* var_eq(var_cont*, var_cont*);

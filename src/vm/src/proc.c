@@ -34,7 +34,7 @@ void proc_run(rt_t* ctx)
 	
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
-//		printf("%i - %i: %x\n", n, ctx->pc->address, ctx->pc->line->op);
+//printf("%i - %i: %x\n", n, ctx->pc->address, ctx->pc->line->op);
 
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 

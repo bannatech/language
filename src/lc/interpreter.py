@@ -2,29 +2,7 @@ from parser import *
 from lexer import *
 from bytecode import *
 from memonic import *
-
-def token_split(tokenstring, esc_chars, split_chars, include_splitter=True):
-	tokens = []
-	tmp = []
-	capturing = False
-	for x in tokenstring:
-		if x in esc_chars[0]:
-			capturing = esc_chars[0].index(x)
-			tmp.append(x)
-		elif x in esc_chars[1]:
-			if esc_chars[1][capturing] == x:
-				capturing = False
-				tmp.append(x)
-		elif include_splitter or not x in split_chars or capturing:
-			tmp.append(x)
-
-		if x in split_chars and not capturing:
-			tokens.append(tmp)
-			tmp = []
-	if len(tmp) > 0:
-		tokens.append(tmp)
-
-	return tokens
+from helper import *
 
 class AbstractToken():
 	def __init__(self, interpreter_instance, raw_data):
@@ -43,7 +21,6 @@ class AbstractToken():
 class Label(AbstractToken):
 	def update(self):
 		f = lambda y, x: y(y, x[0]) if type(x) is list else x
-
 		self.data = f(f, self.data)
 
 		self.scope = 0 if self.i.scope > 0 else 1
@@ -58,7 +35,7 @@ class Label(AbstractToken):
 		if scope:
 			return(self.scope)
 		else:
-			return([0x00, self.expr])
+			return(int_to_word(self.expr))
 
 class Arguements(AbstractToken):
 	def update(self):
@@ -105,9 +82,9 @@ class Parameters(AbstractToken):
 				tmp = []
 
 	def action(self):
-		types = map(lambda x: x[0].action(), self.expr)
+		types = list(map(lambda x: x[0].action(), self.expr))
 		return([
-		        len(types),
+		        int_to_bytes(len(types)),
 		        0x0,
 		        types
 		       ])
@@ -115,6 +92,7 @@ class Parameters(AbstractToken):
 
 class Expression(AbstractToken):
 	def update(self):
+		self.expr = None
 		self.operators = [
 			["+", Opcode(OP_ADD)],
 			["-", Opcode(OP_SUB)],
@@ -127,7 +105,7 @@ class Expression(AbstractToken):
 			["=<", Opcode(OP_LTHAN_EQ)]
 		]
 
-		self.operator_names = map(lambda x: x[0], self.operators)
+		self.operator_names = list(map(lambda x: x[0], self.operators))
 
 		self.func_call = Statement(
 			"func_call",
@@ -144,13 +122,6 @@ class Expression(AbstractToken):
 				self.i.p.paramlist_def
 			],
 			init=(lambda x,y: Expression(x, y[1:-1]))
-		)
-		self.string = Statement(
-			"string",
-			expression=[
-				AtomicSymbol("^\0")
-			],
-			init=(lambda x,y: StringConstant(y))
 		)
 		self.integer = Statement(
 			"integer",
@@ -170,7 +141,6 @@ class Expression(AbstractToken):
 		self.identifiers = [
 			self.func_call,
 			self.subexpr,
-			self.string,
 			self.integer,
 			self.label
 		]
@@ -184,7 +154,6 @@ class Expression(AbstractToken):
 			t = self.data
 		if len(t) > 2:
 			print("Expression Error ({})".format(self.data))
-			return False
 
 		next_op = False
 		for thing in t:
@@ -196,38 +165,31 @@ class Expression(AbstractToken):
 				op = None
 
 			obj = None
-			for i in self.identifiers:
-				r = i.match(ex)
-				if r:
-					obj = i.action(self.i, ex)
+			if ex[0][0] == "\0":
+				obj = StringConstant(ex[0][2:-1])
+			else:
+				for i in self.identifiers:
+					r = i.match(ex)
+					if r:
+						obj = i.action(self.i, ex)
 
 			if obj == None:
 				print("Unknown Expression Error ({})".format(ex))
 				break
 
 			if next_op:
-				self.expr[-1].vals.append(obj)
+				self.expr.vals.append(obj)
 				next_op = False
 			else:
 				if op in self.operator_names:
 					index = self.operator_names.index(op)
-					self.expr.append(BinaryOp(obj, self.operators[index][1]))
+					self.expr = BinaryOp(obj, self.operators[index][1])
 					next_op = True
 				else:
-					self.expr.append(obj)
-
+					self.expr = obj
 
 	def action(self):
-		return([
-		        self.expr[0].action()
-		       ])
-
-class Opcode():
-	def __init__(self, opcode):
-		self.opcode = opcode
-	
-	def action(self):
-		return([self.opcode])
+		return(self.expr.action());
 
 class Directive():
 	def __init__(self, function, conditional):
