@@ -56,12 +56,13 @@ void init_ins_def( void )
 
 	INS_DEF[0x50] = _ins_def_GTHAN;
 	INS_DEF[0x51] = _ins_def_LTHAN;
-	INS_DEF[0x51] = _ins_def_GTHAN_EQ;
-	INS_DEF[0x52] = _ins_def_LTHAN_EQ;
-	INS_DEF[0x53] = _ins_def_EQ;
-	INS_DEF[0x54] = _ins_def_NOT;
-	INS_DEF[0x55] = _ins_def_OR;
-	INS_DEF[0x56] = _ins_def_AND;
+	INS_DEF[0x52] = _ins_def_GTHAN_EQ;
+	INS_DEF[0x53] = _ins_def_LTHAN_EQ;
+	INS_DEF[0x54] = _ins_def_EQ;
+	INS_DEF[0x55] = _ins_def_NEQ;
+	INS_DEF[0x56] = _ins_def_NOT;
+	INS_DEF[0x57] = _ins_def_OR;
+	INS_DEF[0x58] = _ins_def_AND;
 
 	INS_DEF[0x60] = _ins_def_STARTL;
 	INS_DEF[0x61] = _ins_def_CLOOP;
@@ -379,8 +380,28 @@ void _ins_def_EQ       (rt_t* ctx, bc_cont* line)
 
 	pc_inc(ctx->pc, 1);
 }
+void _ins_def_NEQ       (rt_t* ctx, bc_cont* line)
+{
+	var_cont* A = stk_pop(ctx->stack);
+	var_cont* B = stk_pop(ctx->stack);
+
+	var_cont* C = var_eq(A, B);
+
+	C = var_not(C);
+
+	stk_push(ctx->stack, C);
+
+	pc_inc(ctx->pc, 1);
+}
+
 void _ins_def_NOT      (rt_t* ctx, bc_cont* line)
 {
+	var_cont* A = stk_pop(ctx->stack);
+
+	var_cont* C = var_not(A);
+
+	stk_push(ctx->stack, C);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_OR       (rt_t* ctx, bc_cont* line)
@@ -392,6 +413,21 @@ void _ins_def_AND      (rt_t* ctx, bc_cont* line)
 	pc_inc(ctx->pc, 1);
 }
 
+/* HELPER FUNCTIONS */
+void _ins_def_loop_break(rt_t* ctx)
+{
+	while (pc_safe(ctx->pc))
+	{
+		pc_update(ctx->pc);
+		pc_inc(ctx->pc, 1);
+
+		if (ctx->pc->line->op == 0x6F)
+		{
+			break;
+		}
+	}
+}
+/* END HELPER FUNCIONS */
 void _ins_def_STARTL   (rt_t* ctx, bc_cont* line)
 {
 	pc_branch(ctx->pc, ctx->pc->address);
@@ -406,16 +442,7 @@ void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 	if (value < 1)
 	{
 		pc_return(ctx->pc);
-		while (pc_safe(ctx->pc))
-		{
-			pc_update(ctx->pc);
-			pc_inc(ctx->pc, 1);
-
-			if (ctx->pc->line->op == 0x6F)
-			{
-				break;
-			}
-		}
+		_ins_def_loop_break(ctx);
 	} else
 	{
 		pc_inc(ctx->pc, 1);
@@ -423,20 +450,60 @@ void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_BREAK    (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	pc_return(ctx->pc);
+	
+	_ins_def_loop_break(ctx);
 }
 void _ins_def_ENDL     (rt_t* ctx, bc_cont* line)
 {
 	pc_return(ctx->pc);
 }
 
+/* HELPER FUNCTIONS */
+void _ins_def_branch_to_end_if(rt_t* ctx)
+{
+	int level = 0;
+	while (pc_safe(ctx->pc))
+	{
+		pc_inc(ctx->pc, 1);
+		pc_update(ctx->pc);
+
+		// Is this instruction another IF statement?
+		if (ctx->pc->line->op == 0x72)
+		{
+			// Increment the if statement depth counter
+			level++;
+		} else
+		// Is the instruction an ELSE statement?
+		if (ctx->pc->line->op == 0x73)
+		{
+			// We're done here if we're in our scope
+			if (level == 0) break;
+		} else
+		// Is the instruction a DONE statement?
+		if (ctx->pc->line->op == 0x7E)
+		{
+			// And we're not in another if statement, we're done here
+			if (level == 0) break;
+
+			level--;
+		}
+	}
+
+	pc_inc(ctx->pc, 1);
+}
+/* END HELPER FUNCTIONS */
 void _ins_def_GOTO     (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	int value = var_data_get_G_INT(line->varg[0]);
+
+	pc_branch(ctx->pc, value);
 }
 void _ins_def_JUMPF    (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	int value = var_data_get_G_INT(line->varg[0]);
+
+	pc_inc(ctx->pc, value);
 }
 void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 {
@@ -447,33 +514,7 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 	// If the value is false, find an ELSE statement or DONE statement.
 	if (value < 1)
 	{
-		int level = 0;
-		while (pc_safe(ctx->pc))
-		{
-			pc_update(ctx->pc);
-			pc_inc(ctx->pc, 1);
-
-			// Is this instruction another IF statement?
-			if (ctx->pc->line->op == 0x72)
-			{
-				// Increment the if statement depth counter
-				level++;
-			} else
-			// Is the instruction an ELSE statement?
-			if (ctx->pc->line->op == 0x73)
-			{
-				// We're done here.
-				break;
-			} else
-			// Is the instruction a DONE statement?
-			if (ctx->pc->line->op == 0x7E)
-			{
-				// And we're not in another if statement, we're done here
-				if (level == 0) break;
-
-				level--;
-			}
-		}
+		_ins_def_branch_to_end_if(ctx);
 	} else
 	{
 		pc_inc(ctx->pc, 1);
@@ -482,6 +523,7 @@ void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)
 void _ins_def_ELSE     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
+	_ins_def_branch_to_end_if(ctx);
 }
 void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 {

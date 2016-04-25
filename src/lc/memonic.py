@@ -40,9 +40,10 @@ OP_LTHAN     = 0x51
 OP_GTHAN_EQ  = 0x52
 OP_LTHAN_EQ  = 0x53
 OP_EQ        = 0x54
-OP_NOT       = 0x55
-OP_OR        = 0x56
-OP_AND       = 0x57
+OP_NEQ       = 0x55
+OP_NOT       = 0x56
+OP_OR        = 0x57
+OP_AND       = 0x58
 
 OP_STARTL    = 0x60
 OP_CLOOP     = 0x61

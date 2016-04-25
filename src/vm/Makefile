@@ -3,6 +3,7 @@ INC_DIR = inc
 
 CC      = gcc
 CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
+DEBUG   = -D DEBUG
 
 DEPS    = $(INC_DIR)/is_mdata.h \
                      helper.h   \

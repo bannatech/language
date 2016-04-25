@@ -1,25 +1,3 @@
-func test (int y) -> int:
-{
-	int z = 2;
-	return y * z;
-}
+include extern;
 
-int x = 3;
-
-if 3 == x:
-{
-	x = x + 1;
-
-	if 4 == x:
-	{
-		print "I will die";
-	} else if 5 == x:
-	{
-		print "If this works";
-	} else:
-	{
-		print "God help me";
-	}
-}
-
-print test(x);
+print some_external_function(3);

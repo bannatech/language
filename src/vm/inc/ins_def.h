@@ -75,15 +75,22 @@ void _ins_def_LTHAN    (rt_t*, bc_cont*);
 void _ins_def_GTHAN_EQ (rt_t*, bc_cont*);
 void _ins_def_LTHAN_EQ (rt_t*, bc_cont*);
 void _ins_def_EQ       (rt_t*, bc_cont*);
+void _ins_def_NEQ       (rt_t*, bc_cont*);
 void _ins_def_NOT      (rt_t*, bc_cont*);
 void _ins_def_OR       (rt_t*, bc_cont*);
 void _ins_def_AND      (rt_t*, bc_cont*);
 
+/* HELPER FUNCTIONS */
+void _ins_def_loop_break(rt_t*);
+/* END HELPER FUNCTIONS */
 void _ins_def_STARTL   (rt_t*, bc_cont*);
 void _ins_def_CLOOP    (rt_t*, bc_cont*);
 void _ins_def_BREAK    (rt_t*, bc_cont*);
 void _ins_def_ENDL     (rt_t*, bc_cont*);
 
+/* HELPER FUNCTIONS */
+void _ins_def_branch_to_end_if(rt_t*);
+/* END HELPER FUNCTIONS */
 void _ins_def_GOTO     (rt_t*, bc_cont*);
 void _ins_def_JUMPF    (rt_t*, bc_cont*);
 void _ins_def_IFDO     (rt_t*, bc_cont*);

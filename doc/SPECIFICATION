@@ -236,12 +236,15 @@ the result on the stack.
 Behaves like Arithmetic instructions, besides NOT instruction. Pushes boolean
 to TOS
 -------------------------------------------------------------------------------
-50 GTHAN - Greather than
-51 LTHAN - Less than
-52 EQ    - Equal to
-53 NOT   - Inverts TOS if TOS is boolean
-54 OR    - Boolean OR
-55 AND   - Boolean AND
+50 GTHAN    - Greater than
+51 LTHAN    - Less than
+52 GTHAN_EQ - Greater than or equal to
+53 LTHAN_EQ - Less than or equal to
+54 EQ       - Equal to
+55 NEQ      - Not equal to
+56 NOT      - Inverts TOS if TOS is boolean
+57 OR       - Boolean OR
+58 AND      - Boolean AND
 -------------------------------------------------------------------------------
 6 - Loops
 -------------------------------------------------------------------------------
@@ -269,11 +272,11 @@ to TOS
 
     For arrays, key-value arrays, etc
 -------------------------------------------------------------------------------
-80 PUSH N<ref>  - Call 'push' method of <ref>                               TBI
+80 NEW          - Call 'new' method of <ref>                                TBI
 
-81 DEL N<ref>   - Call 'delete' method of <ref>                             TBI
+81 DEL          - Call 'delete' method of <ref>                             TBI
 
-82 GET N<ref>   - Call 'get' method of <ref>                                TBI
+82 INDEX        - Call 'get' method of <ref>                                TBI
 
 83 GETP N<ref>  - Get property of <ref> in object contained in TOS. pushes  TBI
                   to stack

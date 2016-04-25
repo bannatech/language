@@ -48,4 +48,6 @@ var_cont* var_eq_float(var_cont*, var_cont*);
 var_cont* var_eq_int(var_cont*, var_cont*);
 var_cont* var_eq(var_cont*, var_cont*);
 
+var_cont* var_not(var_cont*);
+
 #endif //VAR_OPS_H

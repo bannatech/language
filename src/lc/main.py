@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from interpreter import *
 
 def tobytearray(l, n, ba):
@@ -10,8 +12,6 @@ def tobytearray(l, n, ba):
 				i = int.from_bytes(i, byteorder='big')
 			if type(i) is int:
 				ba.append(i)
-
-			print((" "*n)+hex(i))
 
 	return(ba)
 

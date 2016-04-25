@@ -99,10 +99,11 @@ class Expression(AbstractToken):
 			["*", Opcode(OP_MULT)],
 			["/", Opcode(OP_DIV)],
 			["==", Opcode(OP_EQ)],
-			[">", Opcode(OP_GTHAN)],
-			["<", Opcode(OP_LTHAN)],
-			[">=", Opcode(OP_GTHAN_EQ)],
-			["=<", Opcode(OP_LTHAN_EQ)]
+			["!=", Opcode(OP_NEQ)],
+			[">", Opcode(OP_LTHAN)],
+			["<", Opcode(OP_GTHAN)],
+			[">=", Opcode(OP_LTHAN_EQ)],
+			["=<", Opcode(OP_GTHAN_EQ)]
 		]
 
 		self.operator_names = list(map(lambda x: x[0], self.operators))
@@ -220,10 +221,10 @@ class Interpreter():
 				if i != False:
 					self.line[2].append(i)
 
-	def nxt(self):
-		if len(self.program) >= self.ln + 1:
+	def nxt(self, n):
+		if len(self.program) <= self.ln + n:
 			return self.program[self.ln]
-		return self.program[self.ln + 1]
+		return self.program[self.ln + n]
 
 	def new_name(self, index):
 		self.name_dec(self.line[1][index])

@@ -404,8 +404,6 @@ var_cont* var_lthan_eq(var_cont* A, var_cont* B)
 	return rv;
 }
 
-
-
 var_cont* var_eq_float(var_cont* A, var_cont* B)
 {
 	var_cont* var = var_new(G_INT);
@@ -453,3 +451,15 @@ var_cont* var_eq(var_cont* A, var_cont* B)
 	return rv;
 }
 
+var_cont* var_not(var_cont* A)
+{
+	var_cont* rv = var_new(G_INT);
+
+	int val = var_data_get_G_INT(A);
+	if (val < 1) val = 1;
+	else         val = 0;
+
+	var_set(rv, var_data_alloc_G_INT(val), G_INT);
+
+	return rv;
+}

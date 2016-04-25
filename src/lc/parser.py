@@ -90,6 +90,16 @@ class Parser():
 		                                           AtomicSymbol(":")
 		                                          ])
 
+		self.statement_include = Statement(
+			"include",
+			expression=[
+				AtomicSymbol("include"),
+				self.label_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [])
+		)
+
 		self.statement_codeblock_begin = Statement(
 			"codeblock_begin",
 			expression=[
@@ -147,7 +157,7 @@ class Parser():
 			                 x.op(OP_IFDO),
 			                 x.add_directive(lambda x: [x.op(OP_DONE)],
 			                                 cond=(
-			                 lambda x: x.nxt()[0].name in ["else", "else_if"]))
+			                 lambda x: x.nxt(1)[0].name in ["else", "else_if"]))
 			                ])
 		)
 
@@ -165,7 +175,7 @@ class Parser():
 			                 x.op(OP_IFDO),
 			                 x.add_directive(lambda x: [x.op(OP_DONE)],
 			                                 cond=(
-			                 lambda x: x.nxt()[0].name in ["else", "else_if"]))
+			                 lambda x: x.nxt(1)[0].name in ["else", "else_if"]))
 			                ])
 		)
 
@@ -295,11 +305,13 @@ class Parser():
 		)
 
 		self.active_tokens = [
+			self.statement_include,
 			self.statement_codeblock_begin,
 			self.statement_codeblock_end,
 			self.statement_return,
 			self.statement_print,
 			self.statement_if,
+			self.statement_else_if,
 			self.statement_else,
 			self.statement_for,
 			self.statement_while,
@@ -325,7 +337,12 @@ class Parser():
 			for a in self.active_tokens:
 				r = a.match(l)
 				if r:
-					rv.append([a,r,[]])
+					if a.name == "include":
+						t = Parser(r[1][0] + ".ti")
+						l = t.get_statements()
+						rv.extend(l)
+					else:
+						rv.append([a,r,[]])
 					break
 
 		return rv

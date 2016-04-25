@@ -1,0 +1,4 @@
+func some_external_function(int x) -> int:
+{
+	return x*2;
+}
