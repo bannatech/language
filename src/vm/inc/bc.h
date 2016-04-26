@@ -70,4 +70,8 @@ bc_t* bc_init(char*);
  */
 void bc_del(bc_t*);
 
+/* Thing for pretty printing
+ */
+void bc_print_op(bc_cont*);
+
 #endif // BC_H

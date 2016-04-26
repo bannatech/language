@@ -147,6 +147,16 @@ structures. This is set in place to prevent accidental deallocation of variable
 containers that are not copied, but instead passed as references to these
 structures.
 
+    FUNCTION DEFINITION
+
+Functions in this virtual machine are a pointer to a set of instructions in a
+program with metadata about parameters defined.
+
+    OBJECT DEFINITION
+
+In this paradigm, objects are units that encapsulate a seperate namespace and
+collection of methods.
+
     BYTECODE SPEC
 
 Bytecode is organised in the following manner:
@@ -206,8 +216,8 @@ Hex | Memnonic | arguments - description
    Types are in the air at this moment. I'll detail what types there are when
 the time comes
 -------------------------------------------------------------------------------
-30 TYPEOF       - pushes type of TOS on to the stack TBI
-31 CAST S<type> - Tries to cast TOS to <type>        TBI
+30 TYPEOF       - pushes type of TOS on to the stack                        TBI
+31 CAST S<type> - Tries to cast TOS to <type>                               TBI
 -------------------------------------------------------------------------------
 4 - Binary Ops
     OPS take the two top elements of the stack, preform an operation and push
@@ -217,18 +227,18 @@ the result on the stack.
 41 SUB  - subtracts
 42 MULT - multiplies
 43 DIV  - divides
-44 POW  - power, TOS^TOS1           TBI
-45 BRT  - base root, TOS root TOS1  TBI
-46 SIN  - sine                      TBI
-47 COS  - cosine                    TBI
-48 TAN  - tangent                   TBI
-49 ISIN - inverse sine              TBI
-4A ICOS - inverse consine           TBI
-4B ITAN - inverse tangent           TBI
-4C MOD  - modulus                   TBI
-4D OR   - or's                      TBI
-4E XOR  - xor's                     TBI
-4F NAND - and's                     TBI
+44 POW  - power, TOS^TOS1                                                   TBI
+45 BRT  - base root, TOS root TOS1                                          TBI
+46 SIN  - sine                                                              TBI
+47 COS  - cosine                                                            TBI
+48 TAN  - tangent                                                           TBI
+49 ISIN - inverse sine                                                      TBI
+4A ICOS - inverse consine                                                   TBI
+4B ITAN - inverse tangent                                                   TBI
+4C MOD  - modulus                                                           TBI
+4D OR   - or's                                                              TBI
+4E XOR  - xor's                                                             TBI
+4F NAND - and's                                                             TBI
 -------------------------------------------------------------------------------
 5 - Conditional Expressions
 
@@ -268,27 +278,21 @@ to TOS
 7E DONE         - End of block
 7F CALL N<ref>  - Calls function, pushes return value on to STACK.
 -------------------------------------------------------------------------------
-8 - Generic object interface
-
-    For arrays, key-value arrays, etc
+8 - Generic object interface. Expects object on TOS
 -------------------------------------------------------------------------------
-80 NEW          - Call 'new' method of <ref>                                TBI
+80 GETN N<name>   - Returns variable assosiated with name in object         TBI
 
-81 DEL          - Call 'delete' method of <ref>                             TBI
+81 CALLM N<name>  - Calls method in object                                  TBI
 
-82 INDEX        - Call 'get' method of <ref>                                TBI
+82 INDEXO         - Index an object, uses arguement stack                   TBI
 
-83 GETP N<ref>  - Get property of <ref> in object contained in TOS. pushes  TBI
-                  to stack
-
-84 CALLM N<ref> - Call method of <ref> in object contained in TOS. Uses     TBI
-                  arguement stack
+83 MODO S<OP>     - Modify an object based on op. [+, -, *, /, %, ^ .. etc] TBI
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
 FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
-                                  function. D<ref> is its name, S<type> is the
-                                  return value, D<args> is the args.
+                                  function. D<ref> is its name, S<type> is
+                                  the return value, D<args> is the args.
 
 FE DECLASS N<ref> D<args>       - Defines a class.                          TBI
 
@@ -298,10 +302,9 @@ F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------
 0 - SPECIAL BYTES
 -------------------------------------------------------------------------------
-00 NULL          -
+00 NULL          - No-op
 
-01 SYNC S<level> - Updates global namespace with global namespace cache of  TBI
-                   current thread
+01 LC N<name>    - Calls OS function library, i.e. I/O, opening files, etc  TBI
 
 02 PRINT         - Prints whatever is on the TOS.                           TBI
 
@@ -309,8 +312,9 @@ F0 RETURN                       - Returns from function
 
 0E ARGB          - Builds arguement stack
 
-0F LIBC A<ref>   - Library call                                             TBI
-
+0F PC S<ref>     - Primitive call, calls a subroutine A<ref>. A list of     TBI
+                   primitive subroutines providing methods to tweak
+                   objects this bytecode set cannot touch. Uses argstack.
 _______________________________________________________________________________
 COMPILER/TRANSLATOR/ASSEMBLER SHINDIGS
 --------------------------------------------------------------------------------

@@ -13,13 +13,20 @@ def token_split(tokenstring, esc_chars, split_chars, include_splitter=True):
 	tokens = []
 	tmp = []
 	capturing = False
+	depth     = 0
 	for x in tokenstring:
 		if x in esc_chars[0]:
-			capturing = esc_chars[0].index(x)
+			if capturing:
+				depth += 1
+			else:
+				capturing = esc_chars[0].index(x)
 			tmp.append(x)
 		elif x in esc_chars[1]:
 			if esc_chars[1][capturing] == x:
-				capturing = False
+				if depth > 0:
+					depth -= 1
+				elif depth == 0:
+					capturing = False
 				tmp.append(x)
 		elif include_splitter or not x in split_chars or capturing:
 			tmp.append(x)
@@ -32,6 +39,9 @@ def token_split(tokenstring, esc_chars, split_chars, include_splitter=True):
 
 	return tokens
 
+# This here takes a number and chops it up into a series of byte-width numbers
+# i.e 42 -> [42], 256 -> [1, 0]
+#
 def int_to_bytes(number):
 	rv = []
 	c = 0

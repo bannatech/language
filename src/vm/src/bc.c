@@ -226,3 +226,32 @@ void bc_del(bc_t* program)
 
 	free(program);
 }
+
+/* Thing for pretty printing
+ */
+void bc_print_op(bc_cont* op)
+{
+	int num_args,
+	    arg_types[3];
+
+	unencode(op->mdata, &num_args, arg_types);
+
+	printf("%x\t", op->op);
+	for (int i = 0; i < num_args && num_args != 0; i++)
+	{
+		if (arg_types[i] == A_BYTE)
+		{
+			printf("%x, ", op->args[i][0]);
+		} else
+		if (arg_types[i] == A_NAME)
+		{
+			printf("%x %x, ", op->args[i][0], op->args[i][1]);
+		} else
+		if (arg_types[i] == A_DYNC)
+		{
+			for (int x = 0; x < op->sarg[i]; x++)
+				printf("%x ", op->args[i][x]);
+		}
+	}
+}
+

@@ -1,9 +1,9 @@
 SRC_DIR = src
 INC_DIR = inc
+DST_DIR = /usr/bin/
 
 CC      = gcc
 CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
-DEBUG   = -D DEBUG
 
 DEPS    = $(INC_DIR)/is_mdata.h \
                      helper.h   \
@@ -43,3 +43,6 @@ $(OUT): $(OBJ)
 clean:
 	rm $(SRC_DIR)/*.o
 	rm $(OUT)
+
+install:
+	mv $(OUT) $(DST_DIR)

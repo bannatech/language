@@ -1,10 +1,15 @@
-int a = 0;
-int b = 1;
-
-while a < 100000000:
+func fibo(int limit) -> void:
 {
-	a = a + b;
-	print b;
-	b = a + b;
-	print a;
+	string thing = "starting this shit yo";
+	print thing;
+	int a = 0;
+	int b = 1;
+
+	while a < limit:
+	{
+		a = a + b;
+		print b;
+		b = a + b;
+		print a;
+	}
 }

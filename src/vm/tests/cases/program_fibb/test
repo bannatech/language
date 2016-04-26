@@ -1,0 +1,6 @@
+#!/bin/bash
+pushd ../../.. &>/dev/null
+make &>/dev/null
+popd &>/dev/null
+
+../../../toi fibb

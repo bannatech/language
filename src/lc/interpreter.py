@@ -23,28 +23,28 @@ class Label(AbstractToken):
 		f = lambda y, x: y(y, x[0]) if type(x) is list else x
 		self.data = f(f, self.data)
 
-		self.scope = 0 if self.i.scope > 0 else 1
+		self.scope = 0
 		self.expr  = 0
 
-		for i in self.i.names:
+		for n, i in enumerate(self.i.names):
 			if self.data in i:
 				self.expr = i.index(self.data) + 1
+				self.scope = 0 if n > 0 else 1
 				break
 
-	def action(self, scope=False):
-		if scope:
+	def action(self, s=False):
+		if s:
 			return(self.scope)
 		else:
 			return(int_to_word(self.expr))
 
 class Arguements(AbstractToken):
 	def update(self):
-		tokens = token_split(self.data[1:-1],
+		tokens = token_split(self.data[1:],
 		                     [["[", "("], ["]", ")"]],
 		                     [","], include_splitter = False)
-
 		for t in tokens:
-			self.expr.append(Expression(self.i, t))
+			self.expr.insert(0, Expression(self.i, t))
 
 	def action(self):
 		rv = []
@@ -72,14 +72,20 @@ class Parameters(AbstractToken):
 	def update(self):
 		tmp = []
 		for x in self.data:
-			if x != "(" and x != ")" and x != ",":
+			if x != ",":
 				tmp.append(x)
-			elif x == "," or x == ")":
+			elif x == ",":
 				self.i.name_dec(tmp[1:])
 				t = Type(self.i, tmp[:-1])
 				l = Label(self.i, tmp[1:])
 				self.expr.append([t, l])
 				tmp = []
+
+		if len(tmp) > 0:
+			self.i.name_dec(tmp[1:])
+			t = Type(self.i, tmp[:-1])
+			l = Label(self.i, tmp[1:])
+			self.expr.append([t, l])
 
 	def action(self):
 		types = list(map(lambda x: x[0].action(), self.expr))
@@ -100,10 +106,10 @@ class Expression(AbstractToken):
 			["/", Opcode(OP_DIV)],
 			["==", Opcode(OP_EQ)],
 			["!=", Opcode(OP_NEQ)],
-			[">", Opcode(OP_LTHAN)],
-			["<", Opcode(OP_GTHAN)],
-			[">=", Opcode(OP_LTHAN_EQ)],
-			["=<", Opcode(OP_GTHAN_EQ)]
+			[">", Opcode(OP_GTHAN)],
+			["<", Opcode(OP_LTHAN)],
+			[">=", Opcode(OP_GTHAN_EQ)],
+			["=<", Opcode(OP_LTHAN_EQ)]
 		]
 
 		self.operator_names = list(map(lambda x: x[0], self.operators))
@@ -150,7 +156,6 @@ class Expression(AbstractToken):
 		t = token_split(self.data,
 		                self.group_char,
 		                self.operator_names)
-
 		if len(t) == 0:
 			t = self.data
 		if len(t) > 2:

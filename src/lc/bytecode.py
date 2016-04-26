@@ -9,7 +9,7 @@ class VariableNew():
 	def action(self):
 		return([
 		        OP_DEC,
-		        self.label.action(scope=True),
+		        self.label.action(s=True),
 		        self.typed.action(),
 		        self.label.action()
 		       ])
@@ -23,7 +23,7 @@ class VariableAssignment():
 		return([
 		        self.expr.action(),
 		        OP_STV,
-		        self.label.action(scope=True),
+		        self.label.action(s=True),
 		        self.label.action()
 		       ])
 
@@ -34,7 +34,7 @@ class VariableGet():
 	def action(self):
 		return([
 		        OP_LOV,
-		        self.label.action(scope=True),
+		        self.label.action(s=True),
 		        self.label.action()
 		       ])
 
@@ -114,8 +114,8 @@ class BinaryOp():
 	
 	def action(self):
 		return([
-		        self.vals[0].action(),
 		        self.vals[1].action(),
+		        self.vals[0].action(),
 		        self.op.action()
 		       ])
 

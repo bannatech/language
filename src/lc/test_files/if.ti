@@ -1,3 +1,4 @@
 include extern;
+include test;
 
 print some_external_function(3);

@@ -43,6 +43,7 @@ var_cont* var_add_float(var_cont* A, var_cont* B)
 var_cont* var_add_int(var_cont* A, var_cont* B)
 {
 	var_cont* var = var_new(G_INT);
+
 	int AV = var_data_get_G_INT(A);
 	int BV = var_data_get_G_INT(B);
 
@@ -173,7 +174,7 @@ var_cont* var_div_float(var_cont* A, var_cont* B)
 	double AV = var_data_get_G_FLOAT(A);
 	double BV = var_data_get_G_FLOAT(B);
 
-	double S  = AV * BV;
+	double S  = AV / BV;
 
 	var_data_float* data = var_data_alloc_G_FLOAT(S);
 

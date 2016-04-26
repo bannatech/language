@@ -1,0 +1,9 @@
+include fibb;
+
+func testing(int x, int y, int z) -> int:
+{
+	int rv = (x * y) * z;
+	return rv;
+}
+
+fibo(testing(2333, 3, 3));

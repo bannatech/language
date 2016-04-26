@@ -80,7 +80,6 @@ class GroupingSymbol(PolySymbol):
 		rv = []
 		r = self.symbols[0].match(tokenstring, index)
 		if r[0]:
-			rv.extend(r[1])
 			index = r[0]
 			ignore = 0
 			while index < len(tokenstring):
@@ -89,17 +88,19 @@ class GroupingSymbol(PolySymbol):
 					ignore += 1
 					rv.extend(r[1])
 					index = r[0]
-				r = self.symbols[1].match(tokenstring, index)
-				if r[0]:
-					index = r[0]
-					rv.extend(r[1])
-					if not ignore > 0:
-						break
-					else:
-						ignore -= 1
 				else:
-					rv.append(tokenstring[index])
-					index += 1
+					r = self.symbols[1].match(tokenstring, index)
+					if r[0]:
+						if ignore > 0:
+							ignore -= 1
+							rv.extend(r[1])
+							index = r[0]
+						else:
+							index = r[0]
+							break
+					else:
+						rv.append(tokenstring[index])
+						index += 1
 
 		return [index, rv] if len(rv) > 0 else [False, None]
 

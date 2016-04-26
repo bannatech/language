@@ -189,8 +189,11 @@ void _ins_def_STV      (rt_t* ctx, bc_cont* line)
 	int name  = var_data_get_G_INT(line->varg[1]);
 
 	var_cont* var = stk_pop(ctx->stack);
+	var_cont* ovr = proc_getvar(ctx, scope, name);
+	var_cont* set = var_data_cpy(var);
+	set->ownership = ovr->ownership;
 
-	proc_setvar(ctx, scope, name, var);
+	proc_setvar(ctx, scope, name, set);
 
 	pc_inc(ctx->pc, 1);
 }
