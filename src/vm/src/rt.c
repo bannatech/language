@@ -24,8 +24,9 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 
 	ctx->pc     = pc_new(fname);
 	ctx->stack  = stk_new();
-	ctx->vars   = ns_init(1024);
 	ctx->argstk = args;
+	ctx->vars   = ns_init(1024);
+	ctx->varctx = ns_ctx_init();
 
 	return ctx;
 }
@@ -42,9 +43,12 @@ void rt_ctx_del(rt_t* ctx)
 	N_ASSERT(ctx->argstk, "rt_ctx_del\n");
 	stk_del(ctx->argstk);
 
+	N_ASSERT(ctx->pc, "rt_ctx_del\n");
+	pc_del(ctx->pc);
+
 	N_ASSERT(ctx->vars, "rt_ctx_del\n");
 	ns_del(ctx->vars);
 
-	N_ASSERT(ctx->pc, "rt_ctx_del\n");
-	pc_del(ctx->pc);
+	N_ASSERT(ctx->varctx, "rt_ctx_del\n");
+	ns_ctx_del(ctx->varctx);
 }

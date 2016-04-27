@@ -29,14 +29,6 @@ void proc_run(rt_t*);
  */
 void proc_clean(rt_t*);
 
-/* Function call subroutine.
- *  rt_t*     - Runtime context
- *  var_cont* - Variable in type of function
- *
- *  This function is used to support an interface to multithreaded instances
- */
-var_cont* proc_callfun(rt_t*, var_cont*);
-
 /* Set a variable subroutine
  *  rt_t*     - Runtime context
  *  int       - Scope

@@ -43,6 +43,7 @@ class Parser():
 			"_type",
 			"_plist",
 			"_sub",
+			"objbldr",
 			"object",
 			"int",
 			"float",

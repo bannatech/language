@@ -120,8 +120,8 @@ var_cont* stk_pop(stk_t* stack)
 	ASSERT(((stack->stack->ptr - 1) >= 0), "Stack Underflow\n");
 
 	stack->stack->ptr = stack->stack->ptr - 1;
-	var_cont* rv = stack->stack->data[stack->stack->ptr];
-	return rv;
+
+	return stack->stack->data[stack->stack->ptr];
 }
 
 /* Pushes var_cont* to the stack

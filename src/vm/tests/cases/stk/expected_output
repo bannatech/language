@@ -1,23 +1,23 @@
 init: 
-9, 8, 7, 6
+10, 9, 8, 7
 stk_pop: 
-8, 7, 6, 0
+9, 8, 7, 0
 stk_rot_top: 
-7, 8, 6, 0
+8, 9, 7, 0
 stk_rot_top + stk_rot_three: 
-6, 7, 8, 0
+7, 8, 9, 0
 stk_rot_three: 
-8, 7, 6, 0
+9, 8, 7, 0
 -- NEW STACK LEVEL --
 init: 
-9, 8, 7, 6
+10, 9, 8, 7
 stk_pop: 
-8, 7, 6, 0
+9, 8, 7, 0
 stk_rot_top: 
-7, 8, 6, 0
+8, 9, 7, 0
 stk_rot_top + stk_rot_three: 
-6, 7, 8, 0
+7, 8, 9, 0
 stk_rot_three: 
-8, 7, 6, 0
--- LEVEL 1: 8, 7, 6, 0
--- LEVEL 0: 8, 7, 6, 0
+9, 8, 7, 0
+-- LEVEL 1: 9, 8, 7, 0
+-- LEVEL 0: 9, 8, 7, 0

@@ -14,6 +14,7 @@ DEPS    = $(INC_DIR)/is_mdata.h \
                      var_ops.h  \
                      stk.h      \
                      ns.h       \
+                     object.h   \
                      pc.h       \
                      rt.h       \
                      ins_def.h  \
@@ -27,6 +28,7 @@ OBJ     = $(SRC_DIR)/main.o     \
           $(SRC_DIR)/var_ops.o  \
           $(SRC_DIR)/stk.o      \
           $(SRC_DIR)/ns.o       \
+          $(SRC_DIR)/object.o   \
           $(SRC_DIR)/rt.o       \
           $(SRC_DIR)/ins_def.o  \
           $(SRC_DIR)/pc.o       \

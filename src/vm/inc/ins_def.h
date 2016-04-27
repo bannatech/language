@@ -98,14 +98,14 @@ void _ins_def_ELSE     (rt_t*, bc_cont*);
 void _ins_def_DONE     (rt_t*, bc_cont*);
 void _ins_def_CALL     (rt_t*, bc_cont*);
 
-void _ins_def_PUSH     (rt_t*, bc_cont*);
-void _ins_def_DEL      (rt_t*, bc_cont*);
-void _ins_def_GET      (rt_t*, bc_cont*);
-void _ins_def_GETP     (rt_t*, bc_cont*);
+void _ins_def_GETN     (rt_t*, bc_cont*);
 void _ins_def_CALLM    (rt_t*, bc_cont*);
+void _ins_def_INDEXO   (rt_t*, bc_cont*);
+void _ins_def_MODO     (rt_t*, bc_cont*);
 
 void _ins_def_RETURN   (rt_t*, bc_cont*);
 void _ins_def_NEW      (rt_t*, bc_cont*);
+void _ins_def_ENDCLASS (rt_t*, bc_cont*);
 void _ins_def_DECLASS  (rt_t*, bc_cont*);
 void _ins_def_DEFUN    (rt_t*, bc_cont*);
 

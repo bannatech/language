@@ -20,16 +20,17 @@ are deemed inferior.
  2 TYPE    - A `type` type
  3 PLIST   - Parameter list
  4 FUNC    - Function
- 5 OBJECT  - Object/Class
- 6 G_PTR   - Generic pointer
- 7 G_INT   - Generic integer
- 8 G_FLOAT - Generic double
- 9 G_CHAR  - Generic character
-10 G_STR   - Generic string
-11 S_ARRAY - Static array
-12 D_ARRAY - Dynamic array
-13 H_TABLE - Hashtable
-14 G_FIFO  - Stack
+ 5 OBJBLDR - Object builder
+ 6 OBJECT  - Object/Class
+ 7 G_PTR   - Generic pointer
+ 8 G_INT   - Generic integer
+ 9 G_FLOAT - Generic double
+10 G_CHAR  - Generic character
+11 G_STR   - Generic string
+12 S_ARRAY - Static array
+13 D_ARRAY - Dynamic array
+14 H_TABLE - Hashtable
+15 G_FIFO  - Stack
 
  RUNTIME
 
@@ -295,6 +296,8 @@ FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   the return value, D<args> is the args.
 
 FE DECLASS N<ref> D<args>       - Defines a class.                          TBI
+
+F2 ENDCLASS                     - End of class block
 
 F1 NEW N<ref>                   - Instantiates class                        TBI
 

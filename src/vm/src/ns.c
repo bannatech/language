@@ -4,6 +4,54 @@
 #include "var.h"
 #include "helper.h"
 
+/* Initializes namespace context
+ */
+ns_ctx* ns_ctx_init(void)
+{
+	ns_ctx* new = (ns_ctx*)malloc(sizeof(ns_ctx*));
+	M_ASSERT(new);
+
+	new->spaces = (ns_t**)malloc(sizeof(ns_t*)*NS_CTX_DEPTH);
+	M_ASSERT(new->spaces);
+
+	new->ptr = 0;
+	return new;
+}
+
+void ns_ctx_del(ns_ctx* ctx)
+{
+	N_ASSERT(ctx, "ns_ctx_del\n");
+	N_ASSERT(ctx->spaces, "ns_ctx_del\n");
+
+	free(ctx->spaces);
+	free(ctx);
+}
+
+/* Push namespace to context
+ */
+void ns_ctx_push(ns_ctx* ctx, ns_t* ns)
+{
+	N_ASSERT(ctx, "ns_ctx_push\n");
+	N_ASSERT(ns, "ns_ctx_push\n");
+
+	ASSERT((ctx->ptr + 1) < NS_CTX_DEPTH, "ns_ctx overflow");
+
+	ctx->spaces[ctx->ptr] = ns;
+	ctx->ptr = ctx->ptr + 1;
+}
+
+/* Pop namespace to context
+ */
+ns_t* ns_ctx_pop(ns_ctx* ctx)
+{
+	N_ASSERT(ctx, "ns_ctx_push\n");
+
+	ASSERT((ctx->ptr - 1) >= NS_CTX_DEPTH, "ns_ctx overflow");
+
+	ctx->ptr = ctx->ptr - 1;
+	return ctx->spaces[ctx->ptr];
+}
+
 /* Initialize namespace container of size
  *  ns_addr - name limit
  *  int     - Namespace level

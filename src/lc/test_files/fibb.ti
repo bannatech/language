@@ -1,7 +1,5 @@
 func fibo(int limit) -> void:
 {
-	string thing = "starting this shit yo";
-	print thing;
 	int a = 0;
 	int b = 1;
 
@@ -13,3 +11,5 @@ func fibo(int limit) -> void:
 		print a;
 	}
 }
+
+fibo(1000);

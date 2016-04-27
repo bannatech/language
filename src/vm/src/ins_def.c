@@ -7,6 +7,7 @@
 #include "rt.h"
 #include "bc.h"
 #include "stk.h"
+#include "object.h"
 #include "var.h"
 #include "var_ops.h"
 #include "pc.h"
@@ -76,14 +77,14 @@ void init_ins_def( void )
 	INS_DEF[0x7E] = _ins_def_DONE;
 	INS_DEF[0x7F] = _ins_def_CALL;
 
-	INS_DEF[0x80] = _ins_def_PUSH;
-	INS_DEF[0x81] = _ins_def_DEL;
-	INS_DEF[0x82] = _ins_def_GET;
-	INS_DEF[0x83] = _ins_def_GETP;
-	INS_DEF[0x84] = _ins_def_CALLM;
+	INS_DEF[0x80] = _ins_def_GETN;
+	INS_DEF[0x81] = _ins_def_CALLM;
+	INS_DEF[0x82] = _ins_def_INDEXO;
+	INS_DEF[0x83] = _ins_def_MODO;
 
 	INS_DEF[0xF0] = _ins_def_RETURN;
 	INS_DEF[0xF1] = _ins_def_NEW;
+	INS_DEF[0xF2] = _ins_def_ENDCLASS;
 	INS_DEF[0xFE] = _ins_def_DECLASS;
 	INS_DEF[0xFF] = _ins_def_DEFUN;
 }
@@ -92,7 +93,7 @@ int ins_def_is_valid(bc_cont* line)
 {
 	int rv = 0;
 
-	if(INS_DEF[line->op] != NULL)
+	if (INS_DEF[line->op] != NULL)
 	{
 		rv = 1;
 	}
@@ -569,23 +570,19 @@ void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 	pc_branch(ctx->pc, func->loc);
 }
 
-void _ins_def_PUSH     (rt_t* ctx, bc_cont* line)
-{
-	pc_inc(ctx->pc, 1);
-}
-void _ins_def_DEL      (rt_t* ctx, bc_cont* line)
-{
-	pc_inc(ctx->pc, 1);
-}
-void _ins_def_GET      (rt_t* ctx, bc_cont* line)
-{
-	pc_inc(ctx->pc, 1);
-}
-void _ins_def_GETP     (rt_t* ctx, bc_cont* line)
+void _ins_def_GETN     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_INDEXO   (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_MODO     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
@@ -610,17 +607,116 @@ void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	int name = var_data_get_G_INT(line->varg[0]);
+
+	// Get the object builder
+	var_cont* var = proc_getvar(ctx, 1, name);
+	var_data_objbldr* builder = var_data_get_OBJBLDR(var);
+
+	// Init a new namespace of proper size
+	ns_t* new_ns = ns_init(builder->size);
+
+	// Push current namespace to namespace context
+	ns_ctx_push(ctx->varctx, ctx->vars);
+
+	// Set the current namespace to new namespace
+	ctx->vars = new_ns;
+
+	int offset = 1;
+	int i;
+	for (i = 0; i < builder->paramlen; i++)
+	{
+		// Pop the arguement stack
+		var_cont* arg = stk_pop(ctx->argstk);
+
+		// Is the arguement of the right type?
+		ASSERT(arg->type == builder->param[i], "Invalid object instantiation\n");
+
+		// Declare the name in the new namespace and pass the arguements
+		ns_dec(ctx->vars, arg->type, 0, i+offset);
+		ns_set(ctx->vars, 0, i+offset, arg);
+	}
+	// Push new stack levels for the stack and the arguement stack
+	stk_newlevel(&ctx->stack);
+	stk_newlevel(&ctx->argstk);
+
+	pc_branch(ctx->pc, builder->loc);
+}
+void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
+{
+	var_cont* new = var_new(OBJECT);
+	var_data_object* data = var_data_alloc_OBJECT(object_del);
+
+	obj_t* obj = object_init();
+	obj->names = ctx->vars;
+
+	data->ref = (void*)obj;
+
+	var_set(new, data, OBJECT);
+
+	stk_poplevel(&ctx->stack);
+	stk_poplevel(&ctx->argstk);
+
+	ctx->vars = ns_ctx_pop(ctx->varctx);
+
+	stk_push(ctx->stack, new);
+
+	pc_return(ctx->pc);
 }
 void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 {
-	pc_inc(ctx->pc, 1);
+	int     name = var_data_get_G_INT(line->varg[0]);
+	b_type* args = var_data_get_PLIST(line->varg[1]);
+	size_t  alen = line->sarg[1];
+
+	// Create a new variable for the object builder
+	var_cont* obj = var_new(OBJBLDR);
+
+	// Allocate memory for this variable
+	var_data_objbldr* data = var_data_alloc_OBJBLDR();
+
+	// Set this objects ID
+	data->id  = name;
+	// Set the location
+	data->loc = line->real_addr + 1;
+
+	/* Determine namespace size for this object
+	 */
+	int nsize;
+	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
+	{
+		pc_inc(ctx->pc, 1);
+
+		// Are we at the end of the object builder?
+		if (ctx->pc->line->op == 0xF2)
+		{
+			break;
+		} else
+		// Are we declaring a variable or function?
+		if (ctx->pc->line->op == 0x20 || ctx->pc->line->op == 0xFF)
+		{
+			nsize++;
+		}
+	}
+
+	data->end      = ctx->pc->line->real_addr;
+	data->size     = nsize + alen + 1;
+	data->paramlen = alen;
+	data->param    = args;
+
+	// Throw the data in a variable container
+	var_set(obj, data, OBJBLDR);
+
+	// Declare a name for this object
+	proc_decvar(ctx, OBJBLDR, 1, name);
+	// Set the object to the name we just declared
+	proc_setvar(ctx, 1, name, obj);
 }
 void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
 	int     name = var_data_get_G_INT(line->varg[0]);
 	b_type  type = var_data_get_TYPE(line->varg[1]);
-	b_type* args = var_data_get_PLIST(line->varg[2]);	
+	b_type* args = var_data_get_PLIST(line->varg[2]);
 	size_t  alen = line->sarg[2];
 
 	// Create a new variable for the new function

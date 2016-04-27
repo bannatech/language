@@ -54,18 +54,6 @@ void proc_clean(rt_t* ctx)
 	rt_ctx_del(ctx);
 }
 
-/* Function call subroutine.
- *  rt_t*     - Runtime context
- *  var_cont* - Variable in type of function
- *
- *  This function is used to support an interface to multithreaded instances
- */
-var_cont* proc_callfun(rt_t* ctx, var_cont* func)
-{
-	N_ASSERT(ctx, "proc_callfun\n");
-	return 0;
-}
-
 /* Set a variable subroutine
  *  rt_t*     - Runtime context
  *  b_type    - Type

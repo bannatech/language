@@ -23,6 +23,25 @@ typedef struct ns_t {
 	ns_cont* last;
 } ns_t;
 
+#define NS_CTX_DEPTH 256
+typedef struct ns_ctx {
+	int ptr;
+	ns_t** spaces;
+} ns_ctx;
+
+/* Initializes namespace context
+ */
+ns_ctx* ns_ctx_init(void);
+void ns_ctx_del(ns_ctx*);
+
+/* Push namespace to context
+ */
+void ns_ctx_push(ns_ctx*, ns_t*);
+
+/* Pop namespace out of context
+ */
+ns_t* ns_ctx_pop(ns_ctx*);
+
 /* Initializes namespace of size
  *  ns_addr - name limit
  */

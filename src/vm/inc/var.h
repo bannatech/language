@@ -18,16 +18,16 @@ typedef enum {
 	TYPE,   // 2
 	PLIST,  // 3
 	FUNC,   // 4
-	OBJECT, // 5
-	G_INT,  // 6
-	G_FLOAT,// 7
-	G_CHAR, // 8
-	G_STR,  // 9
-	S_ARRAY,// A
-	D_ARRAY,// B
-	H_TABLE,// C
-	G_FIFO, // D
-	G_IO,   // E
+	OBJBLDR,// 5
+	OBJECT, // 6
+	G_INT,  // 7
+	G_FLOAT,// 8
+	G_CHAR, // 9
+	G_STR,  // A
+	S_ARRAY,// B
+	D_ARRAY,// C
+	H_TABLE,// D
+	G_FIFO, // E
 	G_PTR   // F
 } b_type;
 
@@ -54,9 +54,21 @@ typedef struct var_data_func {
 	b_type* param;
 } var_data_func;
 
-typedef struct var_data_ptr {
-	var_cont* v;
-} var_data_ptr;
+typedef struct var_data_objbldr {
+	ns_addr id;
+	bc_addr loc;
+	bc_addr end;
+	ns_addr size;
+	ns_addr instc;
+	size_t paramlen;
+	b_type* param;
+} var_data_objbldr;
+
+typedef struct var_data_object {
+	ns_addr id;
+	void* ref;
+	void (*objfree)(void*);
+} var_data_object;
 
 typedef struct var_data_int {
 	int v;
@@ -80,6 +92,10 @@ typedef struct var_data_array {
 	var_cont* v;
 } var_data_array;
 
+typedef struct var_data_ptr {
+	var_cont* v;
+} var_data_ptr;
+
 #include "bc.h"
 
 /* Initialze variable with type
@@ -89,6 +105,8 @@ var_cont* var_new(b_type);
 void* var_data_alloc_TYPE(b_type);
 void* var_data_alloc_PLIST(size_t);
 void* var_data_alloc_FUNC(b_type);
+void* var_data_alloc_OBJBLDR(void);
+void* var_data_alloc_OBJECT(void (*freefunc)(void*));
 void* var_data_alloc_G_INT(int);
 void* var_data_alloc_G_FLOAT(double);
 void* var_data_alloc_G_CHAR(char);
@@ -102,6 +120,8 @@ void var_data_free(void*, b_type);
 
 void var_data_free_PLIST(void*);
 void var_data_free_FUNC(void*);
+void var_data_free_OBJBLDR(void*);
+void var_data_free_OBJECT(void*);
 void var_data_free_G_STR(void*);
 
 /* Sets variable
@@ -109,13 +129,15 @@ void var_data_free_G_STR(void*);
  */
 void var_set(var_cont*, void*, b_type);
 
-b_type         var_data_get_TYPE(var_cont*);
-var_data_func* var_data_get_FUNC(var_cont*);
-int            var_data_get_G_INT(var_cont*);
-double         var_data_get_G_FLOAT(var_cont*);
-char           var_data_get_G_CHAR(var_cont*);
-char*          var_data_get_G_STR(var_cont*);
-b_type*        var_data_get_PLIST(var_cont*);
+b_type           var_data_get_TYPE(var_cont*);
+var_data_func*   var_data_get_FUNC(var_cont*);
+var_data_objbldr*var_data_get_OBJBLDR(var_cont*);
+var_data_object* var_data_get_OBJECT(var_cont*);
+int              var_data_get_G_INT(var_cont*);
+double           var_data_get_G_FLOAT(var_cont*);
+char             var_data_get_G_CHAR(var_cont*);
+char*            var_data_get_G_STR(var_cont*);
+b_type*          var_data_get_PLIST(var_cont*);
 
 
 void* var_data_cpy_G_INT(var_data_int*);

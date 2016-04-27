@@ -81,21 +81,21 @@
 /* DONE      */ INS_MDATA[0x7E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* CALL      */ INS_MDATA[0x7F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
                                                                      \
-/* PUSH      */ INS_MDATA[0x80] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* DEL       */ INS_MDATA[0x81] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* GET       */ INS_MDATA[0x82] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* GETP      */ INS_MDATA[0x83] = encode(1, A_NAME, A_BYTE, A_BYTE); \
-/* CALLM     */ INS_MDATA[0x84] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* GETN      */ INS_MDATA[0x80] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* CALLM     */ INS_MDATA[0x81] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* INDEXO    */ INS_MDATA[0x82] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* MODO      */ INS_MDATA[0x83] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* RETURN    */ INS_MDATA[0xF0] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* NEW       */ INS_MDATA[0xF1] = encode(1, A_NAME, A_BYTE, A_BYTE); \
 /* DECLASS   */ INS_MDATA[0xFE] = encode(2, A_NAME, A_DYNC, A_BYTE); \
 /* DEFUN     */ INS_MDATA[0xFF] = encode(3, A_NAME, A_BYTE, A_DYNC);
 
-#define BTOI 0
-#define BTOT 1
-#define DTOL 2
-#define DTOV 3
+
+#define BTOI 0 // Byte to Integer
+#define BTOT 1 // Byte to Type
+#define DTOL 2 // Dynamic to Byte List
+#define DTOV 3 // Dynamic to Variable
 
 /* This definition is ran in `is.c`
  *
@@ -161,11 +161,10 @@
 /* DONE      */ INS_ADATA[0x7E] = encode(0, BTOI, BTOI, BTOI); \
 /* CALL      */ INS_ADATA[0x7F] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
-/* PUSH      */ INS_ADATA[0x80] = encode(0, BTOI, BTOI, BTOI); \
-/* DEL       */ INS_ADATA[0x81] = encode(0, BTOI, BTOI, BTOI); \
-/* GET       */ INS_ADATA[0x82] = encode(0, BTOI, BTOI, BTOI); \
-/* GETP      */ INS_ADATA[0x83] = encode(1, BTOI, BTOI, BTOI); \
-/* CALLM     */ INS_ADATA[0x84] = encode(1, BTOI, BTOI, BTOI); \
+/* GETN      */ INS_ADATA[0x80] = encode(1, BTOI, BTOI, BTOI); \
+/* CALLM     */ INS_ADATA[0x81] = encode(1, BTOI, BTOI, BTOI); \
+/* INDEXO    */ INS_ADATA[0x82] = encode(0, BTOI, BTOI, BTOI); \
+/* MODO      */ INS_ADATA[0x83] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
 /* RETURN    */ INS_ADATA[0xF0] = encode(0, BTOI, BTOI, BTOI); \
 /* NEW       */ INS_ADATA[0xF1] = encode(1, BTOI, BTOI, BTOI); \
