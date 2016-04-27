@@ -212,6 +212,7 @@ class Interpreter():
 
 		self.ln   = 0
 
+		self.scopestack = []
 		self.names = [[]]
 		self.scope = 0
 
@@ -244,6 +245,18 @@ class Interpreter():
 				print("Can't do that")
 
 		self.names[self.scope].append(t)
+
+	def push_scope(self):
+		self.scopestack.append([self.names, self.scope])
+		self.names = [[]]
+		self.scope = 0
+		return False
+	
+	def pop_scope(self):
+		t = self.scopestack.pop()
+		self.names = t[0]
+		self.scope = t[1]
+		return False
 
 	def inc_scope(self):
 		self.names.append([])

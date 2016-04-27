@@ -15,6 +15,12 @@ def tobytearray(l, n, ba):
 
 	return(ba)
 
+def printb(l):
+	if type(l) is list:
+		for i in l:
+			printb(i)
+	else:
+		print(" "+hex(l), end="")
 
 if __name__ == "__main__":
 	import sys
@@ -27,10 +33,15 @@ if __name__ == "__main__":
 	
 	out = open(sys.argv[2], "wb")
 
+	print("\nTO BYTES\n")
 	rv = []
-	for l in itr.program:
+	for n, l in enumerate(itr.program):
+		print("{}: {} <= ".format(str(n).rjust(4),l[0].name.rjust(15), l[1]), end="")
 		for e in l[2]:
-			rv.append(e.action())
+			t = e.action()
+			printb(t)
+			rv.append(t)
+		print()
 
 	program = bytearray()
 	program = tobytearray(rv, 0, program)

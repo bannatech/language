@@ -26,7 +26,7 @@ class Parser():
 			"{",
 			"}"
 		]
-	
+
 		self.known_tokens = [
 			"return",
 			"print",
@@ -34,9 +34,10 @@ class Parser():
 			"else",
 			"for",
 			"while",
-			"func"
+			"func",
+			"class"
 		]
-	
+
 		self.defined_types = [
 			"void",
 			"_addr",
@@ -264,6 +265,43 @@ class Parser():
 				          ])
 		)
 
+		self.statement_class = Statement(
+			"class",
+			expression=[
+				AtomicSymbol("class"),
+				self.label_def,
+				self.paramlist_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 ClassDef(x.eval_label(1),
+			                          x.eval_param(2)),
+			                 x.add_directive(lambda x: [x.pop_scope(),
+			                                            x.op(OP_ENDCLASS)]),
+			                 x.push_scope()
+			                ])
+		)
+
+		self.statement_new = Statement(
+			"new",
+			expression=[
+				self.defined_types[6],
+				self.label_def,
+				AtomicSymbol("="),
+				AtomicSymbol("new"),
+				self.label_def,
+				self.paramlist_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 NewClass(x.eval_label(1),
+			                          x.eval_label(5),
+			                          x.eval_args(6))
+			                ])
+		)
+
 		self.statement_inst = Statement(
 			"instantiation",
 			expression=[
@@ -318,6 +356,8 @@ class Parser():
 			self.statement_while,
 			self.statement_func,
 			self.statement_proc,
+			self.statement_class,
+			self.statement_new,
 			self.statement_inst,
 			self.statement_assign,
 			self.statement_expression
@@ -344,6 +384,7 @@ class Parser():
 						rv.extend(l)
 					else:
 						rv.append([a,r,[]])
+						print("{}: {}\t{}".format(str(num).rjust(4), a.name.rjust(15),r))
 					break
 
 		return rv

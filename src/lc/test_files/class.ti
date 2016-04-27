@@ -1,0 +1,12 @@
+
+class Wow(int cool):
+{
+	func test(int wow) -> void:
+	{
+		print cool * wow;
+	}
+
+	test(4);
+}
+
+object wee = new Wow(3);

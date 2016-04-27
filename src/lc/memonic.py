@@ -57,13 +57,13 @@ OP_ELSE      = 0x73
 OP_DONE      = 0x7E
 OP_CALL      = 0x7F
 
-OP_PUSH      = 0x80
-OP_DEL       = 0x81
-OP_GET       = 0x82
-OP_GETP      = 0x83
-OP_CALLM     = 0x84
+OP_GETN      = 0x80
+OP_CALLM     = 0x81
+OP_INDEXO    = 0x82
+OP_MODO      = 0x83
 
 OP_RETURN    = 0xF0
 OP_NEW       = 0xF1
+OP_ENDCLASS  = 0xF2
 OP_DECLASS   = 0xFE
 OP_DEFUN     = 0xFF

@@ -38,6 +38,38 @@ class VariableGet():
 		        self.label.action()
 		       ])
 
+class ClassDef():
+	def __init__(self, label, args):
+		self.label = label
+		self.args  = args
+	
+	def action(self):
+		tmp = self.args.action() if self.args != None else 0x0
+		return([
+		        OP_DECLASS,
+		        self.label.action(),
+		        tmp
+		       ])
+
+class NewClass():
+	def __init__(self, toset, label, args):
+		self.toset = toset
+		self.label = label
+		self.args  = args
+	
+	def action(self):
+		return([
+		        self.args.action(),
+		        OP_NEW,
+		        self.label.action(),
+		        OP_DEC,
+		        self.toset.action(s=True),
+		        self.toset.action(),
+		        OP_STV,
+		        self.toset.action(s=True),
+		        self.toset.action()
+		       ])
+
 class FunctionDef():
 	def __init__(self, label, args, typed):
 		self.label = label
@@ -88,7 +120,7 @@ class StringConstant(SerializeableType):
 		        OP_CTS,
 		        int_to_bytes(len(self.value) + 1),
 		        0x00,
-		        0x09,
+		        0x0A,
 		        self.value
 		       ])
 
@@ -103,7 +135,7 @@ class IntegerConstant(SerializeableType):
 		        OP_CTS,
 		        int_to_bytes(len(self.value) + 1),
 		        0x00,
-		        0x06,
+		        0x07,
 		        self.value
 		       ])
 
