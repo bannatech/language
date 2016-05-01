@@ -13,14 +13,14 @@
 		exit(1);                  \
 	}
 
-#define SIZE_ASSERT(condition)    \
-	if (!(condition))             \
-	{                             \
+#define SIZE_ASSERT(condition)                                \
+	if (!(condition))                                         \
+	{                                                         \
 		fprintf(stderr, "address exeeded namespace limit\n"); \
-		exit(1);                  \
+		exit(1);                                              \
 	}
 
-#define M_ASSERT(x)                                   \
+#define M_ASSERT(x)                                    \
 	if (x == NULL)                                     \
 	{                                                  \
 		fprintf(stderr, "Could not allocate memory\n");\

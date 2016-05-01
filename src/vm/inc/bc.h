@@ -44,11 +44,11 @@ void bc_cont_del(bc_cont*);
 /* Given a file object, and an instance of `bc_cont` with proper metadata, this
  * function will read arguements into bc_cont.
  */
-void get_args(FILE*, bc_cont*);
-byte_t* get_byte_arg(FILE*, int*);
-byte_t* get_name_arg(FILE*, int*);
-byte_t* get_addr_arg(FILE*, int*);
-byte_t* get_dync_arg(FILE*, int*);
+void get_opcode_adata(FILE*, bc_cont*);
+byte_t* get_byte_arg (FILE*, int*);
+byte_t* get_name_arg (FILE*, int*);
+byte_t* get_addr_arg (FILE*, int*);
+byte_t* get_dync_arg (FILE*, int*);
 
 /* Process arguements into typed & readable data
  *  bc_cont* - bytecode container

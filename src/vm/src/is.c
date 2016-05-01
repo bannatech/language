@@ -12,7 +12,7 @@
  *  byte_t   - opcode
  *  bc_cont* - Bytecode instruction
  */
-void get_opcode(byte_t byte, bc_cont* ins)
+void get_opcode_mdata(byte_t byte, bc_cont* ins)
 {
 	ins->op    = byte;
 	ins->mdata = INS_MDATA[byte];

@@ -19,9 +19,9 @@
 
 /* This definition is ran in `is.c`
  *
- *  INS_MDATA[ <opcode> ] = encode( <number of arguements>, <type..3> )
+ *  INS_MDATA[ <opcode> ] <- encode( <number of arguements>, <type..3> )
  */
-#define INS_MDATA_DEF()                                             \
+#define INS_MDATA_DEF()                                              \
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* SYNC      */ INS_MDATA[0x01] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
 /* PRINT     */ INS_MDATA[0x02] = encode(0, A_BYTE, A_BYTE, A_BYTE); \

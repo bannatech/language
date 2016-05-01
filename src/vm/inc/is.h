@@ -23,7 +23,7 @@ byte_t INS_ADATA[0x100];
  *  byte_t   - opcode
  *  bc_cont* - Bytecode instruction
  */
-void get_opcode(byte_t, bc_cont*);
+void get_opcode_mdata(byte_t, bc_cont*);
 
 /* Fills in metadata in @param byte_t.
  * byte_t - un-expanded metadata

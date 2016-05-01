@@ -297,8 +297,8 @@ class Parser():
 			init=(lambda x: [
 			                 x.new_name(1),
 			                 NewClass(x.eval_label(1),
-			                          x.eval_label(5),
-			                          x.eval_args(6))
+			                          x.eval_label(4),
+			                          x.eval_args(5))
 			                ])
 		)
 
