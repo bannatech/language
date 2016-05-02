@@ -58,9 +58,10 @@ OP_DONE      = 0x7E
 OP_CALL      = 0x7F
 
 OP_GETN      = 0x80
-OP_CALLM     = 0x81
-OP_INDEXO    = 0x82
-OP_MODO      = 0x83
+OP_SETN      = 0x81
+OP_CALLM     = 0x82
+OP_INDEXO    = 0x83
+OP_MODO      = 0x84
 
 OP_RETURN    = 0xF0
 OP_NEW       = 0xF1

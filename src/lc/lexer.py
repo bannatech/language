@@ -77,6 +77,7 @@ class PolySymbol():
 
 class GroupingSymbol(PolySymbol):
 	def match(self, tokenstring, index):
+		found = False
 		rv = []
 		r = self.symbols[0].match(tokenstring, index)
 		if r[0]:
@@ -97,12 +98,13 @@ class GroupingSymbol(PolySymbol):
 							index = r[0]
 						else:
 							index = r[0]
+							found = True
 							break
 					else:
 						rv.append(tokenstring[index])
 						index += 1
 
-		return [index, rv] if len(rv) > 0 else [False, None]
+		return [index, rv] if found else [False, None]
 
 class Statement():
 	def __init__(self, name, expression=[], init=None):

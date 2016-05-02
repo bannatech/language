@@ -34,11 +34,12 @@ void proc_run(rt_t* ctx)
 	
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
-/*
+#ifdef DEBUG
 		printf("[%i]:\t", ctx->pc->address);
 		bc_print_op(ctx->pc->line);
 		printf("\n");
-*/
+#endif // DEBUG
+
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 
 		n++;

@@ -20,21 +20,55 @@ class VariableAssignment():
 		self.expr  = expression
 	
 	def action(self):
-		return([
-		        self.expr.action(),
-		        OP_STV,
-		        self.label.action(s=True),
-		        self.label.action()
-		       ])
+		if self.label.is_property:
+			return(PropertyAssignment(self.label.obj,
+			                          self.label,
+			                          self.expr).action())
+		else:
+			return([
+			        self.expr.action(),
+			        OP_STV,
+			        self.label.action(s=True),
+			        self.label.action()
+			       ])
 
 class VariableGet():
 	def __init__(self, label):
 		self.label = label
 	
 	def action(self):
+		if self.label.is_property:
+			return(PropertyGet(self.label.obj, self.label).action())
+		else:
+			return([
+			        OP_LOV,
+			        self.label.action(s=True),
+			        self.label.action()
+			       ])
+
+class PropertyAssignment():
+	def __init__(self, ovar, plabel, expression):
+		self.ovar = ovar
+		self.label = plabel
+		self.expr = expression
+	
+	def action(self):
 		return([
-		        OP_LOV,
-		        self.label.action(s=True),
+		        self.expr.action(),
+		        self.ovar.action(),
+		        OP_SETN,
+		        self.label.action()
+		       ])
+
+class PropertyGet():
+	def __init__(self, ovar, plabel):
+		self.ovar = VariableGet(ovar)
+		self.label = plabel
+	
+	def action(self):
+		return([
+		        self.ovar.action(),
+		        OP_GETN,
 		        self.label.action()
 		       ])
 

@@ -1,12 +1,13 @@
-
-class Wow(int cool):
+class Wow():
 {
+	int cool = 32;
+
 	func test(int wow) -> void:
 	{
 		print cool * wow;
 	}
-
-	test(4);
 }
 
-object wee = new Wow(3);
+object wee = new Wow();
+
+wee.test(3);

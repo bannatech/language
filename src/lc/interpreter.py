@@ -22,6 +22,15 @@ class Label(AbstractToken):
 	def update(self):
 		f = lambda y, x: y(y, x[0]) if type(x) is list else x
 		self.data = f(f, self.data)
+		self.is_property = False
+		self.obj = None
+
+		names = self.data.rsplit(".", 1)
+
+		if len(names) > 1:
+			self.is_property = True
+			self.obj = names[0]
+			self.data = names[1]
 
 		self.scope = 0
 		self.expr  = 0
@@ -31,6 +40,9 @@ class Label(AbstractToken):
 				self.expr = i.index(self.data) + 1
 				self.scope = 0 if n > 0 else 1
 				break
+
+		if self.expr == 0:
+			print("UNDEFINED REFERENCE TO VARIABLE '{}'".format(self.data))
 
 	def action(self, s=False):
 		if s:

@@ -47,4 +47,4 @@ clean:
 	rm $(OUT)
 
 install:
-	mv $(OUT) $(DST_DIR)
+	cp $(OUT) $(DST_DIR)

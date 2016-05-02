@@ -283,11 +283,14 @@ to TOS
 -------------------------------------------------------------------------------
 80 GETN N<name>   - Returns variable assosiated with name in object         TBI
 
-81 CALLM N<name>  - Calls method in object                                  TBI
+81 SETN N<name>   - Sets the variable assosiated with name in object        TBI
+                    Object on TOS, Variable on TOS1
 
-82 INDEXO         - Index an object, uses arguement stack                   TBI
+82 CALLM N<name>  - Calls method in object                                  TBI
 
-83 MODO S<OP>     - Modify an object based on op. [+, -, *, /, %, ^ .. etc] TBI
+83 INDEXO         - Index an object, uses arguement stack                   TBI
+
+84 MODO S<OP>     - Modify an object based on op. [+, -, *, /, %, ^ .. etc] TBI
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
@@ -295,11 +298,11 @@ FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
                                   function. D<ref> is its name, S<type> is
                                   the return value, D<args> is the args.
 
-FE DECLASS N<ref> D<args>       - Defines a class.                          TBI
+FE DECLASS N<ref> D<args>       - Defines a class.
 
 F2 ENDCLASS                     - End of class block
 
-F1 NEW N<ref>                   - Instantiates class                        TBI
+F1 NEW N<ref>                   - Instantiates class
 
 F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------

@@ -78,9 +78,10 @@ void init_ins_def( void )
 	INS_DEF[0x7F] = _ins_def_CALL;
 
 	INS_DEF[0x80] = _ins_def_GETN;
-	INS_DEF[0x81] = _ins_def_CALLM;
-	INS_DEF[0x82] = _ins_def_INDEXO;
-	INS_DEF[0x83] = _ins_def_MODO;
+	INS_DEF[0x81] = _ins_def_SETN;
+	INS_DEF[0x82] = _ins_def_CALLM;
+	INS_DEF[0x83] = _ins_def_INDEXO;
+	INS_DEF[0x84] = _ins_def_MODO;
 
 	INS_DEF[0xF0] = _ins_def_RETURN;
 	INS_DEF[0xF1] = _ins_def_NEW;
@@ -541,6 +542,12 @@ void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 	var_cont* var = proc_getvar(ctx, 1, name);
 	var_data_func* func = var_data_get_FUNC(var);
 
+	// Call the function
+	_ins_def_function_call(ctx, func);
+}
+
+void _ins_def_function_call(rt_t* ctx, var_data_func* func)
+{
 	// Push a new namespace of specified size
 	ns_push(ctx->vars, func->size);
 	// Declare the return value
@@ -572,10 +579,81 @@ void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 
 void _ins_def_GETN     (rt_t* ctx, bc_cont* line)
 {
+	int name = var_data_get_G_INT(line->varg[0]);
+
+	var_cont* obj = stk_pop(ctx->stack);
+
+	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
+
+	obj_t* object = (obj_t*)obj_var_data->ref;
+
+	var_cont* var = object_get_name(object, name);
+
+	stk_push(ctx->stack, var);
+
+	pc_inc(ctx->pc, 1);
+}
+void _ins_def_SETN     (rt_t* ctx, bc_cont* line)
+{
+	int name = var_data_get_G_INT(line->varg[0]);
+
+	var_cont* obj = stk_pop(ctx->stack);
+
+	var_cont* var = stk_pop(ctx->stack);
+
+	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
+
+	obj_t* object = (obj_t*)obj_var_data->ref;
+
+	object_set_name(object, name, var);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 {
+	int name = var_data_get_G_INT(line->varg[0]);
+	// Pop the stack to get the object
+	var_cont* obj = stk_pop(ctx->stack);
+	// Get the objects variable data
+	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
+	// Cast reference to object type
+	obj_t* object = (obj_t*)obj_var_data->ref;
+	// Get the method to call
+	var_cont* var = object_get_name(object, name);
+	var_data_func* func = var_data_get_FUNC(var);
+	// Push current namespace context
+	ns_ctx_push(ctx->varctx, ctx->vars);
+	// Set current namespace to objects namespace
+	ctx->vars = object->names;
+	// Call the function
+	_ins_def_function_call(ctx, func);
+
+	// Run code here so we can pop the namespace context
+	int n;
+	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
+	{
+#ifdef DEBUG
+		printf("[%i]:\t", ctx->pc->address);
+		bc_print_op(ctx->pc->line);
+		printf("\n");
+#endif // DEBUG
+
+		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
+
+		// Break when the function returns
+		if (ctx->pc->line->op == 0x7F)
+			n++;
+		else if (ctx->pc->line->op == 0xF0)
+		{
+			if (n > 0)
+				n--;
+			else
+				break;
+		}
+	}
+	// Pop the namespace context
+	ctx->vars = ns_ctx_pop(ctx->varctx);
+
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_INDEXO   (rt_t* ctx, bc_cont* line)
@@ -662,6 +740,7 @@ void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
 	stk_push(ctx->stack, new);
 
 	pc_return(ctx->pc);
+	pc_inc(ctx->pc, 1);
 }
 void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 {

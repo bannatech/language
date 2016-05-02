@@ -64,7 +64,7 @@ class Parser():
 		                                     [self.int_def]     +
 		                                     [self.str_def]     +
 		                                     self.known_tokens   )
-	
+
 		self.paramlist_def = GroupingSymbol( [
 		                                      AtomicSymbol("\("),
 		                                      AtomicSymbol("\)")
@@ -265,6 +265,25 @@ class Parser():
 				          ])
 		)
 
+		self.statement_pless_class = Statement(
+			"paramless_class",
+			expression=[
+				AtomicSymbol("class"),
+				self.label_def,
+				self.paramlist_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 ClassDef(x.eval_label(1),
+			                          None),
+			                 x.add_directive(lambda x: [x.pop_scope(),
+			                                            x.op(OP_ENDCLASS)]),
+			                 x.push_scope()
+			                ])
+		)
+
+
 		self.statement_class = Statement(
 			"class",
 			expression=[
@@ -356,6 +375,7 @@ class Parser():
 			self.statement_while,
 			self.statement_func,
 			self.statement_proc,
+			self.statement_pless_class,
 			self.statement_class,
 			self.statement_new,
 			self.statement_inst,
@@ -384,7 +404,8 @@ class Parser():
 						rv.extend(l)
 					else:
 						rv.append([a,r,[]])
-						print("{}: {}\t{}".format(str(num).rjust(4), a.name.rjust(15),r))
+						print("{}: {}\t{}".format(str(num).rjust(4),
+						                          a.name.rjust(15),r))
 					break
 
 		return rv

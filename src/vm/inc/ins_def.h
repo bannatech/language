@@ -97,8 +97,11 @@ void _ins_def_IFDO     (rt_t*, bc_cont*);
 void _ins_def_ELSE     (rt_t*, bc_cont*);
 void _ins_def_DONE     (rt_t*, bc_cont*);
 void _ins_def_CALL     (rt_t*, bc_cont*);
-
+/* HELPER FUNCTIONS */
+void _ins_def_function_call(rt_t*, var_data_func*);
+/* END HELPER FUNCTIONS */
 void _ins_def_GETN     (rt_t*, bc_cont*);
+void _ins_def_SETN     (rt_t*, bc_cont*);
 void _ins_def_CALLM    (rt_t*, bc_cont*);
 void _ins_def_INDEXO   (rt_t*, bc_cont*);
 void _ins_def_MODO     (rt_t*, bc_cont*);

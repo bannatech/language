@@ -44,9 +44,9 @@ void ns_ctx_push(ns_ctx* ctx, ns_t* ns)
  */
 ns_t* ns_ctx_pop(ns_ctx* ctx)
 {
-	N_ASSERT(ctx, "ns_ctx_push\n");
+	N_ASSERT(ctx, "ns_ctx_pop\n");
 
-	ASSERT((ctx->ptr - 1) >= NS_CTX_DEPTH, "ns_ctx overflow");
+	ASSERT((ctx->ptr - 1) >= 0, "ns_ctx underflow");
 
 	ctx->ptr = ctx->ptr - 1;
 	return ctx->spaces[ctx->ptr];
