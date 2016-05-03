@@ -1,6 +1,7 @@
 OP_NULL      = 0x00
 OP_SYNC      = 0x01
 OP_PRINT     = 0x02
+OP_DEBUG     = 0x03
 OP_ARGB      = 0x0E
 OP_LIBC      = 0x0F
 

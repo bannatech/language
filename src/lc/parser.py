@@ -43,8 +43,8 @@ class Parser():
 			"_addr",
 			"_type",
 			"_plist",
-			"_sub",
-			"objbldr",
+			"func",
+			"class",
 			"object",
 			"int",
 			"float",
@@ -91,6 +91,15 @@ class Parser():
 		                                           AtomicSymbol(";"),
 		                                           AtomicSymbol(":")
 		                                          ])
+
+		self.statement_endebug = Statement(
+			"endebug",
+			expression=[
+				AtomicSymbol("DEBUG"),
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [x.op(OP_DEBUG)])
+		)
 
 		self.statement_include = Statement(
 			"include",
@@ -265,25 +274,6 @@ class Parser():
 				          ])
 		)
 
-		self.statement_pless_class = Statement(
-			"paramless_class",
-			expression=[
-				AtomicSymbol("class"),
-				self.label_def,
-				self.paramlist_def,
-				AtomicSymbol(":")
-			],
-			init=(lambda x: [
-			                 x.new_name(1),
-			                 ClassDef(x.eval_label(1),
-			                          None),
-			                 x.add_directive(lambda x: [x.pop_scope(),
-			                                            x.op(OP_ENDCLASS)]),
-			                 x.push_scope()
-			                ])
-		)
-
-
 		self.statement_class = Statement(
 			"class",
 			expression=[
@@ -294,18 +284,40 @@ class Parser():
 			],
 			init=(lambda x: [
 			                 x.new_name(1),
+			                 x.ns_persist(1),
 			                 ClassDef(x.eval_label(1),
 			                          x.eval_param(2)),
-			                 x.add_directive(lambda x: [x.pop_scope(),
+			                 x.add_directive(lambda x: [x.ns_save(),
+			                                            x.pop_scope(),
 			                                            x.op(OP_ENDCLASS)]),
 			                 x.push_scope()
 			                ])
 		)
 
+		self.statement_pless_class = Statement(
+			"paramless_class",
+			expression=[
+				AtomicSymbol("class"),
+				self.label_def,
+				AtomicSymbol(":")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 x.ns_persist(1),
+			                 ClassDef(x.eval_label(1),
+			                          None),
+			                 x.add_directive(lambda x: [x.ns_save(),
+			                                            x.pop_scope(),
+			                                            x.op(OP_ENDCLASS)]),
+			                 x.push_scope()
+			                ])
+		)
+
+
 		self.statement_new = Statement(
 			"new",
 			expression=[
-				self.defined_types[6],
+				self.label_def,
 				self.label_def,
 				AtomicSymbol("="),
 				AtomicSymbol("new"),
@@ -315,6 +327,7 @@ class Parser():
 			],
 			init=(lambda x: [
 			                 x.new_name(1),
+			                 x.ns_copy(1, 0),
 			                 NewClass(x.eval_label(1),
 			                          x.eval_label(4),
 			                          x.eval_args(5))
@@ -363,6 +376,7 @@ class Parser():
 		)
 
 		self.active_tokens = [
+			self.statement_endebug,
 			self.statement_include,
 			self.statement_codeblock_begin,
 			self.statement_codeblock_end,

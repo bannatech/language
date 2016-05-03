@@ -29,13 +29,15 @@ class Label(AbstractToken):
 
 		if len(names) > 1:
 			self.is_property = True
-			self.obj = names[0]
+			self.obj = Label(self.i, names[0])
 			self.data = names[1]
+			namespace = [self.i.objects[self.obj.data]]
+		else:
+			namespace = self.i.names
 
 		self.scope = 0
 		self.expr  = 0
-
-		for n, i in enumerate(self.i.names):
+		for n, i in enumerate(namespace):
 			if self.data in i:
 				self.expr = i.index(self.data) + 1
 				self.scope = 0 if n > 0 else 1
@@ -226,6 +228,8 @@ class Interpreter():
 
 		self.scopestack = []
 		self.names = [[]]
+		self.objects = {}
+		self.cur_obj_scope = ""
 		self.scope = 0
 
 		self.cur_directives = []
@@ -243,6 +247,19 @@ class Interpreter():
 		if len(self.program) <= self.ln + n:
 			return self.program[self.ln]
 		return self.program[self.ln + n]
+
+	def ns_persist(self, index):
+		self.objects[self.line[1][index][0]] = []
+		self.cur_obj_scope = self.line[1][index][0]
+		return False
+	
+	def ns_save(self):
+		self.objects[self.cur_obj_scope] = self.names[self.scope]
+		return False
+	
+	def ns_copy(self, key, index):
+		self.objects[self.line[1][key][0]] = self.objects[self.line[1][index][0]]
+		return False
 
 	def new_name(self, index):
 		self.name_dec(self.line[1][index])
@@ -305,7 +322,7 @@ class Interpreter():
 
 	def op(self, opcode):
 		return(Opcode(opcode))
-	
+
 	def eval_label(self, index):
 		return(Label(self, self.line[1][index]))
 

@@ -25,6 +25,7 @@
  *  [1] Function calls implement this stack to load variables as arguements.
  */
 typedef struct rt_t {
+	int        db;
 	pc_t*      pc;
 	stk_t*     stack;
 	stk_t*     argstk;

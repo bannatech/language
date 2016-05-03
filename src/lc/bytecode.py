@@ -1,6 +1,79 @@
 from memonic import *
 from helper import *
 
+class PropertyAssignment():
+	def __init__(self, ovar, plabel, expression):
+		self.ovar = VariableGet(ovar)
+		self.label = plabel
+		self.expr = expression
+	
+	def action(self):
+		return([
+		        self.expr.action(),
+		        self.ovar.action(),
+		        OP_SETN,
+		        self.label.action()
+		       ])
+
+class PropertyGet():
+	def __init__(self, ovar, plabel):
+		self.ovar = VariableGet(ovar)
+		self.label = plabel
+	
+	def action(self):
+		return([
+		        self.ovar.action(),
+		        OP_GETN,
+		        self.label.action()
+		       ])
+
+class MethodCall():
+	def __init__(self, ovar, label, arguements):
+		self.ovar  = VariableGet(ovar)
+		self.label = label
+		self.args  = arguements
+	
+	def action(self):
+		return([
+		        self.args.action(),
+		        self.ovar.action(),
+		        OP_CALLM,
+		        self.label.action()
+		       ])
+
+class ClassDef():
+	def __init__(self, label, args):
+		self.label = label
+		self.args  = args
+	
+	def action(self):
+		tmp = self.args.action() if self.args != None else 0x0
+		return([
+		        OP_DECLASS,
+		        self.label.action(),
+		        tmp
+		       ])
+
+class NewClass():
+	def __init__(self, toset, label, args):
+		self.toset = toset
+		self.label = label
+		self.args  = args
+	
+	def action(self):
+		return([
+		        self.args.action(),
+		        OP_NEW,
+		        self.label.action(),
+		        OP_DEC,
+		        self.toset.action(s=True),
+		        0x06,
+		        self.toset.action(),
+		        OP_STV,
+		        self.toset.action(s=True),
+		        self.toset.action()
+		       ])
+
 class VariableNew():
 	def __init__(self, label, typed):
 		self.label = label
@@ -46,64 +119,6 @@ class VariableGet():
 			        self.label.action()
 			       ])
 
-class PropertyAssignment():
-	def __init__(self, ovar, plabel, expression):
-		self.ovar = ovar
-		self.label = plabel
-		self.expr = expression
-	
-	def action(self):
-		return([
-		        self.expr.action(),
-		        self.ovar.action(),
-		        OP_SETN,
-		        self.label.action()
-		       ])
-
-class PropertyGet():
-	def __init__(self, ovar, plabel):
-		self.ovar = VariableGet(ovar)
-		self.label = plabel
-	
-	def action(self):
-		return([
-		        self.ovar.action(),
-		        OP_GETN,
-		        self.label.action()
-		       ])
-
-class ClassDef():
-	def __init__(self, label, args):
-		self.label = label
-		self.args  = args
-	
-	def action(self):
-		tmp = self.args.action() if self.args != None else 0x0
-		return([
-		        OP_DECLASS,
-		        self.label.action(),
-		        tmp
-		       ])
-
-class NewClass():
-	def __init__(self, toset, label, args):
-		self.toset = toset
-		self.label = label
-		self.args  = args
-	
-	def action(self):
-		return([
-		        self.args.action(),
-		        OP_NEW,
-		        self.label.action(),
-		        OP_DEC,
-		        self.toset.action(s=True),
-		        self.toset.action(),
-		        OP_STV,
-		        self.toset.action(s=True),
-		        self.toset.action()
-		       ])
-
 class FunctionDef():
 	def __init__(self, label, args, typed):
 		self.label = label
@@ -125,11 +140,16 @@ class FunctionCall():
 		self.arguements = arguements
 	
 	def action(self):
-		return([
-		        self.arguements.action(),
-		        OP_CALL,
-		        self.label.action()
-		       ])
+		if self.label.is_property:
+			return(MethodCall(self.label.obj,
+			                  self.label,
+			                  self.arguements).action())
+		else:
+			return([
+			        self.arguements.action(),
+			        OP_CALL,
+			        self.label.action()
+			       ])
 
 #TODO: Implement this
 class ForLoop():

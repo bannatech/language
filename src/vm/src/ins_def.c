@@ -21,6 +21,7 @@ void init_ins_def( void )
 	INS_DEF[0x00] = _ins_def_NULL;
 	INS_DEF[0x01] = _ins_def_SYNC;
 	INS_DEF[0x02] = _ins_def_PRINT;
+	INS_DEF[0x03] = _ins_def_DEBUG;
 	INS_DEF[0x0E] = _ins_def_ARGB;
 	INS_DEF[0x0F] = _ins_def_LIBC;
 
@@ -105,6 +106,10 @@ void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
 {
 	pc_inc(ctx->pc, 1);
 }
+void _ins_def_SYNC     (rt_t* ctx, bc_cont* line)
+{
+	pc_inc(ctx->pc, 1);
+}
 void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
 {
 	var_cont* var = stk_pop(ctx->stack);
@@ -113,8 +118,9 @@ void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)
 
 	pc_inc(ctx->pc, 1);
 }
-void _ins_def_SYNC     (rt_t* ctx, bc_cont* line)
+void _ins_def_DEBUG    (rt_t* ctx, bc_cont* line)
 {
+	ctx->db = 0 ? ctx->db : 1;
 	pc_inc(ctx->pc, 1);
 }
 void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
@@ -627,16 +633,18 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	ctx->vars = object->names;
 	// Call the function
 	_ins_def_function_call(ctx, func);
+	pc_update(ctx->pc);
 
 	// Run code here so we can pop the namespace context
 	int n;
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
-#ifdef DEBUG
-		printf("[%i]:\t", ctx->pc->address);
-		bc_print_op(ctx->pc->line);
-		printf("\n");
-#endif // DEBUG
+		if (ctx->db)
+		{
+			printf("[%i]:\t", ctx->pc->address);
+			bc_print_op(ctx->pc->line);
+			printf("\n");
+		}
 
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 
@@ -653,8 +661,6 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	}
 	// Pop the namespace context
 	ctx->vars = ns_ctx_pop(ctx->varctx);
-
-	pc_inc(ctx->pc, 1);
 }
 void _ins_def_INDEXO   (rt_t* ctx, bc_cont* line)
 {

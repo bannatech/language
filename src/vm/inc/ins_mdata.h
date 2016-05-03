@@ -25,6 +25,7 @@
 /* NULL      */ INS_MDATA[0x00] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* SYNC      */ INS_MDATA[0x01] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
 /* PRINT     */ INS_MDATA[0x02] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* DEBUG     */ INS_MDATA[0x03] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* ARGB      */ INS_MDATA[0x0E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* LIBC      */ INS_MDATA[0x0F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
                                                                      \
@@ -82,9 +83,10 @@
 /* CALL      */ INS_MDATA[0x7F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
                                                                      \
 /* GETN      */ INS_MDATA[0x80] = encode(1, A_NAME, A_BYTE, A_BYTE); \
-/* CALLM     */ INS_MDATA[0x81] = encode(1, A_NAME, A_BYTE, A_BYTE); \
-/* INDEXO    */ INS_MDATA[0x82] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* MODO      */ INS_MDATA[0x83] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
+/* SETN      */ INS_MDATA[0x81] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* CALLM     */ INS_MDATA[0x82] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* INDEXO    */ INS_MDATA[0x83] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* MODO      */ INS_MDATA[0x84] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
 /* RETURN    */ INS_MDATA[0xF0] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* NEW       */ INS_MDATA[0xF1] = encode(1, A_NAME, A_BYTE, A_BYTE); \
@@ -104,7 +106,8 @@
 #define INS_ADATA_DEF()                                        \
 /* NULL      */ INS_ADATA[0x00] = encode(0, BTOI, BTOI, BTOI); \
 /* SYNC      */ INS_ADATA[0x01] = encode(1, BTOI, BTOI, BTOI); \
-/* PRINT     */ INS_ADATA[0x01] = encode(0, BTOI, BTOI, BTOI); \
+/* PRINT     */ INS_ADATA[0x02] = encode(0, BTOI, BTOI, BTOI); \
+/* DEBUG     */ INS_ADATA[0x03] = encode(0, BTOI, BTOI, BTOI); \
 /* ARGB      */ INS_ADATA[0x0E] = encode(0, BTOI, BTOI, BTOI); \
 /* LIBC      */ INS_ADATA[0x0F] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
@@ -162,9 +165,10 @@
 /* CALL      */ INS_ADATA[0x7F] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
 /* GETN      */ INS_ADATA[0x80] = encode(1, BTOI, BTOI, BTOI); \
-/* CALLM     */ INS_ADATA[0x81] = encode(1, BTOI, BTOI, BTOI); \
-/* INDEXO    */ INS_ADATA[0x82] = encode(0, BTOI, BTOI, BTOI); \
-/* MODO      */ INS_ADATA[0x83] = encode(1, BTOI, BTOI, BTOI); \
+/* SETN      */ INS_ADATA[0x81] = encode(1, BTOI, BTOI, BTOI); \
+/* CALLM     */ INS_ADATA[0x82] = encode(1, BTOI, BTOI, BTOI); \
+/* INDEXO    */ INS_ADATA[0x83] = encode(0, BTOI, BTOI, BTOI); \
+/* MODO      */ INS_ADATA[0x84] = encode(1, BTOI, BTOI, BTOI); \
                                                                \
 /* RETURN    */ INS_ADATA[0xF0] = encode(0, BTOI, BTOI, BTOI); \
 /* NEW       */ INS_ADATA[0xF1] = encode(1, BTOI, BTOI, BTOI); \

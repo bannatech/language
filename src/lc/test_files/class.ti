@@ -1,13 +1,42 @@
-class Wow():
-{
-	int cool = 32;
 
-	func test(int wow) -> void:
+class ObjectFibb:
+{
+	int a = 0;
+	int b = 1;
+	int c = 0;
+
+	func next -> void:
 	{
-		print cool * wow;
+		if c == 0:
+		{
+			b = a + b;
+			c = 1;
+		} else
+		if c == 1:
+		{
+			a = a + b;
+			c = 0;
+		}
+	}
+	
+	func display -> void:
+	{
+		print b;
+		print a;
+	}
+
+	func run (int count) -> void:
+	{
+		int x = 0;
+		while x < count:
+		{
+			next();
+			display();
+			x = x + 1;
+		}
 	}
 }
 
-object wee = new Wow();
+ObjectFibb test = new ObjectFibb();
 
-wee.test(3);
+test.run(15);

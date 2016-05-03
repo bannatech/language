@@ -1,4 +1,4 @@
-include fibb;
+include extern;
 
 func testing(int x, int y, int z) -> int:
 {
@@ -6,4 +6,4 @@ func testing(int x, int y, int z) -> int:
 	return rv;
 }
 
-fibo(testing(2333, 3, 3));
+print some_external_function(testing(2333, 3, 3));

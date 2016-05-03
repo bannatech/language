@@ -378,6 +378,11 @@ var_cont* var_data_cpy(var_cont* var)
 		rv->data = var_data_cpy_G_STR(var->data);
 	}
 
+	if (var->type == OBJECT)
+	{
+		rv->data = var->data;
+	}
+
 	ASSERT((rv->data != NULL), "ERROR: Could not copy type.\n");
 
 	return rv;

@@ -6,6 +6,8 @@
 #include "ins_def.h"
 #include "helper.h"
 
+#define DEBUG 0
+
 int main(int argc, char** argv)
 {
 	ASSERT(argc > 1, "Specify a bytecode file in the first and only argument, please\n");

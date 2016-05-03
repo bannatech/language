@@ -83,7 +83,7 @@ void pc_addr_stk_del(pc_addr_stk* stk)
 void pc_update(pc_t* pc)
 {
 	N_ASSERT(pc, "pc_update\n");
-	ASSERT((pc->address <= pc->bc->size), "Uhoh\n");
+	ASSERT((pc->address < (pc->bc->size + 1)), "Address out of range\n");
 	// Update the pointer
 	pc->line = pc->bc->heap[pc->address];
 }

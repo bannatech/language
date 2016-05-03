@@ -312,9 +312,9 @@ F0 RETURN                       - Returns from function
 
 01 LC N<name>    - Calls OS function library, i.e. I/O, opening files, etc  TBI
 
-02 PRINT         - Prints whatever is on the TOS.                           TBI
+02 PRINT         - Prints whatever is on the TOS.
 
-03 FREE          - Pops & Deletes TOS
+03 DEBUG         - Toggle debug mode
 
 0E ARGB          - Builds arguement stack
 
@@ -322,7 +322,7 @@ F0 RETURN                       - Returns from function
                    primitive subroutines providing methods to tweak
                    objects this bytecode set cannot touch. Uses argstack.
 _______________________________________________________________________________
-COMPILER/TRANSLATOR/ASSEMBLER SHINDIGS
+COMPILER/TRANSLATOR/ASSEMBLER
 --------------------------------------------------------------------------------
 
 LEXICAL ANALYSIS
