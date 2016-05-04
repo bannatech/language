@@ -26,7 +26,7 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 	ctx->pc     = pc_new(fname);
 	ctx->stack  = stk_new();
 	ctx->argstk = args;
-	ctx->vars   = ns_init(0xFF);
+	ctx->vars   = ns_init(0xFFFF);
 	ctx->varctx = ns_ctx_init();
 	ctx->names  = ns_init(0x7F);
 

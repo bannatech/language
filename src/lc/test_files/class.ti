@@ -1,9 +1,22 @@
+class Counter:
+{
+	int val = 0;
+	int inc = 1;
+
+	func increment -> int:
+	{
+		val = val + inc;
+		return val;
+	}
+}
 
 class ObjectFibb:
 {
 	int a = 0;
 	int b = 1;
 	int c = 0;
+
+	Counter counter = new Counter();
 
 	func next -> void:
 	{
@@ -27,12 +40,11 @@ class ObjectFibb:
 
 	func run (int count) -> void:
 	{
-		int x = 0;
-		while x < count:
+		counter.val = 0;
+		while counter.increment() < count:
 		{
 			next();
 			display();
-			x = x + 1;
 		}
 	}
 }

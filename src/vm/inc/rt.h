@@ -16,10 +16,13 @@
 #include "helper.h"
 
 /* Runtime context structure
+ *  db    -  Debug flag
  *  pc    - `pc.h` program counter instance
  *  stack - `stk.h` stack instance[0]
  *  argstk- `stk.h` stack instance[1]
  *  vars  - `ns.h` namespace instance
+ *  varctx- `ns.h` namespace context instance
+ *  names - `ns.h` namespace instance
  *
  *  [0] This is the stack register used at runtime to push/pop variable
  *      containers.

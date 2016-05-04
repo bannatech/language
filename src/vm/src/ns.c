@@ -210,7 +210,6 @@ void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)
  *  b_type    - Type of variable
  *  ns_addr   - Variable name
  */
-
 void ns_cont_dec(ns_cont* container, b_type type, ns_addr address)
 {
 	N_ASSERT(container, "ns_cont_dec\n");

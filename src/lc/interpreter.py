@@ -44,7 +44,7 @@ class Label(AbstractToken):
 				break
 
 		if self.expr == 0:
-			print("UNDEFINED REFERENCE TO VARIABLE '{}'".format(self.data))
+			print("Undefined variable '{}'".format(self.data))
 
 	def action(self, s=False):
 		if s:
@@ -271,7 +271,7 @@ class Interpreter():
 	
 		for scope in range(0, self.scope):
 			if t in self.names[scope]:
-				print("Can't do that")
+				print("Can't instantiate name that's already in use!")
 
 		self.names[self.scope].append(t)
 

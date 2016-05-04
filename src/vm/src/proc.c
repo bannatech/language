@@ -47,9 +47,13 @@ void proc_run(rt_t* ctx)
 	}
 }
 
+/* Runs exection loop until a return is reached
+ */
 void proc_run_to_return(rt_t* ctx)
 {
 	N_ASSERT(ctx, "proc_run\n");
+
+	if (ctx->db) printf("START proc_run_to_return\n");
 
 	int n;
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
@@ -61,19 +65,30 @@ void proc_run_to_return(rt_t* ctx)
 			printf("\n");
 		}
 
+		if (ctx->pc->line->op == 0x7F)
+		{
+			if (ctx->db) printf("FUNCTION CALL proc_run_to_return\n");
+			n++;
+		}
+
 		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
 
 		// Break when the function returns
-		if (ctx->pc->line->op == 0x7F)
-			n++;
-		else if (ctx->pc->line->op == 0xF0)
+		
+		if (ctx->pc->line->op == 0xF0)
 		{
 			if (n > 0)
+			{
+				if (ctx->db) printf("FUNCTION CALL RETURN proc_run_to_return\n");
 				n--;
-			else
+			} else
+			{
+				if (ctx->db) printf("RETURNING FROM proc_run_to_return\n");
 				break;
+			}
 		}
 	}
+	if (ctx->db) printf("END proc_run_to_return\n");
 }
 
 /* Calls runtime context elements to free memory and terminate
@@ -163,9 +178,12 @@ var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 	return rv;
 }
 
+/* Call a function
+ */
 void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 {
 	N_ASSERT(ctx, "proc_function_call\n");
+	if (ctx->db) printf("FUNCTION CALL (%i)\n", name);
 
 	int x = (scope & 0xFE) >> 1;
 
@@ -174,6 +192,7 @@ void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 	if (x != 0)
 	{
 		ns_ctx_push(ctx->varctx, ctx->vars);
+
 		var_cont* ns_var = ns_get(ctx->names, 1, x);
 		var_data_object* var_d = var_data_get_OBJECT(ns_var);
 		ns_t* ns = (ns_t*) var_d->ref;
@@ -185,14 +204,21 @@ void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 	
 	proc_function_call_handle(ctx, func);
 
+	pc_update(ctx->pc);
+
 	proc_run_to_return(ctx);
 
 	if (x != 0)
 	{
 		ctx->vars = ns_ctx_pop(ctx->varctx);
 	}
+
+	if (ctx->db) printf("RETURN (%i)\n", name);
 }
 
+/* Handles arguements and namespace procedures for a given
+ * function call
+ */
 void proc_function_call_handle(rt_t* ctx, var_data_func* func)
 {
 	// Push a new namespace of specified size
