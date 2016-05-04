@@ -98,9 +98,7 @@ void _ins_def_IFDO     (rt_t*, bc_cont*);
 void _ins_def_ELSE     (rt_t*, bc_cont*);
 void _ins_def_DONE     (rt_t*, bc_cont*);
 void _ins_def_CALL     (rt_t*, bc_cont*);
-/* HELPER FUNCTIONS */
-void _ins_def_function_call(rt_t*, var_data_func*);
-/* END HELPER FUNCTIONS */
+
 void _ins_def_GETN     (rt_t*, bc_cont*);
 void _ins_def_SETN     (rt_t*, bc_cont*);
 void _ins_def_CALLM    (rt_t*, bc_cont*);
@@ -110,6 +108,7 @@ void _ins_def_MODO     (rt_t*, bc_cont*);
 void _ins_def_RETURN   (rt_t*, bc_cont*);
 void _ins_def_NEW      (rt_t*, bc_cont*);
 void _ins_def_ENDCLASS (rt_t*, bc_cont*);
+void _ins_def_DENS     (rt_t*, bc_cont*);
 void _ins_def_DECLASS  (rt_t*, bc_cont*);
 void _ins_def_DEFUN    (rt_t*, bc_cont*);
 

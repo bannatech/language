@@ -24,6 +24,8 @@ rt_t* proc_init(char*);
  */
 void proc_run(rt_t*);
 
+void proc_run_to_return(rt_t*);
+
 /* Calls runtime context elements to free memory and terminate
  *  rt_t* - Runtime context
  */
@@ -56,5 +58,9 @@ void proc_setvar(rt_t*, int, ns_addr, var_cont*);
  *  This function is used to support an interface to multithreaded instances
  */
 var_cont* proc_getvar(rt_t*, int, ns_addr);
+
+void proc_function_call(rt_t*, int, ns_addr);
+
+void proc_function_call_handle(rt_t*, var_data_func*);
 
 #endif //PROC_H

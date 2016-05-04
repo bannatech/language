@@ -170,8 +170,8 @@ void _ins_def_ROT_THREE(rt_t* ctx, bc_cont* line)
 
 void _ins_def_DEC      (rt_t* ctx, bc_cont* line)
 {
-	int scope = var_data_get_G_INT(line->varg[0]);
-	int type  = var_data_get_G_INT(line->varg[1]);
+	int type  = var_data_get_G_INT(line->varg[0]);
+	int scope = var_data_get_G_INT(line->varg[1]);
 	int name  = var_data_get_G_INT(line->varg[2]);
 
 	proc_decvar(ctx, type, scope, name);
@@ -207,8 +207,9 @@ void _ins_def_STV      (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CTV      (rt_t* ctx, bc_cont* line)
 {
-	int scope     = var_data_get_G_INT(line->varg[0]);
-	int name      = var_data_get_G_INT(line->varg[1]);
+	int name = var_data_get_G_INT(line->varg[0]);
+	
+	int scope = var_data_get_G_INT(line->varg[1]);
 
 	var_cont* new = var_data_cpy(line->varg[2]);
 
@@ -542,45 +543,11 @@ void _ins_def_DONE     (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CALL     (rt_t* ctx, bc_cont* line)
 {
-	int name = var_data_get_G_INT(line->varg[0]);
-
-	// Get the function's variable container
-	var_cont* var = proc_getvar(ctx, 1, name);
-	var_data_func* func = var_data_get_FUNC(var);
+	int scope = var_data_get_G_INT(line->varg[0]);
+	int name  = var_data_get_G_INT(line->varg[1]);
 
 	// Call the function
-	_ins_def_function_call(ctx, func);
-}
-
-void _ins_def_function_call(rt_t* ctx, var_data_func* func)
-{
-	// Push a new namespace of specified size
-	ns_push(ctx->vars, func->size);
-	// Declare the return value
-	ns_dec(ctx->vars, func->type, 0, 0);
-
-	// Throw in the arguements on the arguement stack into the new namespace
-	int offset = 1;
-	int i;
-	for (i = 0; i < func->paramlen; i++)
-	{
-		// Pop the arguement stack
-		var_cont* arg = stk_pop(ctx->argstk);
-
-		// Is the arguement of the right type?
-		ASSERT(arg->type == func->param[i], "Invalid function call\n");
-
-		// Declare the name in the new namespace and pass the arguements
-		ns_dec(ctx->vars, arg->type, 0, i+offset);
-		ns_set(ctx->vars, 0, i+offset, arg);
-	}
-
-	// Push new stack levels for the stack and the arguement stack
-	stk_newlevel(&ctx->stack);
-	stk_newlevel(&ctx->argstk);
-
-	// Branch to functions body
-	pc_branch(ctx->pc, func->loc);
+	proc_function_call(ctx, scope, name);
 }
 
 void _ins_def_GETN     (rt_t* ctx, bc_cont* line)
@@ -632,33 +599,11 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	// Set current namespace to objects namespace
 	ctx->vars = object->names;
 	// Call the function
-	_ins_def_function_call(ctx, func);
+	proc_function_call_handle(ctx, func);
+	// Update the program counter
 	pc_update(ctx->pc);
-
 	// Run code here so we can pop the namespace context
-	int n;
-	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
-	{
-		if (ctx->db)
-		{
-			printf("[%i]:\t", ctx->pc->address);
-			bc_print_op(ctx->pc->line);
-			printf("\n");
-		}
-
-		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
-
-		// Break when the function returns
-		if (ctx->pc->line->op == 0x7F)
-			n++;
-		else if (ctx->pc->line->op == 0xF0)
-		{
-			if (n > 0)
-				n--;
-			else
-				break;
-		}
-	}
+	proc_run_to_return(ctx);
 	// Pop the namespace context
 	ctx->vars = ns_ctx_pop(ctx->varctx);
 }
@@ -747,6 +692,23 @@ void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
 
 	pc_return(ctx->pc);
 	pc_inc(ctx->pc, 1);
+}
+void _ins_def_DENS     (rt_t* ctx, bc_cont* line)
+{
+	int name = var_data_get_G_INT(line->varg[0]);
+
+	ns_t* ns = ns_init(0xFF);
+
+	var_data_object* namespace = var_data_alloc_OBJECT(rt_ns_del);
+	namespace->ref = (void*)ns;
+
+	var_cont* ns_var = var_new(OBJECT);
+	var_set(ns_var, namespace, OBJECT);
+
+	ns_dec(ctx->names, OBJECT, 1, name);
+	ns_set(ctx->names, 1, name, ns_var);
+
+	ctx->vars = ns;
 }
 void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 {

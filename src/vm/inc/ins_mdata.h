@@ -34,7 +34,7 @@
 /* DUP       */ INS_MDATA[0x12] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* ROT_THREE */ INS_MDATA[0x13] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
                                                                      \
-/* DEC       */ INS_MDATA[0x20] = encode(3, A_BYTE, A_BYTE, A_NAME); \
+/* DEC       */ INS_MDATA[0x20] = encode(2, A_BYTE, A_NAME, A_BYTE); \
 /* LOV       */ INS_MDATA[0x21] = encode(2, A_BYTE, A_NAME, A_BYTE); \
 /* STV       */ INS_MDATA[0x22] = encode(2, A_BYTE, A_NAME, A_BYTE); \
 /* CTV       */ INS_MDATA[0x23] = encode(3, A_BYTE, A_NAME, A_DYNC); \
@@ -80,7 +80,7 @@
 /* IFDO      */ INS_MDATA[0x72] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* ELSE      */ INS_MDATA[0x73] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* DONE      */ INS_MDATA[0x7E] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
-/* CALL      */ INS_MDATA[0x7F] = encode(1, A_ADDR, A_BYTE, A_BYTE); \
+/* CALL      */ INS_MDATA[0x7F] = encode(2, A_BYTE, A_NAME, A_BYTE); \
                                                                      \
 /* GETN      */ INS_MDATA[0x80] = encode(1, A_NAME, A_BYTE, A_BYTE); \
 /* SETN      */ INS_MDATA[0x81] = encode(1, A_NAME, A_BYTE, A_BYTE); \
@@ -90,6 +90,8 @@
                                                                      \
 /* RETURN    */ INS_MDATA[0xF0] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
 /* NEW       */ INS_MDATA[0xF1] = encode(1, A_NAME, A_BYTE, A_BYTE); \
+/* ENDCLASS  */ INS_MDATA[0xF2] = encode(0, A_BYTE, A_BYTE, A_BYTE); \
+/* DENS      */ INS_MDATA[0xFD] = encode(1, A_BYTE, A_BYTE, A_BYTE); \
 /* DECLASS   */ INS_MDATA[0xFE] = encode(2, A_NAME, A_DYNC, A_BYTE); \
 /* DEFUN     */ INS_MDATA[0xFF] = encode(3, A_NAME, A_BYTE, A_DYNC);
 
@@ -162,7 +164,7 @@
 /* IFDO      */ INS_ADATA[0x72] = encode(0, BTOI, BTOI, BTOI); \
 /* ELSE      */ INS_ADATA[0x73] = encode(0, BTOI, BTOI, BTOI); \
 /* DONE      */ INS_ADATA[0x7E] = encode(0, BTOI, BTOI, BTOI); \
-/* CALL      */ INS_ADATA[0x7F] = encode(1, BTOI, BTOI, BTOI); \
+/* CALL      */ INS_ADATA[0x7F] = encode(2, BTOI, BTOI, BTOI); \
                                                                \
 /* GETN      */ INS_ADATA[0x80] = encode(1, BTOI, BTOI, BTOI); \
 /* SETN      */ INS_ADATA[0x81] = encode(1, BTOI, BTOI, BTOI); \
@@ -172,6 +174,8 @@
                                                                \
 /* RETURN    */ INS_ADATA[0xF0] = encode(0, BTOI, BTOI, BTOI); \
 /* NEW       */ INS_ADATA[0xF1] = encode(1, BTOI, BTOI, BTOI); \
+/* ENDCLASS  */ INS_MDATA[0xF2] = encode(0, BTOI, BTOI, BTOI); \
+/* DENS      */ INS_ADATA[0xFD] = encode(1, BTOI, BTOI, BTOI); \
 /* DECLASS   */ INS_ADATA[0xFE] = encode(2, BTOI, DTOL, BTOI); \
 /* DEFUN     */ INS_ADATA[0xFF] = encode(3, BTOI, BTOT, DTOL);
 

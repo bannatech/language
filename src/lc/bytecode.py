@@ -66,7 +66,6 @@ class NewClass():
 		        OP_NEW,
 		        self.label.action(),
 		        OP_DEC,
-		        self.toset.action(s=True),
 		        0x06,
 		        self.toset.action(),
 		        OP_STV,
@@ -82,8 +81,8 @@ class VariableNew():
 	def action(self):
 		return([
 		        OP_DEC,
-		        self.label.action(s=True),
 		        self.typed.action(),
+		        self.label.action(s=True),
 		        self.label.action()
 		       ])
 
@@ -148,6 +147,7 @@ class FunctionCall():
 			return([
 			        self.arguements.action(),
 			        OP_CALL,
+			        self.label.action(s=True)
 			        self.label.action()
 			       ])
 

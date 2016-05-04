@@ -10,6 +10,7 @@
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
+#include "object.h"
 #include "ns.h"
 #include "pc.h"
 #include "helper.h"
@@ -25,12 +26,13 @@
  *  [1] Function calls implement this stack to load variables as arguements.
  */
 typedef struct rt_t {
-	int        db;
-	pc_t*      pc;
-	stk_t*     stack;
-	stk_t*     argstk;
-	ns_t*      vars;
-	ns_ctx*    varctx;
+	int     db;
+	pc_t*   pc;
+	stk_t*  stack;
+	stk_t*  argstk;
+	ns_t*   vars;
+	ns_ctx* varctx;
+	ns_t*   names;
 } rt_t;
 
 /* Creates new runtime context.
@@ -38,6 +40,8 @@ typedef struct rt_t {
  *  stk_t*  - Arguement stack
  */
 rt_t* rt_ctx_new(char*, stk_t*);
+
+void rt_ns_del(void*);
 
 /* Destroys runtime context.
  */

@@ -6,6 +6,7 @@
 #include "stk.h"
 #include "var.h"
 #include "ns.h"
+#include "object.h"
 #include "pc.h"
 #include "helper.h"
 
@@ -25,10 +26,26 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 	ctx->pc     = pc_new(fname);
 	ctx->stack  = stk_new();
 	ctx->argstk = args;
-	ctx->vars   = ns_init(1024);
+	ctx->vars   = ns_init(0xFF);
 	ctx->varctx = ns_ctx_init();
+	ctx->names  = ns_init(0x7F);
+
+	var_data_object* namespace = var_data_alloc_OBJECT(rt_ns_del);
+	namespace->ref = (void*)ctx->vars;
+
+	var_cont* ns_var = var_new(OBJECT);
+	var_set(ns_var, namespace, OBJECT);
+
+	ns_dec(ctx->names, OBJECT, 1, 1);
+	ns_set(ctx->names, 1, 1, ns_var);
 
 	return ctx;
+}
+
+void rt_ns_del(void* ns)
+{
+	ns_t* namespace = (ns_t*)ns;
+	ns_del(namespace);
 }
 
 /* Destroys runtime context. This can be *very* slow.
@@ -51,4 +68,8 @@ void rt_ctx_del(rt_t* ctx)
 
 	N_ASSERT(ctx->varctx, "rt_ctx_del\n");
 	ns_ctx_del(ctx->varctx);
+
+	N_ASSERT(ctx->names, "rt_ctx_del\n");
+	ns_del(ctx->names);
+
 }

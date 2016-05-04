@@ -281,16 +281,16 @@ to TOS
 -------------------------------------------------------------------------------
 8 - Generic object interface. Expects object on TOS
 -------------------------------------------------------------------------------
-80 GETN N<name>   - Returns variable assosiated with name in object         TBI
+80 GETN N<name>   - Returns variable assosiated with name in object
 
-81 SETN N<name>   - Sets the variable assosiated with name in object        TBI
+81 SETN N<name>   - Sets the variable assosiated with name in object
                     Object on TOS, Variable on TOS1
 
-82 CALLM N<name>  - Calls method in object                                  TBI
+82 CALLM N<name>  - Calls method in object
 
-83 INDEXO         - Index an object, uses arguement stack                   TBI
+83 INDEXO         - Index an object, uses arguement stack
 
-84 MODO S<OP>     - Modify an object based on op. [+, -, *, /, %, ^ .. etc] TBI
+84 MODO S<OP>     - Modify an object based on op. [+, -, *, /, %, ^ .. etc]
 -------------------------------------------------------------------------------
 F - Functions/classes
 -------------------------------------------------------------------------------
@@ -300,9 +300,11 @@ FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
 
 FE DECLASS N<ref> D<args>       - Defines a class.
 
+FD DENS S<ref>                  - Specifies a namespace scope
+
 F2 ENDCLASS                     - End of class block
 
-F1 NEW N<ref>                   - Instantiates class
+F1 NEW S<scope> N<ref>          - Instantiates class
 
 F0 RETURN                       - Returns from function
 -------------------------------------------------------------------------------
