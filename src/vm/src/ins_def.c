@@ -598,7 +598,7 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	var_data_func* func = var_data_get_FUNC(var);
 	// Push current namespace context
 	ns_ctx_push(ctx->varctx, ctx->vars);
-	if (ctx->db) printf("PUSHED NAMESPACE CONTEXT\n");
+
 	// Set current namespace to objects namespace
 	ctx->vars = object->names;
 	// Call the function
@@ -609,7 +609,6 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	proc_run_to_return(ctx);
 	// Pop the namespace context
 	ctx->vars = ns_ctx_pop(ctx->varctx);
-	if (ctx->db) printf("POPPED NAMESPACE CONTEXT\n");
 
 	pc_inc(ctx->pc, 1);
 }
@@ -630,7 +629,7 @@ void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 
 	// Pop the namespace and get the return value
 	var_cont* return_value = ns_pop(ctx->vars);
-	if (ctx->db) printf("RETURN VALUE TYPE (%i)\n", return_value->type);
+
 	// Push the return value to the stack
 	stk_push(ctx->stack, return_value);
 
@@ -640,7 +639,7 @@ void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 {
 	int scope = var_data_get_G_INT(line->varg[0]);
-	int name  = var_data_get_G_INT(line->varg[0]);
+	int name  = var_data_get_G_INT(line->varg[1]);
 
 	// Get the object builder
 	var_cont* var = proc_getvar(ctx, scope, name);
@@ -651,7 +650,6 @@ void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 
 	// Push current namespace to namespace context
 	ns_ctx_push(ctx->varctx, ctx->vars);
-	if (ctx->db) printf("NEW: PUSHED NEW NAMESPACE CONTEXT\n");
 
 	// Set the current namespace to new namespace
 	ctx->vars = new_ns;
@@ -678,7 +676,6 @@ void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
 {
-	if (ctx->db) printf("NEW: CREATING NEW OBJECT\n");
 	var_cont* new = var_new(OBJECT);
 	var_data_object* data = var_data_alloc_OBJECT(object_del);
 
@@ -692,7 +689,6 @@ void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
 	stk_poplevel(&ctx->stack);
 	stk_poplevel(&ctx->argstk);
 
-	if (ctx->db) printf("NEW: POPPED NAMESPACE\n");
 	ctx->vars = ns_ctx_pop(ctx->varctx);
 
 	stk_push(ctx->stack, new);

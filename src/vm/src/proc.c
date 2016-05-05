@@ -53,8 +53,6 @@ void proc_run_to_return(rt_t* ctx)
 {
 	N_ASSERT(ctx, "proc_run\n");
 
-	if (ctx->db) printf("START proc_run_to_return\n");
-
 	int n;
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
@@ -67,7 +65,6 @@ void proc_run_to_return(rt_t* ctx)
 
 		if (ctx->pc->line->op == 0x7F)
 		{
-			if (ctx->db) printf("FUNCTION CALL proc_run_to_return\n");
 			n++;
 		}
 
@@ -79,16 +76,13 @@ void proc_run_to_return(rt_t* ctx)
 		{
 			if (n > 0)
 			{
-				if (ctx->db) printf("FUNCTION CALL RETURN proc_run_to_return\n");
 				n--;
 			} else
 			{
-				if (ctx->db) printf("RETURNING FROM proc_run_to_return\n");
 				break;
 			}
 		}
 	}
-	if (ctx->db) printf("END proc_run_to_return\n");
 }
 
 /* Calls runtime context elements to free memory and terminate
@@ -174,7 +168,6 @@ var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 		rv = ns_get(ns, s, name);
 	}
 
-
 	return rv;
 }
 
@@ -183,7 +176,6 @@ var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 {
 	N_ASSERT(ctx, "proc_function_call\n");
-	if (ctx->db) printf("FUNCTION CALL (%i)\n", name);
 
 	int x = (scope & 0xFE) >> 1;
 
@@ -212,8 +204,6 @@ void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 	{
 		ctx->vars = ns_ctx_pop(ctx->varctx);
 	}
-
-	if (ctx->db) printf("RETURN (%i)\n", name);
 }
 
 /* Handles arguements and namespace procedures for a given

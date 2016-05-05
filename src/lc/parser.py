@@ -284,9 +284,9 @@ class Parser():
 			],
 			init=(lambda x: [
 			                 x.new_name(1),
-			                 x.ns_persist(1),
 			                 ClassDef(x.eval_label(1),
 			                          x.eval_param(2)),
+			                 x.ns_persist(1),
 			                 x.add_directive(lambda x: [x.ns_save(),
 			                                            x.pop_scope(),
 			                                            x.op(OP_ENDCLASS)]),
