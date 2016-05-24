@@ -3,6 +3,7 @@ from lexer import *
 from bytecode import *
 from memonic import *
 from helper import *
+from namespace import *
 
 class AbstractToken():
 	def __init__(self, interpreter_instance, raw_data):
@@ -22,29 +23,25 @@ class Label(AbstractToken):
 	def update(self):
 		f = lambda y, x: y(y, x[0]) if type(x) is list else x
 		self.data = f(f, self.data)
+
 		self.is_property = False
-		self.obj = None
+		self.parent      = None
+		self.name        = None
 
 		names = self.data.rsplit(".", 1)
 
 		if len(names) > 1:
 			self.is_property = True
-			self.obj = Label(self.i, names[0])
-			self.data = names[1]
-			namespace = [self.i.objects[self.obj.data]]
+			self.parent = Label(self.i, names[0])
+
+			self.name = names[1]
+
+			t = self.i.ns.resolve_with_obj(self.parent, self.name)
 		else:
-			namespace = self.i.names
-
-		self.scope = 0
-		self.expr  = 0
-		for n, i in enumerate(namespace):
-			if self.data in i:
-				self.expr = i.index(self.data) + 1
-				self.scope = 0 if n > 0 else 1
-				break
-
-		if self.expr == 0:
-			print("Undefined variable '{}'".format(self.data))
+			self.name = names[0]
+			t = self.i.ns.resolve(self.name)
+			self.scope = t[0]
+			self.expr = t[1]
 
 	def action(self, s=False):
 		if s:
@@ -89,14 +86,14 @@ class Parameters(AbstractToken):
 			if x != ",":
 				tmp.append(x)
 			elif x == ",":
-				self.i.name_dec(tmp[1:])
+				self.i.new_name_token(tmp[1:])
 				t = Type(self.i, tmp[:-1])
 				l = Label(self.i, tmp[1:])
 				self.expr.append([t, l])
 				tmp = []
 
 		if len(tmp) > 0:
-			self.i.name_dec(tmp[1:])
+			self.i.new_name_token(tmp[1:])
 			t = Type(self.i, tmp[:-1])
 			l = Label(self.i, tmp[1:])
 			self.expr.append([t, l])
@@ -219,18 +216,13 @@ class Directive():
 class Interpreter():
 	def __init__(self, filename):
 		self.p = Parser(filename)
+		self.ns = Namespace()
 
 		self.program = self.p.get_statements()
 
 		self.line = (None, None)
 
 		self.ln   = 0
-
-		self.scopestack = []
-		self.names = [[]]
-		self.objects = {}
-		self.cur_obj_scope = ""
-		self.scope = 0
 
 		self.cur_directives = []
 
@@ -249,52 +241,40 @@ class Interpreter():
 		return self.program[self.ln + n]
 
 	def ns_persist(self, index):
-		self.objects[self.line[1][index][0]] = []
-		self.cur_obj_scope = self.line[1][index][0]
+		self.ns.target(self.line[1][index][0])
 		return False
 	
 	def ns_save(self):
-		self.objects[self.cur_obj_scope] = self.names[self.scope]
+		self.ns.release()
 		return False
 	
 	def ns_copy(self, key, index):
-		self.objects[self.line[1][key][0]] = self.objects[self.line[1][index][0]]
+		self.ns.copy(self.line[1][key][0], self.line[1][index][0])
 		return False
 
 	def new_name(self, index):
-		self.name_dec(self.line[1][index])
+		self.new_name_token(self.line[1][index])
 		return False
 
-	def name_dec(self, token):
+	def new_name_token(self, token):
 		f = lambda y, x: y(y, x[0]) if type(x) is list else x
-		t = f(f, token)
-	
-		for scope in range(0, self.scope):
-			if t in self.names[scope]:
-				print("Can't instantiate name that's already in use!")
 
-		self.names[self.scope].append(t)
+		self.ns.name_dec(f(f, token))
 
 	def push_scope(self):
-		self.scopestack.append([self.names, self.scope])
-		self.names = [[]]
-		self.scope = 0
+		self.ns.push()
 		return False
 	
 	def pop_scope(self):
-		t = self.scopestack.pop()
-		self.names = t[0]
-		self.scope = t[1]
+		self.ns.pop()
 		return False
 
 	def inc_scope(self):
-		self.names.append([])
-		self.scope += 1
+		self.ns.inc_scope()
 		return False
 
 	def dec_scope(self):
-		self.names.pop()
-		self.scope -= 1
+		self.ns.dec_scope()
 		return False
 
 	def push_directives(self):

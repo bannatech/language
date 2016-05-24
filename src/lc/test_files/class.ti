@@ -1,8 +1,29 @@
+DEBUG;
+
+class Counter:
+{
+	int data = 0;
+
+	func count -> int:
+	{
+		data = data + 1;
+
+		return data;
+	}
+
+	func reset -> void:
+	{
+		data = 0;
+	}
+}
+
 class ObjectFibb:
 {
 	int a = 0;
 	int b = 1;
 	int c = 0;
+
+	Counter acc = new Counter();
 
 	func next -> void:
 	{
@@ -26,10 +47,9 @@ class ObjectFibb:
 
 	func run (int count) -> void:
 	{
-		int x = 0;
-		while x < count:
+		acc.reset();
+		while acc.count() < count:
 		{
-			x = x + 1;
 			next();
 			display();
 		}
@@ -37,5 +57,7 @@ class ObjectFibb:
 }
 
 ObjectFibb test = new ObjectFibb();
+
+print test.c.data;
 
 test.run(15);

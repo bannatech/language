@@ -225,7 +225,7 @@ void proc_function_call_handle(rt_t* ctx, var_data_func* func)
 		var_cont* arg = stk_pop(ctx->argstk);
 
 		// Is the arguement of the right type?
-		ASSERT(arg->type == func->param[i], "Invalid function call\n");
+		ASSERT(arg->type == func->param[i], "Invalid arguement stack\n");
 
 		// Declare the name in the new namespace and pass the arguements
 		ns_dec(ctx->vars, arg->type, 0, i+offset);

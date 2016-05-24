@@ -662,7 +662,7 @@ void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 		var_cont* arg = stk_pop(ctx->argstk);
 
 		// Is the arguement of the right type?
-		ASSERT(arg->type == builder->param[i], "Invalid object instantiation\n");
+		ASSERT(arg->type == builder->param[i], "Invalid arguement stack\n");
 
 		// Declare the name in the new namespace and pass the arguements
 		ns_dec(ctx->vars, arg->type, 0, i+offset);

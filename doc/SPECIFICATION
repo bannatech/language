@@ -87,6 +87,11 @@ In this definition, the namespace will provide the following key mechanisms:
 
  * Implicitly move in/out of scopes
 
+The scope arguement is a single byte, where the format is as follows:
+
+ Namespace|Scope
+ 0000000  |0
+
 Scopes are handled by referencing to either the Global Scope or the Local Scope.
 The Local Scope is denoted by '0' in the scope arguement when refering to names,
 and this scope is initialized when evaluating any new block of code. When a diff
@@ -98,20 +103,26 @@ function calls, you can traverse n instances of previous namespaces.
 For example, take this namespace level graphic, where each Level is a namespace
 instance:
 
- Level 0: Global namespace, denoted by '1'.
- Level 1: Namespace level, where Local Level is at 1, denoted by '0'.
+ Level 0: Global namespace, LSB == '1'.
+ Level 1: Namespace level, where Local Level is at 1, LSB == '0'.
 
 When a function is called, another namespace level is created and the local
 level increases, like so:
 
- Level 0: Global namespace, denoted by '1'.
+ Level 0: Global namespace, LSB == '1'.
  Level 1: Namespace level.
- Level 2: Namespace level, where Local Level is at 2, denoted by '0'.
+ Level 2: Namespace level, where Local Level is at 2, LSB == '0'.
 
-Global scope names (denoted by a '1' in the scope arguement) are persistient
+
+Global scope names (LSB == 1 in the scope arguement) are persistient
 through the runtime as they handle all function definitions, objects, and
 names declared in the global scope. The "Local Level" is at where references
 that have a scope arguement of '0' refer to when accessing names.
+
+The Namespace arguement refers to which Namespace the variable exists in.
+When the namespace arguement equals 0, the current namespace is referenced.
+The global namespace is 1 by default, and any other namespaces must be declared
+by using the 
 
     VARIABLE DEFINITION
 
@@ -160,12 +171,13 @@ collection of methods.
 
     BYTECODE SPEC
 
-Bytecode is organised in the following manner:
+Bytecode is arranged in the following order:
 
-    <opcode> (arg 0... (arg n < 3 ) )
+    <opcode>, <arg 0>, <arg 1>, <arg 2>
 
 Where the <opcode> is a single byte denoting which subroutine to call with the
-following arguements when executed.
+following arguements when executed. Different opcodes have different arguement
+lengths, some having 0 arguements, and others having 3 arguements.
 
  Interpreting Bytecode Instructions
 
@@ -300,7 +312,7 @@ FF DEFUN N<ref> S<type> D<args> - Un-funs everything. no, no- it defines a
 
 FE DECLASS N<ref> D<args>       - Defines a class.
 
-FD DENS S<ref>                  - Specifies a namespace scope
+FD DENS S<ref>                  - Declares namespace
 
 F2 ENDCLASS                     - End of class block
 
