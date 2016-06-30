@@ -53,33 +53,43 @@ class Namespace():
 		self.t = None
 	
 	def copy(self, new_name, name):
-		self.ns[self.sc][new_name][1] = self.obj_resolve(name)[1]
+		self.ns[self.sc][new_name][1] = self.obj_resolve(name)
 	
 	# Resolves name into object
 	def obj_resolve(self, name):
 		rv = None
-		for namespace in self.scopes:
-			for names in namespace:
-				if name in names.keys() and rv == None:
-					rv = names[name]
-				elif rv != None:
-					print("{} was found, but found again".format(name))
+		if name in self.ns[0].keys():
+			rv = self.ns[0][name][1]
+		else:
+			for namespace in self.scopes:
+				for names in namespace:
+					if name in names.keys() and rv == None:
+						rv = names[name][1]
+					elif rv != None:
+						print("{} was found, but found again".format(name))
 
 		return rv
 
-	def resolve_with_obj(self, obj, name):
-		t = self.obj_resolve(obj)
-		print(t)
+	def resolve_with_obj(self, parent, name):
+		rv = None
+		obj = self.obj_resolve(parent.name)
+		print(parent.name, name)
+		if name in obj:
+			rv = obj[name]
+
+		return rv
 
 	# Resolves name into scope and address
 	def resolve(self, name):
 		rv = None
-		
 		if name in self.ns[0].keys():
 			rv = [1, self.ns[0][name][0]]
 		elif name in self.ns[-1].keys():
 			rv = [0, self.ns[-1][name][0]]
 		else:
-			print("Out of scope tbi")
-		
+			for x, names in enumerate(self.scopes):
+				if name in names[0].keys():
+					rv = [((x + 1) << 1) + 1, names[0][name][0]]
+				elif name in names[-1].keys():
+					rv = [((x + 1) << 1) + 0, names[-1][name][0]]
 		return rv

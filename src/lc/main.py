@@ -38,7 +38,7 @@ if __name__ == "__main__":
 	for n, l in enumerate(itr.program):
 		print("{}: {} <= ".format(str(n).rjust(4),
 		                          l[0].name.rjust(15),
-		                           l[1]),
+		                          l[1]),
 		      end="")
 		for e in l[2]:
 			t = e.action()

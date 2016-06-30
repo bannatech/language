@@ -42,6 +42,7 @@ def token_split(tokenstring, esc_chars, split_chars, include_splitter=True):
 # This here takes a number and chops it up into a series of byte-width numbers
 # i.e 42 -> [42], 256 -> [1, 0]
 #
+# TODO: I don't want to use this anymore but it's just for testing.
 def int_to_bytes(number):
 	rv = []
 	c = 0

@@ -58,6 +58,4 @@ class ObjectFibb:
 
 ObjectFibb test = new ObjectFibb();
 
-print test.c.data;
-
 test.run(15);

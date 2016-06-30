@@ -37,6 +37,7 @@ class Label(AbstractToken):
 			self.name = names[1]
 
 			t = self.i.ns.resolve_with_obj(self.parent, self.name)
+			self.expr = t[0]
 		else:
 			self.name = names[0]
 			t = self.i.ns.resolve(self.name)
@@ -47,6 +48,7 @@ class Label(AbstractToken):
 		if s:
 			return(self.scope)
 		else:
+			print(self.name, self.expr)
 			return(int_to_word(self.expr))
 
 class Arguements(AbstractToken):

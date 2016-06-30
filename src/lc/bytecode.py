@@ -95,7 +95,7 @@ class VariableAssignment():
 	
 	def action(self):
 		if self.label.is_property:
-			return(PropertyAssignment(self.label.obj,
+			return(PropertyAssignment(self.label.parent,
 			                          self.label,
 			                          self.expr).action())
 		else:
@@ -112,7 +112,7 @@ class VariableGet():
 	
 	def action(self):
 		if self.label.is_property:
-			return(PropertyGet(self.label.obj, self.label).action())
+			return(PropertyGet(self.label.parent, self.label).action())
 		else:
 			return([
 			        OP_LOV,
@@ -142,7 +142,7 @@ class FunctionCall():
 	
 	def action(self):
 		if self.label.is_property:
-			return(MethodCall(self.label.obj,
+			return(MethodCall(self.label.parent,
 			                  self.label,
 			                  self.arguements).action())
 		else:
