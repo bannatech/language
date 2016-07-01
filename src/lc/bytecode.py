@@ -67,7 +67,7 @@ class NewClass():
 		        self.label.action(s=True),
 		        self.label.action(),
 		        OP_DEC,
-		        self.label.action(s=True),
+		        self.toset.action(s=True),
 		        0x06,
 		        self.toset.action(),
 		        OP_STV,

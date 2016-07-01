@@ -121,7 +121,11 @@ var_cont* stk_pop(stk_t* stack)
 
 	stack->stack->ptr = stack->stack->ptr - 1;
 
-	return stack->stack->data[stack->stack->ptr];
+	var_cont* rv = stack->stack->data[stack->stack->ptr];
+
+	stack->stack->data[stack->stack->ptr] = NULL;
+
+	return rv;
 }
 
 /* Pushes var_cont* to the stack

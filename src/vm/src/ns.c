@@ -48,8 +48,13 @@ ns_t* ns_ctx_pop(ns_ctx* ctx)
 
 	ASSERT((ctx->ptr - 1) >= 0, "ns_ctx underflow");
 
+	ns_t* rv;
+
 	ctx->ptr = ctx->ptr - 1;
-	return ctx->spaces[ctx->ptr];
+
+	rv = ctx->spaces[ctx->ptr];
+
+	return rv;
 }
 
 /* Initialize namespace container of size
@@ -84,7 +89,13 @@ ns_t* ns_init(ns_addr size)
 {
 	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
 	M_ASSERT(ns);
-	
+
+	static int inc = 0;
+
+	ns->id = inc;
+
+	inc++;
+
 	ns->root = ns_cont_init(size, 0);
 	ns->last = ns->root;
 

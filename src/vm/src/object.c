@@ -22,7 +22,7 @@ void object_del(void* object)
 	N_ASSERT(object, "object_del\n");
 
 	obj_t* o = object;
-	
+
 	if (o->names != NULL)
 		ns_del(o->names);
 	

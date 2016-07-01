@@ -36,7 +36,7 @@ void proc_run(rt_t* ctx)
 	{
 		if (ctx->db)
 		{
-			printf("[%i]:\t", ctx->pc->address);
+			printf("-[ns-%i] [%i]:\t", ctx->vars->id, ctx->pc->address);
 			bc_print_op(ctx->pc->line);
 			printf("\n");
 		}
@@ -51,19 +51,19 @@ void proc_run(rt_t* ctx)
  */
 void proc_run_to_return(rt_t* ctx)
 {
-	N_ASSERT(ctx, "proc_run\n");
+	N_ASSERT(ctx, "proc_run_to_return\n");
 
 	int n;
 	for (n = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
 	{
 		if (ctx->db)
 		{
-			printf("[%i]:\t", ctx->pc->address);
+			printf("*[ns-%i] [%i]:\t", ctx->vars->id, ctx->pc->address);
 			bc_print_op(ctx->pc->line);
 			printf("\n");
 		}
 
-		if (ctx->pc->line->op == 0x7F)
+		if (ctx->pc->line->op == 0x7F || ctx->pc->line->op == 0x82)
 		{
 			n++;
 		}

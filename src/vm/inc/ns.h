@@ -19,6 +19,7 @@ typedef struct ns_cont {
 } ns_cont;
 
 typedef struct ns_t {
+	int id;
 	ns_cont* root;
 	ns_cont* last;
 } ns_t;
