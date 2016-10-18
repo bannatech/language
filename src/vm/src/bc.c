@@ -25,7 +25,7 @@ bc_cont* bc_cont_new(void)
 
 	new->sarg[0] = 0;
 	new->sarg[1] = 0;
-
+	new->sarg[2] = 0;
 
 	return new;
 }
