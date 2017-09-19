@@ -30,17 +30,25 @@ class Label(AbstractToken):
 
 		names = self.data.rsplit(".", 1)
 
+		# Determine if we're a simple property or a property that is part of an
+		# object, or if it exists at the root level of a namespace
 		if len(names) > 1:
 			self.is_property = True
 			self.parent = Label(self.i, names[0])
 
+			self.parent.update()
+
 			self.name = names[1]
 
-			t = self.i.ns.resolve_with_obj(self.parent, self.name)
+			t = self.i.ns.resolve_with_obj(self.parent, names[1])
+
 			self.expr = t[0]
+
 		else:
 			self.name = names[0]
+
 			t = self.i.ns.resolve(self.name)
+
 			self.scope = t[0]
 			self.expr = t[1]
 
@@ -48,7 +56,6 @@ class Label(AbstractToken):
 		if s:
 			return(self.scope)
 		else:
-			print(self.name, self.expr)
 			return(int_to_word(self.expr))
 
 class Arguements(AbstractToken):
@@ -124,7 +131,7 @@ class Expression(AbstractToken):
 			[">=", Opcode(OP_GTHAN_EQ)],
 			["=<", Opcode(OP_LTHAN_EQ)]
 		]
-
+		# Flatten the above array
 		self.operator_names = list(map(lambda x: x[0], self.operators))
 
 		self.func_call = Statement(

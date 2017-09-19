@@ -1,0 +1,24 @@
+class UsedByUsedByTesting:
+{
+	int property_three = 3;
+}
+
+class UsedByTesting:
+{
+	int property_two = 2;
+
+	UsedByUsedByTesting x = new UsedByUsedByTesting();
+}
+
+class Testing:
+{
+	int property_one = 1;
+
+	UsedByTesting y = new UsedByTesting();
+
+	print y.x.property_three;
+	print y.property_two;
+	print property_one;
+}
+
+Testing t = new Testing();

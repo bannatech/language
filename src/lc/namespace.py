@@ -72,11 +72,19 @@ class Namespace():
 
 	def resolve_with_obj(self, parent, name):
 		rv = None
-		obj = self.obj_resolve(parent.name)
-		print(parent.name, name)
-		if name in obj:
-			rv = obj[name]
 
+		if parent.is_property == True:
+			obj = self.resolve_with_obj(parent.parent, parent.name)
+		else:
+			obj = self.obj_resolve(parent.name)
+
+		if type(obj) == dict:
+			if name in obj:
+				rv = obj[name]
+		elif type(obj) == list:
+			if name in obj[1]:
+				rv = obj[1][name]
+	
 		return rv
 
 	# Resolves name into scope and address

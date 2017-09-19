@@ -55,21 +55,23 @@ class Parser():
 			"hashtable",
 			"stack"
 		]
-	
+	# Defines what integers look like
 		self.int_def       = AtomicSymbol("^[0-9]+$")
+	# Regular expression for encapsulating text in `"`, simply
 		self.str_def       = AtomicSymbol("^\0+")
-	
+	# Defines what type names exists
 		self.type_def      = InclusiveSymbol(self.defined_types)
+	# Defines what reserved names exists
 		self.label_def     = ExclusiveSymbol(self.defined_types +
 		                                     [self.int_def]     +
 		                                     [self.str_def]     +
 		                                     self.known_tokens   )
-
+	# Defines the parameter list defintion
 		self.paramlist_def = GroupingSymbol( [
 		                                      AtomicSymbol("\("),
 		                                      AtomicSymbol("\)")
 		                                     ] )
-	
+	# Defines the expression definition
 		self.expr_def = PolySymbol( [
 		                             self.label_def,
 		                             self.int_def,
@@ -392,30 +394,46 @@ class Parser():
 			self.statement_assign,
 			self.statement_expression
 		]
-		data=""
-		with open(file_name, 'r') as program:
-		    data=program.read().replace('\n', '')
-	
+
+		# This is the definition for what is a symbol
 		self.symbols = Tokenizer(self.splitters, self.end_statements)
 
-		self.symbols.generate_symbols(data)
+		# This holds the program.
+		data = ""
+		# Open the file, and replace every newline with a space.
+		with open(file_name, 'r') as program:
+		    data=program.read().replace('\n', '')
 
-		self.lines = self.symbols.generate_statements()
+		# Now, parse our program into statements
+		self.lines = self.symbols.generate_statements(data)
 
 	def get_statements(self):
 		rv = []
+		# Go through our program statement by statement and get line numbers
 		for num, l in enumerate(self.lines):
+		#   Now, for each active token we have defined, step through and find
+		#   which lines match which tokens
+		#
+		#   NOTE: The order of active_tokens is of most-probable to match
+		#         to least-probable to match
 			for a in self.active_tokens:
 				r = a.match(l)
+				# If the line matches the token,
 				if r:
+					#   If the token is an "incude" token, include the file
+					#   specified by the "include" directive
 					if a.name == "include":
+						# Create a new Parser instance pointing to the file
+						# specified by the first arguement
 						t = Parser(r[1][0] + ".ti")
 						l = t.get_statements()
 						rv.extend(l)
 					else:
+					#   We are a normal token, return the type of token
+					#   along with the list of matching tokens
 						rv.append([a,r,[]])
 						print("{}: {}\t{}".format(str(num).rjust(4),
-						                          a.name.rjust(15),r))
+						                            a.name.rjust(15), r))
 					break
 
 		return rv

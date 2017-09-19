@@ -131,6 +131,7 @@ class Tokenizer():
 	def __init__(self, symbol_delim, statement_delim):
 		self.symbol_delim    = symbol_delim
 		self.statement_delim = statement_delim
+
 		self.symbols = []
 
 	# Based off of self.symbol_delim, and string literals, break code into bits
@@ -174,9 +175,12 @@ class Tokenizer():
 						tmp.append(x)
 			self.symbols = tmp
 
-	def generate_statements(self):
+	def generate_statements(self, raw):
 		rv = []
 		tmp = []
+
+		self.generate_symbols(raw)
+
 		for i in self.symbols:
 			t = i.strip()
 			if len(t) > 0:
