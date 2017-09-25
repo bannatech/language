@@ -733,10 +733,8 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 	/* Determine namespace size for this object
 	 */
 	int nsize;
-	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
+	for (nsize = 0; pc_safe(ctx->pc);)
 	{
-		pc_inc(ctx->pc, 1);
-
 		// Are we at the end of the object builder?
 		if (ctx->pc->line->op == 0xF2)
 		{
@@ -747,6 +745,9 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 		{
 			nsize++;
 		}
+
+		pc_inc(ctx->pc, 1);
+		pc_update(ctx->pc);
 	}
 
 	data->end      = ctx->pc->line->real_addr;
@@ -761,6 +762,8 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 	proc_decvar(ctx, OBJBLDR, 1, name);
 	// Set the object to the name we just declared
 	proc_setvar(ctx, 1, name, obj);
+
+	pc_inc(ctx->pc, 1);
 }
 void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
@@ -784,10 +787,6 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	 */
 	for (nsize = 0; pc_safe(ctx->pc);)
 	{
-		// Increment the program counter
-		pc_inc(ctx->pc, 1);
-		pc_update(ctx->pc);
-
 		// Is this the end?
 		if (ctx->pc->line->op == 0xF0)
 		{
@@ -799,11 +798,11 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 			// If so, increment the namespace size.
 			nsize++;
 		}
+
+		// Increment the program counter
+		pc_inc(ctx->pc, 1);
+		pc_update(ctx->pc);
 	}
-
-	pc_inc(ctx->pc, 1);
-	pc_update(ctx->pc);
-
 
 	// Set all the values.
 	data->end      = ctx->pc->line->real_addr; // This is the end!
@@ -820,4 +819,6 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	proc_decvar(ctx, FUNC, 1, name);
 	// Set the name's value to the function we just defined
 	proc_setvar(ctx, 1, name, func);
+
+	pc_inc(ctx->pc, 1);
 }
