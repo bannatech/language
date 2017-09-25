@@ -22,6 +22,32 @@ def printb(l):
 	else:
 		print(" "+hex(l), end="")
 
+def write_out(output_file):
+	out = open(output_file, "wb")
+
+	print("\nTO BYTES\n")
+
+	rv = []
+
+	for n, l in enumerate(itr.program):
+		print("{}: {} <= ".format(str(n).rjust(4),
+		                          l[0].name.rjust(15),
+		                          l[1]),
+		                          end="")
+
+		for e in l[2]:
+			t = e.action()
+			printb(t)
+			rv.append(t)
+
+		print()
+
+	program = bytearray()
+	program = tobytearray(rv, 0, program)
+
+	out.write(program)
+	out.close()
+
 if __name__ == "__main__":
 	import sys
 
@@ -30,24 +56,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	itr = Interpreter(sys.argv[1])
-	
-	out = open(sys.argv[2], "wb")
 
-	print("\nTO BYTES\n")
-	rv = []
-	for n, l in enumerate(itr.program):
-		print("{}: {} <= ".format(str(n).rjust(4),
-		                          l[0].name.rjust(15),
-		                          l[1]),
-		      end="")
-		for e in l[2]:
-			t = e.action()
-			printb(t)
-			rv.append(t)
-		print()
+	if itr.success:
+		write_out(sys.argv[2])
 
-	program = bytearray()
-	program = tobytearray(rv, 0, program)
-
-	out.write(program)
-	out.close()

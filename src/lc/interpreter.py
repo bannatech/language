@@ -39,18 +39,14 @@ class Label(AbstractToken):
 
 			self.name = names[1]
 
-			print("RESOLVING {}".format(self.name))
 			t = self.i.ns.resolve_with_obj(self.parent, self.name)
-			print("RESOLVED {}: {}".format(self.name, t))
 
 			self.expr = t[0]
 
 		else:
 			self.name = names[0]
 
-			print("RESOLVING {}".format(self.name))
 			t = self.i.ns.resolve(self.name)
-			print("RESOLVED {}: {}".format(self.name, t))
 
 			self.scope = t[0]
 			self.expr = t[1]
@@ -240,22 +236,27 @@ class Interpreter():
 		self.p = Parser(filename)
 		self.ns = Namespace()
 
+		self.success = False
 		self.program = self.p.get_statements()
 
-		self.line = (None, None)
+		if self.program == False:
+			print("Terminating parsing...")
+		else:
+			self.line = (None, None)
 
-		self.ln   = 0
+			self.ln   = 0
 
-		self.cur_directives = []
+			self.cur_directives = []
 
-		self.directives = [self.cur_directives]
+			self.directives = [self.cur_directives]
 
-		#initalizes values n' stuff
-		for self.ln, self.line in enumerate(self.program):
-			t = self.line[0].action(self)
-			for i in t:
-				if i != False:
-					self.line[2].append(i)
+			for self.ln, self.line in enumerate(self.program):
+				t = self.line[0].action(self)
+				for i in t:
+					if i != False:
+						self.line[2].append(i)
+
+			self.success = True
 
 	def nxt(self, n):
 		if len(self.program) <= self.ln + n:

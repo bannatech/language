@@ -19,22 +19,13 @@ class ObjectFibb:
 {
 	int a = 0;
 	int b = 1;
-	int c = 0;
 
 	Counter acc = new Counter();
 
 	func next -> void:
 	{
-		if c == 0:
-		{
-			b = a + b;
-			c = 1;
-		} else
-		if c == 1:
-		{
-			a = a + b;
-			c = 0;
-		}
+		b = a + b;
+		a = a + b;
 	}
 	
 	func display -> void:
@@ -60,5 +51,5 @@ test.run(15);
 print "ALL DONE!";
 print test.a;
 print test.b;
-print test.c;
+print test.acc.data;
 

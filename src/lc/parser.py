@@ -18,6 +18,7 @@ class Parser():
 			"\-",
 			"\*",
 			"\/",
+			"\t",
 			" "
 		]
 		self.end_statements = [
@@ -415,10 +416,12 @@ class Parser():
 		#
 		#   NOTE: The order of active_tokens is of most-probable to match
 		#         to least-probable to match
+			fail = True
 			for a in self.active_tokens:
 				r = a.match(l)
 				# If the line matches the token,
 				if r:
+					fail = False
 					#   If the token is an "incude" token, include the file
 					#   specified by the "include" directive
 					if a.name == "include":
@@ -434,6 +437,12 @@ class Parser():
 						print("{}: {}\t{}".format(str(num).rjust(4),
 						                            a.name.rjust(15), r))
 					break
+
+			if fail:
+				print("Error, Line #{0}".format(num))
+				print("{}".format(l))
+				rv = False;
+				break;
 
 		return rv
 
