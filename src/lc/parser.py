@@ -288,7 +288,7 @@ class Parser():
 			                 x.new_name(1),
 			                 x.ns_persist(1),
 			                 ClassDef(x.eval_label(1),
-			                          None),
+			                          x.eval_param(2)),
 			                 x.add_directive(lambda x: [x.ns_save(),
 			                                            x.op(OP_ENDCLASS)])
 			                ])
@@ -310,7 +310,6 @@ class Parser():
 			                                            x.op(OP_ENDCLASS)])
 			                ])
 		)
-
 
 		self.statement_new = Statement(
 			"new",

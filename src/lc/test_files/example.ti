@@ -2,27 +2,30 @@ class Object(int init_args):
 {
 	int property = init_args * 2;
 
-	func method (int arg1, int arg2) -> string:
+	func method (int arg1, int arg2) -> void:
 	{
 		property = (arg1 * arg2) / property;
-
-		return "Unrelated string literal";
 	}
 
-	func init_method -> void:
+	func init_method() -> void:
 	{
-		print "Initalized Object";
+		print "Initialized Object";
 	}
 
-		init_method();
-	}
-
-func main -> void:
-{
-	Object new_object = new Object(3);
-
-	print object.property;
-	print object.method;
+	init_method();
 }
 
-main();
+func main(int arg) -> void:
+{
+	Object new_object = new Object(arg);
+
+	print new_object.property;
+
+	new_object.method(2,4);
+
+	print new_object.property;
+}
+
+print "Calling main()";
+main(2);
+print "Called main()";

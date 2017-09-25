@@ -35,19 +35,22 @@ class Label(AbstractToken):
 		if len(names) > 1:
 			self.is_property = True
 			self.parent = Label(self.i, names[0])
-
 			self.parent.update()
 
 			self.name = names[1]
 
-			t = self.i.ns.resolve_with_obj(self.parent, names[1])
+			print("RESOLVING {}".format(self.name))
+			t = self.i.ns.resolve_with_obj(self.parent, self.name)
+			print("RESOLVED {}: {}".format(self.name, t))
 
 			self.expr = t[0]
 
 		else:
 			self.name = names[0]
 
+			print("RESOLVING {}".format(self.name))
 			t = self.i.ns.resolve(self.name)
+			print("RESOLVED {}: {}".format(self.name, t))
 
 			self.scope = t[0]
 			self.expr = t[1]
@@ -60,9 +63,18 @@ class Label(AbstractToken):
 
 class Arguements(AbstractToken):
 	def update(self):
-		tokens = token_split(self.data[1:],
+		if len(self.data) > 0:
+			if self.data[0] == "(":
+				t = self.data[1:]
+			else:
+				t = self.data
+		else:
+			t = self.data
+
+		tokens = token_split(t,
 		                     [["[", "("], ["]", ")"]],
 		                     [","], include_splitter = False)
+
 		for t in tokens:
 			self.expr.insert(0, Expression(self.i, t))
 
@@ -138,7 +150,7 @@ class Expression(AbstractToken):
 			"func_call",
 			expression=[
 				self.i.p.label_def,
-				self.i.p.paramlist_def,
+				self.i.p.paramlist_def
 			],
 			init=(lambda x,y: FunctionCall(Label(x,y[0]),
 			                               Arguements(x,y[1:])))
@@ -176,6 +188,7 @@ class Expression(AbstractToken):
 		t = token_split(self.data,
 		                self.group_char,
 		                self.operator_names)
+
 		if len(t) == 0:
 			t = self.data
 		if len(t) > 2:

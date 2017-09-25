@@ -9,8 +9,13 @@ The goal is not to innovate, but to see if _I_ can. This is a personal refuge
 before my inevitable contributions to large group projects where individuals
 are deemed inferior.
 
- SYNTAX
-    #TO BE DETERMINED#
+ PARSER
+    The syntax and semantics of the language are defined by the cryptic parser
+implemented under /src/lc/parser.py, where each type of statement is built from
+atomic definitions of various token types, static expressions, and dynamic
+expressions. Each one of the matched statments in the parser has a method
+"action" -> returns a list of other objects with an "action" method or bytes,
+until all that is left is raw bytes in the list.
 
  TYPES
 
@@ -103,16 +108,17 @@ function calls, you can traverse n instances of previous namespaces.
 For example, take this namespace level graphic, where each Level is a namespace
 instance:
 
- Level 0: Global namespace, LSB == '1'.
- Level 1: Namespace level, where Local Level is at 1, LSB == '0'.
+ Level 0: Global namespace, LSB == '1'. Raw: 00000001
+ Level 1: Namespace level,  LSB == '0'. Raw: 00000000
 
 When a function is called, another namespace level is created and the local
 level increases, like so:
 
- Level 0: Global namespace, LSB == '1'.
- Level 1: Namespace level.
- Level 2: Namespace level, where Local Level is at 2, LSB == '0'.
-
+ Level 0: Global namespace, LSB == '1'. Raw: 00000001
+ <function call>
+ Level 1: Namespace level, where Local Level is at 1, LSB == '0'. Raw: 00000000
+ <function call>
+ Level 2: Namespace level, where Local Level is at 2, LSB == '0'. Raw: 00000000
 
 Global scope names (LSB == 1 in the scope arguement) are persistient
 through the runtime as they handle all function definitions, objects, and
@@ -121,8 +127,7 @@ that have a scope arguement of '0' refer to when accessing names.
 
 The Namespace arguement refers to which Namespace the variable exists in.
 When the namespace arguement equals 0, the current namespace is referenced.
-The global namespace is 1 by default, and any other namespaces must be declared
-by using the 
+The global namespace is 1 by default
 
     VARIABLE DEFINITION
 

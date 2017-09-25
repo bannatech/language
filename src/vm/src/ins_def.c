@@ -282,7 +282,7 @@ void _ins_def_DIV      (rt_t* ctx, bc_cont* line)
 	var_cont* A = stk_pop(ctx->stack);
 	var_cont* B = stk_pop(ctx->stack);
 
-	var_cont* var = var_mult(A, B);
+	var_cont* var = var_div(A, B);
 
 	stk_push(ctx->stack, var);
 
@@ -782,10 +782,11 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	/* Determine the namespace size by finding variable declarations in the
 	   functions body, Along with determining the end of the function.
 	 */
-	for (nsize = 0; pc_safe(ctx->pc); pc_update(ctx->pc))
+	for (nsize = 0; pc_safe(ctx->pc);)
 	{
 		// Increment the program counter
 		pc_inc(ctx->pc, 1);
+		pc_update(ctx->pc);
 
 		// Is this the end?
 		if (ctx->pc->line->op == 0xF0)
@@ -799,6 +800,11 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 			nsize++;
 		}
 	}
+
+	pc_inc(ctx->pc, 1);
+	pc_update(ctx->pc);
+
+
 	// Set all the values.
 	data->end      = ctx->pc->line->real_addr; // This is the end!
 	data->size     = nsize + alen + 1;         // How many names will this
