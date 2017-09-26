@@ -6,13 +6,6 @@ class Object(int init_args):
 	{
 		property = (arg1 * arg2) / property;
 	}
-
-	func init_method() -> void:
-	{
-		print "Initialized Object";
-	}
-
-	init_method();
 }
 
 func main(int arg) -> void:

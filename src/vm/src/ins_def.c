@@ -764,6 +764,7 @@ void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 	proc_setvar(ctx, 1, name, obj);
 
 	pc_inc(ctx->pc, 1);
+	pc_update(ctx->pc);
 }
 void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 {
@@ -804,6 +805,7 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 		pc_update(ctx->pc);
 	}
 
+	pc_update(ctx->pc);
 	// Set all the values.
 	data->end      = ctx->pc->line->real_addr; // This is the end!
 	data->size     = nsize + alen + 1;         // How many names will this
@@ -821,4 +823,5 @@ void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)
 	proc_setvar(ctx, 1, name, func);
 
 	pc_inc(ctx->pc, 1);
+	pc_update(ctx->pc);
 }

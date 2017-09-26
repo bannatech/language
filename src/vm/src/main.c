@@ -10,7 +10,8 @@
 
 int main(int argc, char** argv)
 {
-	ASSERT(argc > 1, "Specify a bytecode file in the first and only argument, please\n");
+	ASSERT(argc > 1,
+	       "Specify a bytecode file in the first and only argument, please\n");
 
 	init_mdata();                       // Initalize the instruction defs
 	init_adata();

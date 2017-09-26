@@ -1,6 +1,11 @@
 class UsedByUsedByTesting:
 {
 	int property_three = 3;
+
+	func testing (int i) -> void:
+	{
+		property_three = property_three * i;
+	}
 }
 
 class UsedByTesting:
@@ -8,6 +13,11 @@ class UsedByTesting:
 	int property_two = 2;
 
 	UsedByUsedByTesting x = new UsedByUsedByTesting();
+
+	func action -> void:
+	{
+		x.testing(property_two);
+	}
 }
 
 class Testing:
@@ -19,6 +29,13 @@ class Testing:
 	print y.x.property_three;
 	print y.property_two;
 	print property_one;
+
+	y.action();
+
+	print y.x.property_three;
+	print y.property_two;
+	print property_one;
 }
 
 Testing t = new Testing();
+
