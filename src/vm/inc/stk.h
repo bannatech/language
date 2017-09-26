@@ -41,11 +41,6 @@ void stk_newlevel(stk_t**);
  */
 void stk_poplevel(stk_t**);
 
-/* Scales the stack by n^2
- *  stk_t* - stack instance
- */
-void stk_scale(stk_line*);
-
 /* Pop the first element of the stack
  *  stk_t* - stack instance
  */
