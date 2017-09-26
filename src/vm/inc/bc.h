@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "fh.h"
 #include "var.h"
@@ -26,15 +27,15 @@ typedef struct bc_cont {
 } bc_cont;
 
 typedef struct bc_t {
-	bc_addr   size;   // Size of program
-	bc_cont** heap;   // Heap of instructions
+	bc_addr   size;                     // Size of program
+	bc_cont*  heap;   // Heap of instructions
 } bc_t;
 
 #include "is.h"
 
 /* Handles allocation for new `bc_cont` instances
  */
-bc_cont* bc_cont_new(void);
+void bc_cont_new(bc_cont*);
 
 /* Deallocates all the things, assuming the arguement is the root.
  *  bc_cont* - bytecode container, root node (hopefully)
@@ -59,7 +60,7 @@ void process_args(bc_cont*);
  *  FILE*    - File descriptor
  *  bc_addr* - pointer to size variable
  */
-bc_cont** bc_read(FILE* f, bc_addr*);
+bc_cont* bc_read(FILE* f, bc_addr*);
 
 /* Reads program into bc_t instance
  *  char* - filename

@@ -16,11 +16,17 @@ void printstk(stk_t* stk)
 
 void playstk(stk_t* new)
 {
-	stk_push(new, var_new(VOID));
-	stk_push(new, var_new(G_INT));
-	stk_push(new, var_new(G_FLOAT));
-	stk_push(new, var_new(G_CHAR));
-	stk_push(new, var_new(G_STR));
+	var_cont* one = var_new(VOID);
+	var_cont* two = var_new(G_INT);
+	var_cont* three = var_new(G_FLOAT);
+	var_cont* four = var_new(G_CHAR);
+	var_cont* five = var_new(G_STR);
+
+	stk_push(new, one);
+	stk_push(new, two);
+	stk_push(new, three);
+	stk_push(new, four);
+	stk_push(new, five);
 
 	printf("init: \n");
 	printstk(new);
@@ -50,6 +56,8 @@ void playstk(stk_t* new)
 
 int main(int argc, char* argv[])
 {
+	init_var_track();
+
 	stk_t* new = stk_new();
 
 	playstk(new);

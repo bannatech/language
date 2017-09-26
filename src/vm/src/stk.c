@@ -10,7 +10,7 @@ stk_t* stk_new( void )
 	stk_t* new = (stk_t*)malloc(sizeof(stk_t));
 	M_ASSERT(new);
 
-	new->stack = stk_line_new(STACK_INIT_SIZE);
+	new->stack = stk_line_new(STACK_SIZE_LIMIT);
 	new->next  = NULL;
 
 	return new;
@@ -23,11 +23,8 @@ stk_line* stk_line_new(size_t size)
 	stk_line* new = (stk_line*)malloc(sizeof(stk_line));
 	M_ASSERT(new);
 
-	new->data = (var_cont**)malloc(sizeof(var_cont*)*size);
-	M_ASSERT(new);
-
 	int i;
-	for (i = 0; i < size; i++)
+	for (i = 0; i < STACK_SIZE_LIMIT; i++)
 	{
 		new->data[i] = NULL;
 	}
@@ -47,6 +44,8 @@ void stk_del(stk_t* stack)
 		stk_poplevel(&stack);
 	}
 
+	stk_line_del(stack->stack);
+
 	free(stack);
 }
 
@@ -64,7 +63,6 @@ void stk_line_del(stk_line* stack)
 		}
 	}
 
-	free(stack->data);
 	free(stack);
 }
 
@@ -98,18 +96,6 @@ void stk_poplevel(stk_t** stack)
 	}
 }
 
-/* Scales the stack by n^2
- *  stk_t* - stack instance
- */
-void stk_scale(stk_line* stack)
-{
-	N_ASSERT(stack, "stk_scale\n");
-
-	size_t newsize = stack->size * stack->size;
-
-	stack->data = realloc(stack->data, sizeof(var_cont*) * newsize);
-}
-
 /* Pop the first element of the stack
  *  stk_t* - stack instance
  */
@@ -137,10 +123,7 @@ void stk_push(stk_t* stack, var_cont* data)
 	N_ASSERT(stack, "stk_push\n");
 	N_ASSERT(data, "stk_push\n");
 
-	if ((stack->stack->ptr + 1) < stack->stack->size)
-	{
-		stk_scale(stack->stack);
-	}
+	ASSERT(((stack->stack->ptr + 1) < stack->stack->size), "STACK OVERFLOW!");
 
 	stack->stack->data[stack->stack->ptr] = data;
 

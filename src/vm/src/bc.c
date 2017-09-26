@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "bc.h"
 
@@ -10,9 +11,9 @@
 
 /* Handles allocation for new `bc_cont` instances
  */
-bc_cont* bc_cont_new(void)
+void bc_cont_new(bc_cont* new)
 {
-	bc_cont *new = (bc_cont*)malloc(sizeof(bc_cont));
+	//new = (bc_cont*)malloc(sizeof(bc_cont));
 	M_ASSERT(new);
 
 	new->args[0] = NULL;
@@ -26,8 +27,6 @@ bc_cont* bc_cont_new(void)
 	new->sarg[0] = 0;
 	new->sarg[1] = 0;
 	new->sarg[2] = 0;
-
-	return new;
 }
 
 void bc_cont_del(bc_cont* ins)
@@ -41,8 +40,6 @@ void bc_cont_del(bc_cont* ins)
 		if (ins->varg[0] != NULL) var_del(ins->varg[0]);
 		if (ins->varg[1] != NULL) var_del(ins->varg[1]);
 		if (ins->varg[2] != NULL) var_del(ins->varg[2]);
-	
-		free(ins);
 	}
 }
 
@@ -172,7 +169,7 @@ void process_args(bc_cont* ins)
  *  FILE*    - File descriptor
  *  bc_addr* - pointer to size variable
  */
-bc_cont** bc_read(FILE* f, bc_addr* len)
+bc_cont* bc_read(FILE* f, bc_addr* len)
 {
 	N_ASSERT(f, "bc_read\n");
 
@@ -182,15 +179,15 @@ bc_cont** bc_read(FILE* f, bc_addr* len)
 	bc_cont* ptr;
 	byte_t byte;
 
-	bc_cont** heap = (bc_cont**)malloc(sizeof(bc_cont*)*fsize);
+	bc_cont* heap = (bc_cont*)malloc(sizeof(bc_cont)*fsize);
 	N_ASSERT(heap, "bc_read\n");
 
 	/* Loop through file byte-by-byte */
 	while (ftell(f) < fsize)
 	{
+		ptr = &heap[addr];
 		// Creates a new bc_cont instance
-		ptr = bc_cont_new();
-
+		bc_cont_new(ptr);
 		// Gets the opcode
 		byte = read_byte(f);
 		// Gets opcode metadata
@@ -199,10 +196,10 @@ bc_cont** bc_read(FILE* f, bc_addr* len)
 		get_opcode_adata(f, ptr);
 		// Process raw arguements
 		process_args(ptr);
+
 		// Set the real address of instruction
-		ptr->real_addr = addr;
-		// Add instruction to program
-		heap[addr] = ptr;
+		heap[addr].real_addr = addr;
+
 		// Increment address
 		addr++;
 	}
@@ -244,8 +241,7 @@ void bc_del(bc_t* program)
 	int i;
 	for (i=0; i < program->size; i++)
 	{
-		if (program->heap[i] != NULL)
-			bc_cont_del(program->heap[i]);
+		bc_cont_del(&program->heap[i]);
 	}
 
 	free(program->heap);

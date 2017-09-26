@@ -39,7 +39,7 @@ pc_addr_stk* pc_addr_stk_new(ns_addr address)
 	pc_addr_stk* new = (pc_addr_stk*)malloc(sizeof(pc_addr_stk));
 	M_ASSERT(new);
 
-	new->addresses = (pc_addr*)malloc(sizeof(pc_addr)*PC_RETURN_DEPTH);
+	new->addresses = (pc_addr*)malloc(sizeof(pc_addr)*(PC_RETURN_DEPTH));
 	M_ASSERT(new->addresses);
 
 	new->ptr = 0;
@@ -85,7 +85,7 @@ void pc_update(pc_t* pc)
 	N_ASSERT(pc, "pc_update\n");
 	ASSERT((pc->address < (pc->bc->size + 1)), "Address out of range\n");
 	// Update the pointer
-	pc->line = pc->bc->heap[pc->address];
+	pc->line = &pc->bc->heap[pc->address];
 }
 
 /* Increment program counter by +-addr

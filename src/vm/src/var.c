@@ -6,6 +6,14 @@
 
 #include "helper.h"
 
+void init_var_track()
+{
+	for (int i = 0; i < MAXIMUM_TRACKING_VARS; i++)
+	{
+		VAR_TRACK.vars[i] = NULL;
+	}
+}
+
 void* var_data_alloc_TYPE(b_type type)
 {
 	var_data_type* rv = (var_data_type*)malloc(sizeof(var_data_type));
@@ -115,6 +123,14 @@ var_cont* var_new(b_type type)
 	var_cont* new = (var_cont*)malloc(sizeof(var_cont));
 	M_ASSERT(new);
 
+	if (VAR_TRACK.ptr < MAXIMUM_TRACKING_VARS)
+		VAR_TRACK.vars[VAR_TRACK.ptr++] = new;
+	else // Here's where some properly implemented garbage collector should sit
+	{
+		VAR_TRACK.ptr = 0;
+		VAR_TRACK.vars[VAR_TRACK.ptr++] = new;
+	}
+
 	new->ownership = -1;
 
 	new->type = type;
@@ -126,13 +142,10 @@ var_cont* var_new(b_type type)
 
 void var_del(var_cont* var)
 {
-	if (var != NULL)
-	{
-		if (var->data != NULL)
-			var_data_free(var->data, var->type);
+	if (var->data != NULL)
+		var_data_free(var->data, var->type);
 
-		free(var);
-	}
+	free(var);
 }
 
 void var_data_free(void* data, b_type type)
@@ -164,39 +177,34 @@ void var_data_free(void* data, b_type type)
 		var_data_free_PLIST(data);
 	}
 
-	if (data != NULL)
+	if (type != VOID)
 		free(data);
 }
 
 void var_data_free_PLIST(void* data)
 {
 	var_data_plist* d = data;
-	if (d->v != NULL)
-		free(d->v);
+	free(d->v);
 }
 void var_data_free_FUNC(void* data)
 {
 	var_data_func* d = data;
-	if (d->param != NULL)
-		free(d->param);
+	free(d->param);
 }
 void var_data_free_OBJBLDR(void* data)
 {
 	var_data_objbldr* d = data;
-	if (d->param != NULL)
-		free(d->param);
+	free(d->param);
 }
 void var_data_free_OBJECT(void* data)
 {
 	var_data_object* d = data;
-	if (d->ref != NULL)
-		d->objfree(d->ref);
+	d->objfree(d->ref);
 }
 void var_data_free_G_STR(void* data)
 {
 	var_data_str* d = data;
-	if (d->v != NULL)
-		free(d->v);
+	free(d->v);
 }
 
 void var_set(var_cont* var, void* data, b_type type)

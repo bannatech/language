@@ -27,8 +27,8 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 	ctx->stack  = stk_new();
 	ctx->argstk = args;
 	ctx->vars   = ns_init(0xFFFF);
-	ctx->varctx = ns_ctx_init();
 	ctx->names  = ns_init(0x7F);
+	ctx->varctx = ns_ctx_init();
 
 	var_data_object* namespace = var_data_alloc_OBJECT(rt_ns_del);
 	namespace->ref = (void*)ctx->vars;
@@ -66,10 +66,11 @@ void rt_ctx_del(rt_t* ctx)
 	N_ASSERT(ctx->vars, "rt_ctx_del\n");
 	ns_del(ctx->vars);
 
-	N_ASSERT(ctx->varctx, "rt_ctx_del\n");
-	ns_ctx_del(ctx->varctx);
-
 	N_ASSERT(ctx->names, "rt_ctx_del\n");
 	ns_del(ctx->names);
 
+	N_ASSERT(ctx->varctx, "rt_ctx_del\n");
+	ns_ctx_del(ctx->varctx);
+
+	free(ctx);
 }

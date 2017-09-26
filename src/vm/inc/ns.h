@@ -11,10 +11,11 @@
 
 typedef unsigned int ns_addr;
 
+#define NS_CONT_MAX_NAMES 0xFFF
 typedef struct ns_cont {
 	int        level;
 	ns_addr    size;
-	var_cont** names;
+	var_cont*  names[NS_CONT_MAX_NAMES];
 	struct ns_cont* next;
 } ns_cont;
 
@@ -24,10 +25,10 @@ typedef struct ns_t {
 	ns_cont* last;
 } ns_t;
 
-#define NS_CTX_DEPTH 256
+#define NS_CTX_DEPTH 32
 typedef struct ns_ctx {
 	int ptr;
-	ns_t** spaces;
+	ns_t* spaces[NS_CTX_DEPTH];
 } ns_ctx;
 
 /* Initializes namespace context

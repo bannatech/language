@@ -37,6 +37,14 @@ typedef struct var_cont {
 	void*  data;
 } var_cont;
 
+#define MAXIMUM_TRACKING_VARS 0xFFFF
+struct var_track {
+	int ptr;
+	var_cont* vars[MAXIMUM_TRACKING_VARS];
+};
+
+struct var_track VAR_TRACK;
+
 typedef struct var_data_type {
 	b_type v;
 } var_data_type;
@@ -97,6 +105,8 @@ typedef struct var_data_ptr {
 } var_data_ptr;
 
 #include "bc.h"
+
+void init_var_track();
 
 /* Initialze variable with type
  */

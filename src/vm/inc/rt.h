@@ -34,8 +34,8 @@ typedef struct rt_t {
 	stk_t*  stack;
 	stk_t*  argstk;
 	ns_t*   vars;
-	ns_ctx* varctx;
 	ns_t*   names;
+	ns_ctx* varctx;
 } rt_t;
 
 /* Creates new runtime context.

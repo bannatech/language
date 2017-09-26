@@ -4,8 +4,7 @@
 #ifndef STK_H
 #define STK_H
 
-#define STACK_SIZE_LIMIT 0xFFFF
-#define STACK_INIT_SIZE  0xFF
+#define STACK_SIZE_LIMIT 0x100
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,7 +15,7 @@
 typedef struct stk_line {
 	int        ptr;
 	size_t     size;
-	var_cont** data;
+	var_cont*  data[STACK_SIZE_LIMIT];
 } stk_line;
 
 typedef struct stk_t {

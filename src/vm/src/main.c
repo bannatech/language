@@ -15,13 +15,14 @@ int main(int argc, char** argv)
 	init_mdata();                       // Initalize the instruction defs
 	init_adata();
 	init_ins_def();
+	init_var_track();
 
 	rt_t* runtime = proc_init(argv[1]); // Initalize process
 
 	proc_run(runtime);                  // Execute runtime
 
 	proc_clean(runtime);                // Once `proc_run` returns, clean
-	                                    // what sort of mess it made.
+	                                    // what sort of mess it made.`
 
 	return 0;
 }

@@ -8,11 +8,8 @@
  */
 ns_ctx* ns_ctx_init(void)
 {
-	ns_ctx* new = (ns_ctx*)malloc(sizeof(ns_ctx*));
+	ns_ctx* new = (ns_ctx*)malloc(sizeof(ns_ctx));
 	M_ASSERT(new);
-
-	new->spaces = (ns_t**)malloc(sizeof(ns_t*)*NS_CTX_DEPTH);
-	M_ASSERT(new->spaces);
 
 	new->ptr = 0;
 	return new;
@@ -21,9 +18,6 @@ ns_ctx* ns_ctx_init(void)
 void ns_ctx_del(ns_ctx* ctx)
 {
 	N_ASSERT(ctx, "ns_ctx_del\n");
-	N_ASSERT(ctx->spaces, "ns_ctx_del\n");
-
-	free(ctx->spaces);
 	free(ctx);
 }
 
@@ -66,13 +60,10 @@ ns_cont* ns_cont_init(ns_addr size, int level)
 	ns_cont* new = (ns_cont*)malloc(sizeof(ns_cont));
 	M_ASSERT(new);
 
-	new->names = (var_cont**)malloc(sizeof(var_cont*)*size);
-	M_ASSERT(new->names);
-
 	new->size = size;
 	new->level = level;
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < NS_CONT_MAX_NAMES; i++)
 	{
 		new->names[i] = NULL;
 	}
@@ -132,12 +123,22 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 			}
 		}
 	}
-	
-	free(container->names);
 
 	free(container);
 
 	return rv;
+}
+
+void ns_cont_free(ns_cont* container)
+{
+	N_ASSERT(container, "ns_cont_del\n");
+	
+	if (container->next != NULL)
+	{
+		ns_cont_free(container->next);
+	}
+
+	free(container);
 }
 
 /* Cleans up memory
@@ -146,19 +147,11 @@ void ns_del(ns_t* ns)
 {
 	N_ASSERT(ns, "ns_del\n");
 
-	var_cont* var;
-	if (ns->last != NULL)
+	if (ns->root != NULL)
 	{
-		while (ns->last->next != NULL)
-		{
-			var = ns_pop(ns);
-			if (var != NULL)
-			{
-				var_del(var);
-			}
-		}
+		ns_cont_free(ns->root);
 	}
-	
+
 	free(ns);
 }
 
@@ -183,7 +176,7 @@ var_cont* ns_pop(ns_t* ns)
 	N_ASSERT(ns, "ns_pop\n");
 
 	// Define our return value
-	var_cont* rv;
+	var_cont* rv = NULL;
 	// Is this the last link on the chain?
 	if (ns->last->next != NULL) {
 		// Get the next to last link on the chain
@@ -193,6 +186,7 @@ var_cont* ns_pop(ns_t* ns)
 		// Set the new last to the last link on the chain
 		ns->last = newlast;
 	}
+
 	return rv;
 }
 
@@ -227,8 +221,9 @@ void ns_cont_dec(ns_cont* container, b_type type, ns_addr address)
 	// Address must be in range
 	SIZE_ASSERT( container->size > address );
 	// Initalize a variable container
-	container->names[ address ] = var_new(type);
-	// Set the ownership of this 
+	var_cont* new_var = var_new(type);
+	container->names[ address ] = new_var;
+	// Set the ownership of this
 	container->names[ address ]->ownership = container->level;
 }
 

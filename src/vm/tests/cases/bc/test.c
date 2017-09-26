@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 	int i;
 	for (i = 0; i < bc->size; i++)
 	{
-		bc_print_op(bc->heap[i]);
+		bc_print_op(&bc->heap[i]);
 		printf("\n");
 	}
 
