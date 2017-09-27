@@ -1,0 +1,27 @@
+DEBUG;
+
+func recurse_me_please(int i) -> int:
+{
+	print(i);
+	if (i < 200):
+	{
+		return recurse_me_please(i + 1);
+	}
+	else:
+	{
+		return i;
+	}
+}
+
+func loop_me_please(int i) -> int:
+{
+	while (i < 200):
+	{
+		print(i);
+		i = i + 1;
+	}
+
+	return i;
+}
+
+print recurse_me_please(0);

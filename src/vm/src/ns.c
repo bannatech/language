@@ -60,10 +60,13 @@ ns_cont* ns_cont_init(ns_addr size, int level)
 	ns_cont* new = (ns_cont*)malloc(sizeof(ns_cont));
 	M_ASSERT(new);
 
+	new->names = (var_cont**)malloc(sizeof(var_cont*)*size);
+	M_ASSERT(new->names);
+
 	new->size = size;
 	new->level = level;
 
-	for (int i = 0; i < NS_CONT_MAX_NAMES; i++)
+	for (int i = 0; i < size; i++)
 	{
 		new->names[i] = NULL;
 	}
@@ -124,6 +127,8 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 		}
 	}
 
+	free(container->names);
+
 	free(container);
 
 	return rv;
@@ -138,6 +143,7 @@ void ns_cont_free(ns_cont* container)
 		ns_cont_free(container->next);
 	}
 
+	free(container->names);
 	free(container);
 }
 

@@ -11,11 +11,10 @@
 
 typedef unsigned int ns_addr;
 
-#define NS_CONT_MAX_NAMES 0xFFF
 typedef struct ns_cont {
 	int        level;
 	ns_addr    size;
-	var_cont*  names[NS_CONT_MAX_NAMES];
+	var_cont** names;
 	struct ns_cont* next;
 } ns_cont;
 
