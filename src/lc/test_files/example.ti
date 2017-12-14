@@ -1,24 +1,14 @@
-class Object(int init_args):
+class Bar:
 {
-	int property = init_args * 2;
-
-	func method (int arg1, int arg2) -> void:
-	{
-		property = (arg1 * arg2) / property;
-	}
+	int lala = 2;
 }
 
-func main(int arg) -> void:
+func main(Bar arg) -> void:
 {
-	Object new_object = new Object(arg);
-
-	print new_object.property;
-
-	new_object.method(2,4);
-
-	print new_object.property;
+	print arg.lala;
 }
 
+Bar foo = new Bar();
 print "Calling main()";
-main(2);
+main(foo);
 print "Called main()";

@@ -3,7 +3,7 @@ INC_DIR = inc
 DST_DIR = /usr/bin/
 
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
+CFLAGS  = -ggdb -std=c99 -Wall -I$(INC_DIR)
 
 DEPS    = $(INC_DIR)/is_mdata.h \
                      helper.h   \

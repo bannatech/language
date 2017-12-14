@@ -1,0 +1,433 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ADDR	inc/var.h	/^	ADDR,   \/\/ 1$/;"	e	enum:__anon1
+ADDRLEN	inc/ins_mdata.h	13;"	d
+ASSERT	inc/helper.h	9;"	d
+A_ADDR	inc/ins_mdata.h	17;"	d
+A_BYTE	inc/ins_mdata.h	15;"	d
+A_DYNC	inc/ins_mdata.h	18;"	d
+A_NAME	inc/ins_mdata.h	16;"	d
+BC_H	inc/bc.h	5;"	d
+BTOI	inc/ins_mdata.h	99;"	d
+BTOT	inc/ins_mdata.h	100;"	d
+CC	Makefile	/^CC      = gcc$/;"	m
+CC	tests/cases/bc/Makefile	/^CC      = gcc$/;"	m
+CC	tests/cases/ns/Makefile	/^CC      = gcc$/;"	m
+CC	tests/cases/pc/Makefile	/^CC      = gcc$/;"	m
+CC	tests/cases/stk/Makefile	/^CC      = gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS  = -std=c99 -Wall -I$(INC_DIR)$/;"	m
+CFLAGS	tests/cases/bc/Makefile	/^CFLAGS  = -std=c99 -Wall -I$(INC_DIR)$/;"	m
+CFLAGS	tests/cases/ns/Makefile	/^CFLAGS  = -std=c99 -Wall -I$(INC_DIR)$/;"	m
+CFLAGS	tests/cases/pc/Makefile	/^CFLAGS  = -std=c99 -Wall -I$(INC_DIR)$/;"	m
+CFLAGS	tests/cases/stk/Makefile	/^CFLAGS  = -std=c99 -Wall -I$(INC_DIR)$/;"	m
+DEBUG	src/main.c	9;"	d	file:
+DEPS	Makefile	/^DEPS    = $(INC_DIR)\/is_mdata.h \\$/;"	m
+DEPS	tests/cases/bc/Makefile	/^DEPS    = $(INC_DIR)\/is_mdata.h \\$/;"	m
+DEPS	tests/cases/ns/Makefile	/^DEPS    = i$(INC_DIR)\/helper.h \\$/;"	m
+DEPS	tests/cases/pc/Makefile	/^DEPS    = i$(INC_DIR)\/is_mdata.h \\$/;"	m
+DEPS	tests/cases/stk/Makefile	/^DEPS    = i$(INC_DIR)\/helper.h \\$/;"	m
+DST_DIR	Makefile	/^DST_DIR = \/usr\/bin\/$/;"	m
+DTOL	inc/ins_mdata.h	101;"	d
+DTOV	inc/ins_mdata.h	102;"	d
+D_ARRAY	inc/var.h	/^	D_ARRAY,\/\/ C$/;"	e	enum:__anon1
+FH_H	inc/fh.h	5;"	d
+FUNC	inc/var.h	/^	FUNC,   \/\/ 4$/;"	e	enum:__anon1
+G_CHAR	inc/var.h	/^	G_CHAR, \/\/ 9$/;"	e	enum:__anon1
+G_FIFO	inc/var.h	/^	G_FIFO, \/\/ E$/;"	e	enum:__anon1
+G_FLOAT	inc/var.h	/^	G_FLOAT,\/\/ 8$/;"	e	enum:__anon1
+G_INT	inc/var.h	/^	G_INT,  \/\/ 7$/;"	e	enum:__anon1
+G_PTR	inc/var.h	/^	G_PTR   \/\/ F$/;"	e	enum:__anon1
+G_STR	inc/var.h	/^	G_STR,  \/\/ A$/;"	e	enum:__anon1
+HELPER_H	inc/helper.h	5;"	d
+H_TABLE	inc/var.h	/^	H_TABLE,\/\/ D$/;"	e	enum:__anon1
+INC_DIR	Makefile	/^INC_DIR = inc$/;"	m
+INC_DIR	tests/cases/bc/Makefile	/^INC_DIR = ..\/..\/..\/inc$/;"	m
+INC_DIR	tests/cases/ns/Makefile	/^INC_DIR = ..\/..\/..\/inc$/;"	m
+INC_DIR	tests/cases/pc/Makefile	/^INC_DIR = ..\/..\/..\/inc$/;"	m
+INC_DIR	tests/cases/stk/Makefile	/^INC_DIR = ..\/..\/..\/inc$/;"	m
+INS_ADATA	inc/is.h	/^byte_t INS_ADATA[0x100];$/;"	v
+INS_ADATA_DEF	inc/ins_mdata.h	108;"	d
+INS_DEF	inc/ins_def.h	/^void (*INS_DEF[0x100])(rt_t*, bc_cont*);$/;"	v
+INS_DEF_H	inc/ins_def.h	5;"	d
+INS_MDATA	inc/is.h	/^byte_t INS_MDATA[0x100];$/;"	v
+INS_MDATA_DEF	inc/ins_mdata.h	24;"	d
+INS_MDATA_H	inc/ins_mdata.h	2;"	d
+IS_H	inc/is.h	9;"	d
+M_ASSERT	inc/helper.h	23;"	d
+NAMELEN	inc/ins_mdata.h	12;"	d
+NS_CTX_DEPTH	inc/ns.h	27;"	d
+NS_H	inc/ns.h	5;"	d
+N_ASSERT	inc/helper.h	30;"	d
+OBJ	Makefile	/^OBJ     = $(SRC_DIR)\/main.o     \\$/;"	m
+OBJ	tests/cases/bc/Makefile	/^OBJ     = test.o     \\$/;"	m
+OBJ	tests/cases/ns/Makefile	/^OBJ     = test.o            \\$/;"	m
+OBJ	tests/cases/pc/Makefile	/^OBJ     = test.o          \\$/;"	m
+OBJ	tests/cases/stk/Makefile	/^OBJ     = test.o            \\$/;"	m
+OBJBLDR	inc/var.h	/^	OBJBLDR,\/\/ 5$/;"	e	enum:__anon1
+OBJECT	inc/var.h	/^	OBJECT, \/\/ 6$/;"	e	enum:__anon1
+OBJECT_H	inc/object.h	5;"	d
+OUT	Makefile	/^OUT     = toi$/;"	m
+OUT	tests/cases/bc/Makefile	/^OUT     = test$/;"	m
+OUT	tests/cases/ns/Makefile	/^OUT     = test$/;"	m
+OUT	tests/cases/pc/Makefile	/^OUT     = test$/;"	m
+OUT	tests/cases/stk/Makefile	/^OUT     = test$/;"	m
+PC_H	inc/pc.h	5;"	d
+PC_RETURN_DEPTH	inc/pc.h	7;"	d
+PLIST	inc/var.h	/^	PLIST,  \/\/ 3$/;"	e	enum:__anon1
+PROC_H	inc/proc.h	5;"	d
+RT_H	inc/rt.h	5;"	d
+SIZE_ASSERT	inc/helper.h	16;"	d
+SRC_DIR	Makefile	/^SRC_DIR = src$/;"	m
+SRC_DIR	tests/cases/bc/Makefile	/^SRC_DIR = ..\/..\/..\/src$/;"	m
+SRC_DIR	tests/cases/ns/Makefile	/^SRC_DIR = ..\/..\/..\/src$/;"	m
+SRC_DIR	tests/cases/pc/Makefile	/^SRC_DIR = ..\/..\/..\/src$/;"	m
+SRC_DIR	tests/cases/stk/Makefile	/^SRC_DIR = ..\/..\/..\/src$/;"	m
+STACK_INIT_SIZE	inc/stk.h	8;"	d
+STACK_SIZE_LIMIT	inc/stk.h	7;"	d
+STK_H	inc/stk.h	5;"	d
+S_ARRAY	inc/var.h	/^	S_ARRAY,\/\/ B$/;"	e	enum:__anon1
+TYPE	inc/var.h	/^	TYPE,   \/\/ 2$/;"	e	enum:__anon1
+VAR_H	inc/var.h	5;"	d
+VAR_OPS_H	inc/var_ops.h	5;"	d
+VOID	inc/var.h	/^	VOID,   \/\/ 0$/;"	e	enum:__anon1
+_ins_def_ADD	src/ins_def.c	/^void _ins_def_ADD      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_AND	src/ins_def.c	/^void _ins_def_AND      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ARGB	src/ins_def.c	/^void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_BNAND	src/ins_def.c	/^void _ins_def_BNAND    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_BOR	src/ins_def.c	/^void _ins_def_BOR      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_BREAK	src/ins_def.c	/^void _ins_def_BREAK    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_BRT	src/ins_def.c	/^void _ins_def_BRT      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_BXOR	src/ins_def.c	/^void _ins_def_BXOR     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CALL	src/ins_def.c	/^void _ins_def_CALL     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CALLM	src/ins_def.c	/^void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CAST	src/ins_def.c	/^void _ins_def_CAST     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CLOOP	src/ins_def.c	/^void _ins_def_CLOOP    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_COS	src/ins_def.c	/^void _ins_def_COS      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CTS	src/ins_def.c	/^void _ins_def_CTS      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_CTV	src/ins_def.c	/^void _ins_def_CTV      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DEBUG	src/ins_def.c	/^void _ins_def_DEBUG    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DEC	src/ins_def.c	/^void _ins_def_DEC      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DECLASS	src/ins_def.c	/^void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DEFUN	src/ins_def.c	/^void _ins_def_DEFUN    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DENS	src/ins_def.c	/^void _ins_def_DENS     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DIV	src/ins_def.c	/^void _ins_def_DIV      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DONE	src/ins_def.c	/^void _ins_def_DONE     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_DUP	src/ins_def.c	/^void _ins_def_DUP      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ELSE	src/ins_def.c	/^void _ins_def_ELSE     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ENDCLASS	src/ins_def.c	/^void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ENDL	src/ins_def.c	/^void _ins_def_ENDL     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_EQ	src/ins_def.c	/^void _ins_def_EQ       (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_GETN	src/ins_def.c	/^void _ins_def_GETN     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_GOTO	src/ins_def.c	/^void _ins_def_GOTO     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_GTHAN	src/ins_def.c	/^void _ins_def_GTHAN    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_GTHAN_EQ	src/ins_def.c	/^void _ins_def_GTHAN_EQ (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ICOS	src/ins_def.c	/^void _ins_def_ICOS     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_IFDO	src/ins_def.c	/^void _ins_def_IFDO     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_INDEXO	src/ins_def.c	/^void _ins_def_INDEXO   (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ISIN	src/ins_def.c	/^void _ins_def_ISIN     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ITAN	src/ins_def.c	/^void _ins_def_ITAN     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_JUMPF	src/ins_def.c	/^void _ins_def_JUMPF    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_LIBC	src/ins_def.c	/^void _ins_def_LIBC     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_LOV	src/ins_def.c	/^void _ins_def_LOV      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_LTHAN	src/ins_def.c	/^void _ins_def_LTHAN    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_LTHAN_EQ	src/ins_def.c	/^void _ins_def_LTHAN_EQ (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_MOD	src/ins_def.c	/^void _ins_def_MOD      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_MODO	src/ins_def.c	/^void _ins_def_MODO     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_MULT	src/ins_def.c	/^void _ins_def_MULT     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_NEQ	src/ins_def.c	/^void _ins_def_NEQ       (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_NEW	src/ins_def.c	/^void _ins_def_NEW      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_NOT	src/ins_def.c	/^void _ins_def_NOT      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_NULL	src/ins_def.c	/^void _ins_def_NULL     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_OR	src/ins_def.c	/^void _ins_def_OR       (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_POP	src/ins_def.c	/^void _ins_def_POP      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_POW	src/ins_def.c	/^void _ins_def_POW      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_PRINT	src/ins_def.c	/^void _ins_def_PRINT    (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_RETURN	src/ins_def.c	/^void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ROT	src/ins_def.c	/^void _ins_def_ROT      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_ROT_THREE	src/ins_def.c	/^void _ins_def_ROT_THREE(rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_SETN	src/ins_def.c	/^void _ins_def_SETN     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_SIN	src/ins_def.c	/^void _ins_def_SIN      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_STARTL	src/ins_def.c	/^void _ins_def_STARTL   (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_STV	src/ins_def.c	/^void _ins_def_STV      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_SUB	src/ins_def.c	/^void _ins_def_SUB      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_SYNC	src/ins_def.c	/^void _ins_def_SYNC     (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_TAN	src/ins_def.c	/^void _ins_def_TAN      (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_TYPEOF	src/ins_def.c	/^void _ins_def_TYPEOF   (rt_t* ctx, bc_cont* line)$/;"	f
+_ins_def_branch_to_end_if	src/ins_def.c	/^void _ins_def_branch_to_end_if(rt_t* ctx)$/;"	f
+_ins_def_loop_break	src/ins_def.c	/^void _ins_def_loop_break(rt_t* ctx)$/;"	f
+adata	inc/bc.h	/^	byte_t    adata;     \/\/ Opcode arguement metadata$/;"	m	struct:bc_cont
+address	inc/pc.h	/^	pc_addr      address; \/\/ Current address$/;"	m	struct:pc_t
+addresses	inc/pc.h	/^	pc_addr* addresses;      \/\/ Stack data$/;"	m	struct:pc_addr_stk
+args	inc/bc.h	/^	byte_t*   args[3];   \/\/ Raw arguements$/;"	m	struct:bc_cont
+argstk	inc/rt.h	/^	stk_t*  argstk;$/;"	m	struct:rt_t
+b_type	inc/var.h	/^} b_type;$/;"	t	typeref:enum:__anon1
+bc	inc/pc.h	/^	bc_t*        bc;      \/\/ Bytecode container instance$/;"	m	struct:pc_t
+bc_addr	inc/bc.h	/^typedef unsigned int bc_addr;$/;"	t
+bc_addr	inc/var.h	/^typedef unsigned int bc_addr;$/;"	t
+bc_cont	inc/bc.h	/^typedef struct bc_cont {$/;"	s
+bc_cont	inc/bc.h	/^} bc_cont;$/;"	t	typeref:struct:bc_cont
+bc_cont_del	src/bc.c	/^void bc_cont_del(bc_cont* ins)$/;"	f
+bc_cont_new	src/bc.c	/^bc_cont* bc_cont_new(void)$/;"	f
+bc_del	src/bc.c	/^void bc_del(bc_t* program)$/;"	f
+bc_init	src/bc.c	/^bc_t* bc_init(char* fname)$/;"	f
+bc_print_op	src/bc.c	/^void bc_print_op(bc_cont* op)$/;"	f
+bc_read	src/bc.c	/^bc_cont** bc_read(FILE* f, bc_addr* len)$/;"	f
+bc_t	inc/bc.h	/^typedef struct bc_t {$/;"	s
+bc_t	inc/bc.h	/^} bc_t;$/;"	t	typeref:struct:bc_t
+byte_t	inc/fh.h	/^typedef unsigned char byte_t;$/;"	t
+byte_to_type	src/var.c	/^var_cont* byte_to_type(byte_t byte)$/;"	f
+data	inc/stk.h	/^	var_cont** data;$/;"	m	struct:stk_line
+data	inc/var.h	/^	void*  data;$/;"	m	struct:var_cont
+db	inc/rt.h	/^	int     db;$/;"	m	struct:rt_t
+encode	inc/ins_mdata.h	9;"	d
+end	inc/var.h	/^	bc_addr end;$/;"	m	struct:var_data_func
+end	inc/var.h	/^	bc_addr end;$/;"	m	struct:var_data_objbldr
+get_addr_arg	src/bc.c	/^byte_t* get_addr_arg(FILE* f, int* size)$/;"	f
+get_byte_arg	src/bc.c	/^byte_t* get_byte_arg(FILE* f, int* size)$/;"	f
+get_dync_arg	src/bc.c	/^byte_t* get_dync_arg(FILE* f, int* size)$/;"	f
+get_name_arg	src/bc.c	/^byte_t* get_name_arg(FILE* f, int* size)$/;"	f
+get_opcode_adata	src/bc.c	/^void get_opcode_adata(FILE* f, bc_cont* ins)$/;"	f
+get_opcode_mdata	src/is.c	/^void get_opcode_mdata(byte_t byte, bc_cont* ins)$/;"	f
+heap	inc/bc.h	/^	bc_cont** heap;   \/\/ Heap of instructions$/;"	m	struct:bc_t
+id	inc/ns.h	/^	int id;$/;"	m	struct:ns_t
+id	inc/var.h	/^	ns_addr id;$/;"	m	struct:var_data_objbldr
+id	inc/var.h	/^	ns_addr id;$/;"	m	struct:var_data_object
+init_adata	src/is.c	/^void init_adata(void)$/;"	f
+init_ins_def	src/ins_def.c	/^void init_ins_def( void )$/;"	f
+init_mdata	src/is.c	/^void init_mdata(void)$/;"	f
+ins_def_is_valid	src/ins_def.c	/^int ins_def_is_valid(bc_cont* line)$/;"	f
+instc	inc/var.h	/^	ns_addr instc;$/;"	m	struct:var_data_objbldr
+last	inc/ns.h	/^	ns_cont* last;$/;"	m	struct:ns_t
+level	inc/ns.h	/^	int        level;$/;"	m	struct:ns_cont
+limit	inc/pc.h	/^	pc_addr      limit;   \/\/ End of program$/;"	m	struct:pc_t
+line	inc/pc.h	/^	bc_cont*     line;    \/\/ Current instruction$/;"	m	struct:pc_t
+loc	inc/var.h	/^	bc_addr loc;$/;"	m	struct:var_data_func
+loc	inc/var.h	/^	bc_addr loc;$/;"	m	struct:var_data_objbldr
+main	src/main.c	/^int main(int argc, char** argv)$/;"	f
+main	tests/cases/bc/test.c	/^int main(int argc, char** argv)$/;"	f
+main	tests/cases/ns/test.c	/^int main( void )$/;"	f
+main	tests/cases/pc/test.c	/^int main(int argc, char *argv[])$/;"	f
+main	tests/cases/stk/test.c	/^int main(int argc, char* argv[])$/;"	f
+mdata	inc/bc.h	/^	byte_t    mdata;     \/\/ Opcode metadata$/;"	m	struct:bc_cont
+names	inc/ns.h	/^	var_cont** names;$/;"	m	struct:ns_cont
+names	inc/object.h	/^	ns_t* names;$/;"	m	struct:obj_t
+names	inc/rt.h	/^	ns_t*   names;$/;"	m	struct:rt_t
+next	inc/ns.h	/^	struct ns_cont* next;$/;"	m	struct:ns_cont	typeref:struct:ns_cont::ns_cont
+next	inc/stk.h	/^	struct stk_t* next;$/;"	m	struct:stk_t	typeref:struct:stk_t::stk_t
+ns_addr	inc/ns.h	/^typedef unsigned int ns_addr;$/;"	t
+ns_addr	inc/var.h	/^typedef unsigned int ns_addr;$/;"	t
+ns_cont	inc/ns.h	/^typedef struct ns_cont {$/;"	s
+ns_cont	inc/ns.h	/^} ns_cont;$/;"	t	typeref:struct:ns_cont
+ns_cont_dec	src/ns.c	/^void ns_cont_dec(ns_cont* container, b_type type, ns_addr address)$/;"	f
+ns_cont_del	src/ns.c	/^var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)$/;"	f
+ns_cont_get	src/ns.c	/^var_cont* ns_cont_get(ns_cont* container, ns_addr address)$/;"	f
+ns_cont_init	src/ns.c	/^ns_cont* ns_cont_init(ns_addr size, int level)$/;"	f
+ns_cont_set	src/ns.c	/^void ns_cont_set(ns_cont* container, var_cont* var, ns_addr address)$/;"	f
+ns_ctx	inc/ns.h	/^typedef struct ns_ctx {$/;"	s
+ns_ctx	inc/ns.h	/^} ns_ctx;$/;"	t	typeref:struct:ns_ctx
+ns_ctx_del	src/ns.c	/^void ns_ctx_del(ns_ctx* ctx)$/;"	f
+ns_ctx_init	src/ns.c	/^ns_ctx* ns_ctx_init(void)$/;"	f
+ns_ctx_pop	src/ns.c	/^ns_t* ns_ctx_pop(ns_ctx* ctx)$/;"	f
+ns_ctx_push	src/ns.c	/^void ns_ctx_push(ns_ctx* ctx, ns_t* ns)$/;"	f
+ns_dec	src/ns.c	/^void ns_dec(ns_t* ns, b_type type, int scope, ns_addr address)$/;"	f
+ns_del	src/ns.c	/^void ns_del(ns_t* ns)$/;"	f
+ns_get	src/ns.c	/^var_cont* ns_get(ns_t* ns, int scope, ns_addr address)$/;"	f
+ns_init	src/ns.c	/^ns_t* ns_init(ns_addr size)$/;"	f
+ns_pop	src/ns.c	/^var_cont* ns_pop(ns_t* ns)$/;"	f
+ns_push	src/ns.c	/^void ns_push(ns_t* ns, ns_addr size)$/;"	f
+ns_set	src/ns.c	/^void ns_set(ns_t* ns, int scope, ns_addr address, var_cont* var)$/;"	f
+ns_t	inc/ns.h	/^typedef struct ns_t {$/;"	s
+ns_t	inc/ns.h	/^} ns_t;$/;"	t	typeref:struct:ns_t
+obj_t	inc/object.h	/^typedef struct obj_t {$/;"	s
+obj_t	inc/object.h	/^} obj_t;$/;"	t	typeref:struct:obj_t
+object_call_method	src/object.c	/^var_cont* object_call_method(obj_t* object, ns_addr name)$/;"	f
+object_del	src/object.c	/^void object_del(void* object)$/;"	f
+object_get	src/object.c	/^obj_t* object_get(void* object)$/;"	f
+object_get_name	src/object.c	/^var_cont* object_get_name(obj_t* object, ns_addr name)$/;"	f
+object_init	src/object.c	/^obj_t* object_init()$/;"	f
+object_set_name	src/object.c	/^void object_set_name(obj_t* object, ns_addr name, var_cont* var)$/;"	f
+objfree	inc/var.h	/^	void (*objfree)(void*);$/;"	m	struct:var_data_object
+op	inc/bc.h	/^	byte_t    op;        \/\/ Opcode of instruction$/;"	m	struct:bc_cont
+ownership	inc/var.h	/^	int ownership;$/;"	m	struct:var_cont
+param	inc/var.h	/^	b_type* param;$/;"	m	struct:var_data_func
+param	inc/var.h	/^	b_type* param;$/;"	m	struct:var_data_objbldr
+paramlen	inc/var.h	/^	size_t  paramlen;$/;"	m	struct:var_data_func
+paramlen	inc/var.h	/^	size_t paramlen;$/;"	m	struct:var_data_objbldr
+pc	inc/rt.h	/^	pc_t*   pc;$/;"	m	struct:rt_t
+pc_addr	inc/pc.h	/^typedef unsigned short int pc_addr;$/;"	t
+pc_addr_stk	inc/pc.h	/^typedef struct pc_addr_stk {$/;"	s
+pc_addr_stk	inc/pc.h	/^} pc_addr_stk;$/;"	t	typeref:struct:pc_addr_stk
+pc_addr_stk_del	src/pc.c	/^void pc_addr_stk_del(pc_addr_stk* stk)$/;"	f
+pc_addr_stk_new	src/pc.c	/^pc_addr_stk* pc_addr_stk_new(ns_addr address)$/;"	f
+pc_branch	src/pc.c	/^void pc_branch(pc_t* pc, pc_addr address)$/;"	f
+pc_del	src/pc.c	/^void pc_del(pc_t* pc)$/;"	f
+pc_goto	src/pc.c	/^void pc_goto(pc_t* pc, pc_addr addr)$/;"	f
+pc_inc	src/pc.c	/^void pc_inc(pc_t* pc, pc_addr addr)$/;"	f
+pc_new	src/pc.c	/^pc_t* pc_new(char* fname)$/;"	f
+pc_return	src/pc.c	/^void pc_return(pc_t* pc)$/;"	f
+pc_safe	src/pc.c	/^int pc_safe(pc_t* pc)$/;"	f
+pc_t	inc/pc.h	/^typedef struct pc_t {$/;"	s
+pc_t	inc/pc.h	/^} pc_t;$/;"	t	typeref:struct:pc_t
+pc_update	src/pc.c	/^void pc_update(pc_t* pc)$/;"	f
+playstk	tests/cases/stk/test.c	/^void playstk(stk_t* new)$/;"	f
+printstk	tests/cases/stk/test.c	/^void printstk(stk_t* stk)$/;"	f
+proc_clean	src/proc.c	/^void proc_clean(rt_t* ctx)$/;"	f
+proc_decvar	src/proc.c	/^void proc_decvar(rt_t* ctx, b_type type, int scope, ns_addr name)$/;"	f
+proc_function_call	src/proc.c	/^void proc_function_call(rt_t* ctx, int scope, ns_addr name)$/;"	f
+proc_function_call_handle	src/proc.c	/^void proc_function_call_handle(rt_t* ctx, var_data_func* func)$/;"	f
+proc_getvar	src/proc.c	/^var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)$/;"	f
+proc_init	src/proc.c	/^rt_t* proc_init(char* fname)$/;"	f
+proc_run	src/proc.c	/^void proc_run(rt_t* ctx)$/;"	f
+proc_run_to_return	src/proc.c	/^void proc_run_to_return(rt_t* ctx)$/;"	f
+proc_setvar	src/proc.c	/^void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)$/;"	f
+process_args	src/bc.c	/^void process_args(bc_cont* ins)$/;"	f
+ptr	inc/ns.h	/^	int ptr;$/;"	m	struct:ns_ctx
+ptr	inc/pc.h	/^	int      ptr;            \/\/ Stack pointer$/;"	m	struct:pc_addr_stk
+ptr	inc/stk.h	/^	int        ptr;$/;"	m	struct:stk_line
+raw_to_int	src/var.c	/^var_cont* raw_to_int(int size, int start, byte_t* bytes)$/;"	f
+raw_to_plist	src/var.c	/^var_cont* raw_to_plist(int n, byte_t* bytes)$/;"	f
+raw_to_str	src/var.c	/^var_cont* raw_to_str(int n, int offset, byte_t* bytes)$/;"	f
+raw_to_var	src/var.c	/^var_cont* raw_to_var(int n, byte_t* bytes)$/;"	f
+read_byte	src/fh.c	/^byte_t read_byte(FILE* f)$/;"	f
+read_bytes	src/fh.c	/^byte_t* read_bytes(FILE* f, long bytes)$/;"	f
+read_size	src/fh.c	/^long read_size(FILE* f)$/;"	f
+real_addr	inc/bc.h	/^	bc_addr   real_addr; \/\/ Real address of instruction$/;"	m	struct:bc_cont
+ref	inc/var.h	/^	void* ref;$/;"	m	struct:var_data_object
+root	inc/ns.h	/^	ns_cont* root;$/;"	m	struct:ns_t
+rt_ctx_del	src/rt.c	/^void rt_ctx_del(rt_t* ctx)$/;"	f
+rt_ctx_new	src/rt.c	/^rt_t* rt_ctx_new(char* fname, stk_t* args)$/;"	f
+rt_ns_del	src/rt.c	/^void rt_ns_del(void* ns)$/;"	f
+rt_t	inc/rt.h	/^typedef struct rt_t {$/;"	s
+rt_t	inc/rt.h	/^} rt_t;$/;"	t	typeref:struct:rt_t
+sarg	inc/bc.h	/^	int       sarg[3];   \/\/ Size of arguements$/;"	m	struct:bc_cont
+size	inc/bc.h	/^	bc_addr   size;   \/\/ Size of program$/;"	m	struct:bc_t
+size	inc/ns.h	/^	ns_addr    size;$/;"	m	struct:ns_cont
+size	inc/pc.h	/^	int      size;           \/\/ Capacity of stack$/;"	m	struct:pc_addr_stk
+size	inc/stk.h	/^	size_t     size;$/;"	m	struct:stk_line
+size	inc/var.h	/^	ns_addr size;$/;"	m	struct:var_data_func
+size	inc/var.h	/^	ns_addr size;$/;"	m	struct:var_data_objbldr
+size	inc/var.h	/^	size_t size;$/;"	m	struct:var_data_array
+size	inc/var.h	/^	size_t size;$/;"	m	struct:var_data_str
+spaces	inc/ns.h	/^	ns_t** spaces;$/;"	m	struct:ns_ctx
+stack	inc/rt.h	/^	stk_t*  stack;$/;"	m	struct:rt_t
+stack	inc/stk.h	/^	stk_line* stack;$/;"	m	struct:stk_t
+stk	inc/pc.h	/^	pc_addr_stk* stk;     \/\/ Address stack$/;"	m	struct:pc_t
+stk_at	src/stk.c	/^var_cont* stk_at(stk_t* stack, int n)$/;"	f
+stk_del	src/stk.c	/^void stk_del(stk_t* stack)$/;"	f
+stk_line	inc/stk.h	/^typedef struct stk_line {$/;"	s
+stk_line	inc/stk.h	/^} stk_line;$/;"	t	typeref:struct:stk_line
+stk_line_del	src/stk.c	/^void stk_line_del(stk_line* stack)$/;"	f
+stk_line_new	src/stk.c	/^stk_line* stk_line_new(size_t size)$/;"	f
+stk_new	src/stk.c	/^stk_t* stk_new( void )$/;"	f
+stk_newlevel	src/stk.c	/^void stk_newlevel(stk_t** stack)$/;"	f
+stk_pop	src/stk.c	/^var_cont* stk_pop(stk_t* stack)$/;"	f
+stk_poplevel	src/stk.c	/^void stk_poplevel(stk_t** stack)$/;"	f
+stk_push	src/stk.c	/^void stk_push(stk_t* stack, var_cont* data)$/;"	f
+stk_rot_three	src/stk.c	/^void stk_rot_three(stk_t* stack)$/;"	f
+stk_rot_top	src/stk.c	/^void stk_rot_top(stk_t* stack)$/;"	f
+stk_scale	src/stk.c	/^void stk_scale(stk_line* stack)$/;"	f
+stk_t	inc/stk.h	/^typedef struct stk_t {$/;"	s
+stk_t	inc/stk.h	/^} stk_t;$/;"	t	typeref:struct:stk_t
+type	inc/var.h	/^	b_type  type;$/;"	m	struct:var_data_func
+type	inc/var.h	/^	b_type type;$/;"	m	struct:var_cont
+unencode	src/is.c	/^void unencode(byte_t byte, int* n, int* at)$/;"	f
+v	inc/var.h	/^	b_type v;$/;"	m	struct:var_data_type
+v	inc/var.h	/^	b_type* v;$/;"	m	struct:var_data_plist
+v	inc/var.h	/^	char v;$/;"	m	struct:var_data_char
+v	inc/var.h	/^	char* v;$/;"	m	struct:var_data_str
+v	inc/var.h	/^	double v;$/;"	m	struct:var_data_float
+v	inc/var.h	/^	int v;$/;"	m	struct:var_data_int
+v	inc/var.h	/^	var_cont* v;$/;"	m	struct:var_data_array
+v	inc/var.h	/^	var_cont* v;$/;"	m	struct:var_data_ptr
+var_add	src/var_ops.c	/^var_cont* var_add(var_cont* A, var_cont* B)$/;"	f
+var_add_float	src/var_ops.c	/^var_cont* var_add_float(var_cont* A, var_cont* B)$/;"	f
+var_add_int	src/var_ops.c	/^var_cont* var_add_int(var_cont* A, var_cont* B)$/;"	f
+var_cont	inc/var.h	/^typedef struct var_cont {$/;"	s
+var_cont	inc/var.h	/^} var_cont;$/;"	t	typeref:struct:var_cont
+var_data_alloc_FUNC	src/var.c	/^void* var_data_alloc_FUNC(b_type type)$/;"	f
+var_data_alloc_G_CHAR	src/var.c	/^void* var_data_alloc_G_CHAR(char value)$/;"	f
+var_data_alloc_G_FLOAT	src/var.c	/^void* var_data_alloc_G_FLOAT(double value)$/;"	f
+var_data_alloc_G_INT	src/var.c	/^void* var_data_alloc_G_INT(int value)$/;"	f
+var_data_alloc_G_STR	src/var.c	/^void* var_data_alloc_G_STR(size_t size)$/;"	f
+var_data_alloc_OBJBLDR	src/var.c	/^void* var_data_alloc_OBJBLDR(void)$/;"	f
+var_data_alloc_OBJECT	src/var.c	/^void* var_data_alloc_OBJECT(void (*freefunc)(void*))$/;"	f
+var_data_alloc_PLIST	src/var.c	/^void* var_data_alloc_PLIST(size_t size)$/;"	f
+var_data_alloc_TYPE	src/var.c	/^void* var_data_alloc_TYPE(b_type type)$/;"	f
+var_data_array	inc/var.h	/^typedef struct var_data_array {$/;"	s
+var_data_array	inc/var.h	/^} var_data_array;$/;"	t	typeref:struct:var_data_array
+var_data_char	inc/var.h	/^typedef struct var_data_char {$/;"	s
+var_data_char	inc/var.h	/^} var_data_char;$/;"	t	typeref:struct:var_data_char
+var_data_cpy	src/var.c	/^var_cont* var_data_cpy(var_cont* var)$/;"	f
+var_data_cpy_G_CHAR	src/var.c	/^void* var_data_cpy_G_CHAR(var_data_char* data)$/;"	f
+var_data_cpy_G_FLOAT	src/var.c	/^void* var_data_cpy_G_FLOAT(var_data_float* data)$/;"	f
+var_data_cpy_G_INT	src/var.c	/^void* var_data_cpy_G_INT(var_data_int* data)$/;"	f
+var_data_cpy_G_STR	src/var.c	/^void* var_data_cpy_G_STR(var_data_str* data)$/;"	f
+var_data_float	inc/var.h	/^typedef struct var_data_float {$/;"	s
+var_data_float	inc/var.h	/^} var_data_float;$/;"	t	typeref:struct:var_data_float
+var_data_free	src/var.c	/^void var_data_free(void* data, b_type type)$/;"	f
+var_data_free_FUNC	src/var.c	/^void var_data_free_FUNC(void* data)$/;"	f
+var_data_free_G_STR	src/var.c	/^void var_data_free_G_STR(void* data)$/;"	f
+var_data_free_OBJBLDR	src/var.c	/^void var_data_free_OBJBLDR(void* data)$/;"	f
+var_data_free_OBJECT	src/var.c	/^void var_data_free_OBJECT(void* data)$/;"	f
+var_data_free_PLIST	src/var.c	/^void var_data_free_PLIST(void* data)$/;"	f
+var_data_func	inc/var.h	/^typedef struct var_data_func {$/;"	s
+var_data_func	inc/var.h	/^} var_data_func;$/;"	t	typeref:struct:var_data_func
+var_data_get_FUNC	src/var.c	/^var_data_func* var_data_get_FUNC(var_cont* var)$/;"	f
+var_data_get_G_CHAR	src/var.c	/^char var_data_get_G_CHAR(var_cont* var)$/;"	f
+var_data_get_G_FLOAT	src/var.c	/^double var_data_get_G_FLOAT(var_cont* var)$/;"	f
+var_data_get_G_INT	src/var.c	/^int var_data_get_G_INT(var_cont* var)$/;"	f
+var_data_get_G_STR	src/var.c	/^char* var_data_get_G_STR(var_cont* var)$/;"	f
+var_data_get_OBJBLDR	src/var.c	/^var_data_objbldr* var_data_get_OBJBLDR(var_cont* var)$/;"	f
+var_data_get_OBJECT	src/var.c	/^var_data_object* var_data_get_OBJECT(var_cont* var)$/;"	f
+var_data_get_PLIST	src/var.c	/^b_type* var_data_get_PLIST(var_cont* var)$/;"	f
+var_data_get_TYPE	src/var.c	/^b_type var_data_get_TYPE(var_cont* var)$/;"	f
+var_data_int	inc/var.h	/^typedef struct var_data_int {$/;"	s
+var_data_int	inc/var.h	/^} var_data_int;$/;"	t	typeref:struct:var_data_int
+var_data_objbldr	inc/var.h	/^typedef struct var_data_objbldr {$/;"	s
+var_data_objbldr	inc/var.h	/^} var_data_objbldr;$/;"	t	typeref:struct:var_data_objbldr
+var_data_object	inc/var.h	/^typedef struct var_data_object {$/;"	s
+var_data_object	inc/var.h	/^} var_data_object;$/;"	t	typeref:struct:var_data_object
+var_data_plist	inc/var.h	/^typedef struct var_data_plist {$/;"	s
+var_data_plist	inc/var.h	/^} var_data_plist;$/;"	t	typeref:struct:var_data_plist
+var_data_ptr	inc/var.h	/^typedef struct var_data_ptr {$/;"	s
+var_data_ptr	inc/var.h	/^} var_data_ptr;$/;"	t	typeref:struct:var_data_ptr
+var_data_str	inc/var.h	/^typedef struct var_data_str {$/;"	s
+var_data_str	inc/var.h	/^} var_data_str;$/;"	t	typeref:struct:var_data_str
+var_data_type	inc/var.h	/^typedef struct var_data_type {$/;"	s
+var_data_type	inc/var.h	/^} var_data_type;$/;"	t	typeref:struct:var_data_type
+var_del	src/var.c	/^void var_del(var_cont* var)$/;"	f
+var_div	src/var_ops.c	/^var_cont* var_div(var_cont* A, var_cont* B)$/;"	f
+var_div_float	src/var_ops.c	/^var_cont* var_div_float(var_cont* A, var_cont* B)$/;"	f
+var_div_int	src/var_ops.c	/^var_cont* var_div_int(var_cont* A, var_cont* B)$/;"	f
+var_eq	src/var_ops.c	/^var_cont* var_eq(var_cont* A, var_cont* B)$/;"	f
+var_eq_float	src/var_ops.c	/^var_cont* var_eq_float(var_cont* A, var_cont* B)$/;"	f
+var_eq_int	src/var_ops.c	/^var_cont* var_eq_int(var_cont* A, var_cont* B)$/;"	f
+var_gthan	src/var_ops.c	/^var_cont* var_gthan(var_cont* A, var_cont* B)$/;"	f
+var_gthan_eq	src/var_ops.c	/^var_cont* var_gthan_eq(var_cont* A, var_cont* B)$/;"	f
+var_gthan_eq_float	src/var_ops.c	/^var_cont* var_gthan_eq_float(var_cont* A, var_cont* B)$/;"	f
+var_gthan_eq_int	src/var_ops.c	/^var_cont* var_gthan_eq_int(var_cont* A, var_cont* B)$/;"	f
+var_gthan_float	src/var_ops.c	/^var_cont* var_gthan_float(var_cont* A, var_cont* B)$/;"	f
+var_gthan_int	src/var_ops.c	/^var_cont* var_gthan_int(var_cont* A, var_cont* B)$/;"	f
+var_lthan	src/var_ops.c	/^var_cont* var_lthan(var_cont* A, var_cont* B)$/;"	f
+var_lthan_eq	src/var_ops.c	/^var_cont* var_lthan_eq(var_cont* A, var_cont* B)$/;"	f
+var_lthan_eq_float	src/var_ops.c	/^var_cont* var_lthan_eq_float(var_cont* A, var_cont* B)$/;"	f
+var_lthan_eq_int	src/var_ops.c	/^var_cont* var_lthan_eq_int(var_cont* A, var_cont* B)$/;"	f
+var_lthan_float	src/var_ops.c	/^var_cont* var_lthan_float(var_cont* A, var_cont* B)$/;"	f
+var_lthan_int	src/var_ops.c	/^var_cont* var_lthan_int(var_cont* A, var_cont* B)$/;"	f
+var_mult	src/var_ops.c	/^var_cont* var_mult(var_cont* A, var_cont* B)$/;"	f
+var_mult_float	src/var_ops.c	/^var_cont* var_mult_float(var_cont* A, var_cont* B)$/;"	f
+var_mult_int	src/var_ops.c	/^var_cont* var_mult_int(var_cont* A, var_cont* B)$/;"	f
+var_new	src/var.c	/^var_cont* var_new(b_type type)$/;"	f
+var_not	src/var_ops.c	/^var_cont* var_not(var_cont* A)$/;"	f
+var_pprint	src/var_ops.c	/^void var_pprint(var_cont* var)$/;"	f
+var_set	src/var.c	/^void var_set(var_cont* var, void* data, b_type type)$/;"	f
+var_sub	src/var_ops.c	/^var_cont* var_sub(var_cont* A, var_cont* B)$/;"	f
+var_sub_float	src/var_ops.c	/^var_cont* var_sub_float(var_cont* A, var_cont* B)$/;"	f
+var_sub_int	src/var_ops.c	/^var_cont* var_sub_int(var_cont* A, var_cont* B)$/;"	f
+varctx	inc/rt.h	/^	ns_ctx* varctx;$/;"	m	struct:rt_t
+varg	inc/bc.h	/^	var_cont* varg[3];   \/\/ Typed arguements$/;"	m	struct:bc_cont
+vars	inc/rt.h	/^	ns_t*   vars;$/;"	m	struct:rt_t

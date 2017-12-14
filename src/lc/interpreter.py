@@ -40,8 +40,10 @@ class Label(AbstractToken):
 			self.name = names[1]
 
 			t = self.i.ns.resolve_with_obj(self.parent, self.name)
-
-			self.expr = t[0]
+			if t == None:
+				print("Cannot resolve name " + self.data)
+			else:
+				self.expr = t[0]
 
 		else:
 			self.name = names[0]
@@ -81,15 +83,21 @@ class Arguements(AbstractToken):
 		return rv
 
 class Type(AbstractToken):
+	type_string = ""
+	is_object = False
 	def update(self):
+
 		n = None
 		for x, t in enumerate(self.i.p.defined_types):
 			r = t.match(self.data, 0)
 			if r[0]:
+				self.type_string = self.data
 				n = x
 
 		if n == None:
-			print("INVALID TYPE")
+			self.is_object = True
+			self.type_string = self.data[0]
+			n = 6
 
 		self.expr = n
 
@@ -114,6 +122,10 @@ class Parameters(AbstractToken):
 			t = Type(self.i, tmp[:-1])
 			l = Label(self.i, tmp[1:])
 			self.expr.append([t, l])
+
+		for x in self.expr:
+			if x[0].is_object:
+				self.i.ns.copy(x[1].name, x[0].type_string)
 
 	def action(self):
 		types = list(map(lambda x: x[0].action(), self.expr))
