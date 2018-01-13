@@ -39,6 +39,22 @@ class Parser():
 			"class"
 		]
 
+		self.TYPE_VOID = 0
+		self.TYPE_ADDR = 1
+		self.TYPE_TYPE = 2
+		self.TYPE_PLIST = 3
+		self.TYPE_FUNC = 4
+		self.TYPE_CLASS = 5
+		self.TYPE_OBJECT = 6
+		self.TYPE_INT = 7
+		self.TYPE_FLOAT = 8
+		self.TYPE_CHAR = 9
+		self.TYPE_STRING = 10
+		self.TYPE_STATIC_ARRAY = 11
+		self.TYPE_ARRAY = 12
+		self.TYPE_HASHTABLE = 13
+		self.TYPE_STACK = 14
+
 		self.defined_types = [
 			"void",
 			"_addr",
@@ -421,6 +437,7 @@ class Parser():
 				r = a.match(l)
 				# If the line matches the token,
 				if r:
+					
 					fail = False
 					#   If the token is an "incude" token, include the file
 					#   specified by the "include" directive

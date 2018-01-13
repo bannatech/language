@@ -1,5 +1,3 @@
-DEBUG;
-
 func recurse_me_please(int i) -> int:
 {
 	print(i);

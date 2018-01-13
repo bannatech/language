@@ -41,7 +41,7 @@ class Label(AbstractToken):
 
 			t = self.i.ns.resolve_with_obj(self.parent, self.name)
 			if t == None:
-				print("Cannot resolve name " + self.data)
+				fatal_error(self.i, "Cannot resolve name " + self.data)
 			else:
 				self.expr = t[0]
 
@@ -50,8 +50,11 @@ class Label(AbstractToken):
 
 			t = self.i.ns.resolve(self.name)
 
-			self.scope = t[0]
-			self.expr = t[1]
+			if t == None:
+				fatal_error(self.i, "Cannot resolve name " + self.name)
+			else:
+				self.scope = t[0]
+				self.expr = t[1]
 
 	def action(self, s=False):
 		if s:
@@ -200,7 +203,7 @@ class Expression(AbstractToken):
 		if len(t) == 0:
 			t = self.data
 		if len(t) > 2:
-			print("Expression Error ({})".format(self.data))
+			fatal_error(self.i, "Expression Error ({})".format(self.data))
 
 		next_op = False
 		for thing in t:
@@ -221,7 +224,7 @@ class Expression(AbstractToken):
 						obj = i.action(self.i, ex)
 
 			if obj == None:
-				print("Unknown Expression Error ({})".format(ex))
+				fatal_error(self.i, "Unknown Expression Error ({})".format(ex))
 				break
 
 			if next_op:
@@ -262,13 +265,12 @@ class Interpreter():
 
 			self.directives = [self.cur_directives]
 
+			self.success = True
 			for self.ln, self.line in enumerate(self.program):
 				t = self.line[0].action(self)
 				for i in t:
 					if i != False:
 						self.line[2].append(i)
-
-			self.success = True
 
 	def nxt(self, n):
 		if len(self.program) <= self.ln + n:

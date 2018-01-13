@@ -15,12 +15,10 @@ class Counter:
 	}
 }
 
-class ObjectFibb:
+class ObjectFibb(Counter acc):
 {
 	int a = 0;
 	int b = 1;
-
-	Counter acc = new Counter();
 
 	func next -> void:
 	{
@@ -45,7 +43,9 @@ class ObjectFibb:
 	}
 }
 
-ObjectFibb test = new ObjectFibb();
+Counter thing = new Counter();
+
+ObjectFibb test = new ObjectFibb(thing);
 
 test.run(15);
 print "ALL DONE!";

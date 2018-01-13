@@ -3,6 +3,8 @@
 
 toi
 
+tags
+
 *.pyc
 
 __pycache__

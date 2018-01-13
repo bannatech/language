@@ -1,4 +1,12 @@
 
+def fatal_error(i, string):
+	i.success = False
+	print("")
+	print("FATAL: {0}".format(string))
+	print(" On Statement Type '{}', line #{}".format(i.line[0].name, i.ln))
+	print(" {}: ".format(i.line[1]))
+	print("")
+
 # This function splits a tokenstring by split characters, along with providing
 # a way to preserve capturing groups via esc_chars
 # An example call would be as follows:

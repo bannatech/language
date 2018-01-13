@@ -81,10 +81,14 @@ class Namespace():
 		if type(obj) == dict:
 			if name in obj:
 				rv = obj[name]
-		elif type(obj) == list:
+		elif type(obj) == list and obj[1] != None:
 			if name in obj[1]:
 				rv = obj[1][name]
-	
+		elif type(obj) == type(None):
+			print("Object referenced before definition: {}.{}".format(
+				parent.name, name)
+			)
+
 		return rv
 
 	# Resolves name into scope and address
