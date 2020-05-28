@@ -147,6 +147,7 @@ class Expression(AbstractToken):
 			["-", Opcode(OP_SUB)],
 			["*", Opcode(OP_MULT)],
 			["/", Opcode(OP_DIV)],
+			["%", Opcode(OP_MOD)],
 			["==", Opcode(OP_EQ)],
 			["!=", Opcode(OP_NEQ)],
 			[">", Opcode(OP_GTHAN)],
