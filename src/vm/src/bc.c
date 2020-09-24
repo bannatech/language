@@ -7,6 +7,7 @@
 #include "var.h"
 #include "helper.h"
 #include "is.h"
+#include "ins_def.h"
 
 /* Handles allocation for new `bc_cont` instances
  */
@@ -257,21 +258,22 @@ void bc_print_op(bc_cont* op)
 
 	unencode(op->mdata, &num_args, arg_types);
 
-	printf("%x\t", op->op);
+	printf("%s [%x] - ", INS_DESC[op->op], op->op);
 	for (int i = 0; i < num_args && num_args != 0; i++)
 	{
 		if (arg_types[i] == A_BYTE)
 		{
-			printf("%x, ", op->args[i][0]);
+			printf("I:<%02x>, ", op->args[i][0]);
 		} else
 		if (arg_types[i] == A_NAME)
 		{
-			printf("%x %x, ", op->args[i][0], op->args[i][1]);
+			printf("N:<%02x%02x>, ", op->args[i][0], op->args[i][1]);
 		} else
 		if (arg_types[i] == A_DYNC)
 		{
+			printf("DYN[%02x]: ", op->sarg[i]);
 			for (int x = 0; x < op->sarg[i]; x++)
-				printf("%x ", op->args[i][x]);
+				printf("%02x ", op->args[i][x]);
 		}
 	}
 }

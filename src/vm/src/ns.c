@@ -90,7 +90,7 @@ ns_t* ns_init(ns_addr size)
 
 	inc++;
 
-	ns->root = ns_cont_init(size, 0);
+	ns->root = ns_cont_init(size, (ns->id)<<16);
 	ns->last = ns->root;
 
 	return ns;
@@ -103,7 +103,8 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 	N_ASSERT(container, "ns_cont_del\n");
 	N_ASSERT(container->names, "ns_cont_del\n");
 
-	var_cont* rv;
+	var_cont* rv = NULL;
+
 
 	for (int i = 0; i < container->size; i++)
 	{
@@ -116,9 +117,9 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 		}
 		else if (i == to_return)
 		{
-			if (container->names[i] != NULL)
+			if (container->names[to_return] != NULL)
 			{
-				rv = container->names[i];
+				rv = container->names[to_return];
 				if (rv->ownership == container->level)
 				{
 					rv->ownership = -1;

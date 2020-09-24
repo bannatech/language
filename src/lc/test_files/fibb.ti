@@ -1,0 +1,70 @@
+class Adder:
+{
+	int operandA = 0;
+
+	int operandB = 0;
+
+	func doOperation -> int:
+	{
+		return operandA + operandB;
+	}
+}
+
+class Counter:
+{
+	Adder add_machine = new Adder();
+
+	add_machine.operandA = 0;
+
+	add_machine.operandB = 1;
+
+	func count -> int:
+	{
+		add_machine.operandA = add_machine.doOperation();
+		return add_machine.operandA;
+	}
+
+	func reset -> int:
+	{
+		int old_value = add_machine.operandA;
+		add_machine.operandA = 0;
+
+		return old_value;
+	}
+}
+
+class ObjectFibb(Counter acc):
+{
+	Adder add_machine = new Adder();
+
+	add_machine.operandA  = 0;
+	add_machine.operandB = 1;
+
+	func next -> void:
+	{
+		add_machine.operandB = add_machine.doOperation();
+		add_machine.operandA = add_machine.doOperation();
+	}
+
+	func run (int count) -> int:
+	{
+		while acc.count() < count:
+		{
+			next();
+		}
+
+		return add_machine.operandA;
+	}
+}
+
+class FullFibb:
+{
+	Counter the_counter = new Counter();
+	ObjectFibb fibb = new ObjectFibb(the_counter);
+
+	func do (int count) -> int:
+	{
+		return fibb.run(count);
+	}
+}
+

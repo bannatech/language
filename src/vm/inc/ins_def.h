@@ -16,8 +16,11 @@
 #include "pc.h"
 #include "helper.h"
 
+#define INS_DEC(op, function, description) INS_DEF[op] = function; INS_DESC[op] = description
+
 // This array is populated by init_ins_def( void );
 void (*INS_DEF[0x100])(rt_t*, bc_cont*);
+char* INS_DESC[0x100];
 
 /* Initializes INS_DEF with pointers to each instructions function
  * Populates INS_DEF
@@ -28,6 +31,8 @@ void init_ins_def( void );
  *  byte_t - opcode
  */
 int ins_def_is_valid(bc_cont*);
+
+void run_ins(rt_t*, bc_cont*);
 
 /* Instruction subroutines. Each subroutine takes the following arguements:
  *  rt_t*    - Runtime context

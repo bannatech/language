@@ -176,7 +176,6 @@ void var_data_free(void* data, b_type type)
 	{
 		var_data_free_PLIST(data);
 	}
-
 	if (type != VOID)
 		free(data);
 }

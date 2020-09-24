@@ -8,6 +8,7 @@
 #include <stdio.h>
 
 #include "rt.h"
+#include "ins_def.h"
 #include "bc.h"
 #include "stk.h"
 #include "var.h"
@@ -21,9 +22,12 @@
 rt_t* proc_init(char*);
 
 /* Starts execution loop for a runtime context
+ * rt_t* - Runtime context
  */
 void proc_run(rt_t*);
 
+/* Runs exection loop until a return is reached
+ */
 void proc_run_to_return(rt_t*);
 
 /* Calls runtime context elements to free memory and terminate

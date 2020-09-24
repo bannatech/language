@@ -1,25 +1,17 @@
-func recurse_me_please(int i) -> int:
+include fibb;
+
+func fibbio(int target) -> int:
 {
-	print(i);
-	if (i < 200):
+	FullFibb fibb = new FullFibb();
+
+	if target > 1:
 	{
-		return recurse_me_please(i + 1);
+		return fibbio(target - 1) + fibbio(target - 2);
 	}
 	else:
 	{
-		return i;
+		return fibb.do(2);
 	}
 }
 
-func loop_me_please(int i) -> int:
-{
-	while (i < 200):
-	{
-		print(i);
-		i = i + 1;
-	}
-
-	return i;
-}
-
-print recurse_me_please(0);
+print fibbio(20);

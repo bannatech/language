@@ -23,10 +23,33 @@ rt_t* proc_init(char* fname)
 	return ctx;
 }
 
+void printstk(char* name, stk_t* stk)
+{
+	printf("\t\t%s: %i: ", name, stk->stack->ptr);
+	for (int i = 0; i < stk->stack->ptr; i++)
+	{
+		var_cont* test = stk_at(stk, i);
+
+		printf("%i, ", test->type);
+	}
+	printf("\n");
+}
+
+void proc_printstate(rt_t* ctx)
+{
+	printf("-[ns-%li] [%li]:\t", ctx->vars->id, ctx->pc->address);
+	bc_print_op(ctx->pc->line);
+	printf("\n");
+
+	printstk("   STK", ctx->stack);
+	printstk("ARGSTK", ctx->argstk);
+	printf("------------------------------------------------------------------------------\n");
+}
+
 /* Starts execution loop for a runtime context
  * rt_t* - Runtime context
  */
-void proc_run(rt_t* ctx)
+inline void proc_run(rt_t* ctx)
 {
 	N_ASSERT(ctx, "proc_run\n");
 
@@ -36,12 +59,10 @@ void proc_run(rt_t* ctx)
 	{
 		if (ctx->db)
 		{
-			printf("-[ns-%i] [%i]:\t", ctx->vars->id, ctx->pc->address);
-			bc_print_op(ctx->pc->line);
-			printf("\n");
+			proc_printstate(ctx);
 		}
 
-		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
+		run_ins(ctx, ctx->pc->line);
 
 		n++;
 	}
@@ -49,7 +70,7 @@ void proc_run(rt_t* ctx)
 
 /* Runs exection loop until a return is reached
  */
-void proc_run_to_return(rt_t* ctx)
+inline void proc_run_to_return(rt_t* ctx)
 {
 	N_ASSERT(ctx, "proc_run_to_return\n");
 
@@ -58,9 +79,7 @@ void proc_run_to_return(rt_t* ctx)
 	{
 		if (ctx->db)
 		{
-			printf("*[ns-%i] [%i]:\t", ctx->vars->id, ctx->pc->address);
-			bc_print_op(ctx->pc->line);
-			printf("\n");
+			proc_printstate(ctx);
 		}
 
 		if (ctx->pc->line->op == 0x7F || ctx->pc->line->op == 0x82)
@@ -68,7 +87,7 @@ void proc_run_to_return(rt_t* ctx)
 			n++;
 		}
 
-		INS_DEF[ctx->pc->line->op](ctx, ctx->pc->line);
+		run_ins(ctx, ctx->pc->line);
 
 		// Break when the function returns
 		

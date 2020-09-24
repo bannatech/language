@@ -1,0 +1,9 @@
+DEBUG;
+
+func test(int i) -> int:
+{
+	return i + 3;
+}
+
+print test(1 + 2) + test(3 + 4);
+

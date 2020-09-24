@@ -4,7 +4,7 @@
 #ifndef PC_H
 #define PC_H
 
-#define PC_RETURN_DEPTH 0xFF
+#define PC_RETURN_DEPTH 0xFFFF
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,13 +14,13 @@
 #include "bc.h"
 #include "helper.h"
 
-typedef unsigned short int pc_addr;
+typedef unsigned long pc_addr;
 
 /* Address stack structure
  */
 typedef struct pc_addr_stk {
-	int      size;           // Capacity of stack
-	int      ptr;            // Stack pointer
+	long     size;           // Capacity of stack
+	long     ptr;            // Stack pointer
 	pc_addr* addresses;      // Stack data
 } pc_addr_stk;
 

@@ -1,3 +1,5 @@
+DEBUG;
+
 class UsedByUsedByTesting:
 {
 	int property_three = 3;

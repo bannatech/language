@@ -18,77 +18,78 @@
  */
 void init_ins_def( void )
 {
-	INS_DEF[0x00] = _ins_def_NULL;
-	INS_DEF[0x01] = _ins_def_SYNC;
-	INS_DEF[0x02] = _ins_def_PRINT;
-	INS_DEF[0x03] = _ins_def_DEBUG;
-	INS_DEF[0x0E] = _ins_def_ARGB;
-	INS_DEF[0x0F] = _ins_def_LIBC;
+	INS_DEC(0x00, _ins_def_NULL, "NULL");
+	INS_DEC(0x01, _ins_def_SYNC, "SYNC");
 
-	INS_DEF[0x10] = _ins_def_POP;
-	INS_DEF[0x11] = _ins_def_ROT;
-	INS_DEF[0x12] = _ins_def_DUP;
-	INS_DEF[0x13] = _ins_def_ROT_THREE;
+	INS_DEC(0x02, _ins_def_PRINT, "PRINT");
+	INS_DEC(0x03, _ins_def_DEBUG, "DEBUG");
+	INS_DEC(0x0E, _ins_def_ARGB, "ARGB");
+	INS_DEC(0x0F, _ins_def_LIBC, "LIBC");
 
-	INS_DEF[0x20] = _ins_def_DEC;
-	INS_DEF[0x21] = _ins_def_LOV;
-	INS_DEF[0x22] = _ins_def_STV;
-	INS_DEF[0x23] = _ins_def_CTV;
-	INS_DEF[0x24] = _ins_def_CTS;
+	INS_DEC(0x10, _ins_def_POP, "POP");
+	INS_DEC(0x11, _ins_def_ROT, "ROT");
+	INS_DEC(0x12, _ins_def_DUP, "DUP");
+	INS_DEC(0x13, _ins_def_ROT_THREE, "ROT_THREE");
 
-	INS_DEF[0x30] = _ins_def_TYPEOF;
-	INS_DEF[0x31] = _ins_def_CAST;
+	INS_DEC(0x20, _ins_def_DEC, "DEC");
+	INS_DEC(0x21, _ins_def_LOV, "LOV");
+	INS_DEC(0x22, _ins_def_STV, "STV");
+	INS_DEC(0x23, _ins_def_CTV, "CTV");
+	INS_DEC(0x24, _ins_def_CTS, "CTS");
 
-	INS_DEF[0x40] = _ins_def_ADD;
-	INS_DEF[0x41] = _ins_def_SUB;
-	INS_DEF[0x42] = _ins_def_MULT;
-	INS_DEF[0x43] = _ins_def_DIV;
-	INS_DEF[0x44] = _ins_def_POW;
-	INS_DEF[0x45] = _ins_def_BRT;
-	INS_DEF[0x46] = _ins_def_SIN;
-	INS_DEF[0x47] = _ins_def_COS;
-	INS_DEF[0x48] = _ins_def_TAN;
-	INS_DEF[0x49] = _ins_def_ISIN;
-	INS_DEF[0x4A] = _ins_def_ICOS;
-	INS_DEF[0x4B] = _ins_def_ITAN;
-	INS_DEF[0x4C] = _ins_def_MOD;
-	INS_DEF[0x4D] = _ins_def_BOR;
-	INS_DEF[0x4E] = _ins_def_BXOR;
-	INS_DEF[0x4F] = _ins_def_BNAND;
+	INS_DEC(0x30, _ins_def_TYPEOF, "TYPEOF");
+	INS_DEC(0x31, _ins_def_CAST, "CAST");
 
-	INS_DEF[0x50] = _ins_def_GTHAN;
-	INS_DEF[0x51] = _ins_def_LTHAN;
-	INS_DEF[0x52] = _ins_def_GTHAN_EQ;
-	INS_DEF[0x53] = _ins_def_LTHAN_EQ;
-	INS_DEF[0x54] = _ins_def_EQ;
-	INS_DEF[0x55] = _ins_def_NEQ;
-	INS_DEF[0x56] = _ins_def_NOT;
-	INS_DEF[0x57] = _ins_def_OR;
-	INS_DEF[0x58] = _ins_def_AND;
+	INS_DEC(0x40, _ins_def_ADD, "ADD");
+	INS_DEC(0x41, _ins_def_SUB, "SUB");
+	INS_DEC(0x42, _ins_def_MULT, "MULT");
+	INS_DEC(0x43, _ins_def_DIV, "DIV");
+	INS_DEC(0x44, _ins_def_POW, "POW");
+	INS_DEC(0x45, _ins_def_BRT, "BRT");
+	INS_DEC(0x46, _ins_def_SIN, "SIN");
+	INS_DEC(0x47, _ins_def_COS, "COS");
+	INS_DEC(0x48, _ins_def_TAN, "TAN");
+	INS_DEC(0x49, _ins_def_ISIN, "ISIN");
+	INS_DEC(0x4A, _ins_def_ICOS, "ICOS");
+	INS_DEC(0x4B, _ins_def_ITAN, "ITAN");
+	INS_DEC(0x4C, _ins_def_MOD, "MOD");
+	INS_DEC(0x4D, _ins_def_BOR, "BOR");
+	INS_DEC(0x4E, _ins_def_BXOR, "BXOR");
+	INS_DEC(0x4F, _ins_def_BNAND, "BNAND");
 
-	INS_DEF[0x60] = _ins_def_STARTL;
-	INS_DEF[0x61] = _ins_def_CLOOP;
-	INS_DEF[0x6E] = _ins_def_BREAK;
-	INS_DEF[0x6F] = _ins_def_ENDL;
+	INS_DEC(0x50, _ins_def_GTHAN, "GTHAN");
+	INS_DEC(0x51, _ins_def_LTHAN, "LTHAN");
+	INS_DEC(0x52, _ins_def_GTHAN_EQ, "GTHAN_EQ");
+	INS_DEC(0x53, _ins_def_LTHAN_EQ, "LTHAN_EQ");
+	INS_DEC(0x54, _ins_def_EQ, "EQ");
+	INS_DEC(0x55, _ins_def_NEQ, "NEQ");
+	INS_DEC(0x56, _ins_def_NOT, "NOT");
+	INS_DEC(0x57, _ins_def_OR, "OR");
+	INS_DEC(0x58, _ins_def_AND, "AND");
 
-	INS_DEF[0x70] = _ins_def_GOTO;
-	INS_DEF[0x71] = _ins_def_JUMPF;
-	INS_DEF[0x72] = _ins_def_IFDO;
-	INS_DEF[0x73] = _ins_def_ELSE;
-	INS_DEF[0x7E] = _ins_def_DONE;
-	INS_DEF[0x7F] = _ins_def_CALL;
+	INS_DEC(0x60, _ins_def_STARTL, "STARTL");
+	INS_DEC(0x61, _ins_def_CLOOP, "CLOOP");
+	INS_DEC(0x6E, _ins_def_BREAK, "BREAK");
+	INS_DEC(0x6F, _ins_def_ENDL, "ENDL");
 
-	INS_DEF[0x80] = _ins_def_GETN;
-	INS_DEF[0x81] = _ins_def_SETN;
-	INS_DEF[0x82] = _ins_def_CALLM;
-	INS_DEF[0x83] = _ins_def_INDEXO;
-	INS_DEF[0x84] = _ins_def_MODO;
+	INS_DEC(0x70, _ins_def_GOTO, "GOTO");
+	INS_DEC(0x71, _ins_def_JUMPF, "JUMPF");
+	INS_DEC(0x72, _ins_def_IFDO, "IFDO");
+	INS_DEC(0x73, _ins_def_ELSE, "ELSE");
+	INS_DEC(0x7E, _ins_def_DONE, "DONE");
+	INS_DEC(0x7F, _ins_def_CALL, "CALL");
 
-	INS_DEF[0xF0] = _ins_def_RETURN;
-	INS_DEF[0xF1] = _ins_def_NEW;
-	INS_DEF[0xF2] = _ins_def_ENDCLASS;
-	INS_DEF[0xFE] = _ins_def_DECLASS;
-	INS_DEF[0xFF] = _ins_def_DEFUN;
+	INS_DEC(0x80, _ins_def_GETN, "GETN");
+	INS_DEC(0x81, _ins_def_SETN, "SETN");
+	INS_DEC(0x82, _ins_def_CALLM, "CALLM");
+	INS_DEC(0x83, _ins_def_INDEXO, "INDEXO");
+	INS_DEC(0x84, _ins_def_MODO, "MODO");
+
+	INS_DEC(0xF0, _ins_def_RETURN, "RETURN");
+	INS_DEC(0xF1, _ins_def_NEW, "NEW");
+	INS_DEC(0xF2, _ins_def_ENDCLASS, "ENDCLASS");
+	INS_DEC(0xFE, _ins_def_DECLASS, "DECLASS");
+	INS_DEC(0xFF, _ins_def_DEFUN, "DEFUN");
 }
 
 int ins_def_is_valid(bc_cont* line)
@@ -100,6 +101,11 @@ int ins_def_is_valid(bc_cont* line)
 		rv = 1;
 	}
 	return rv;
+}
+
+inline void run_ins(rt_t* ctx, bc_cont* line)
+{
+	INS_DEF[line->op](ctx, line);
 }
 
 void _ins_def_NULL     (rt_t* ctx, bc_cont* line)
@@ -125,7 +131,7 @@ void _ins_def_DEBUG    (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_ARGB     (rt_t* ctx, bc_cont* line)
 {
-	var_cont* var = stk_at(ctx->stack, 0);
+	var_cont* var = stk_pop(ctx->stack);
 
 	stk_push(ctx->argstk, var);
 

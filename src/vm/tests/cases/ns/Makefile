@@ -2,7 +2,7 @@ SRC_DIR = ../../../src
 INC_DIR = ../../../inc
 
 CC      = gcc
-CFLAGS  = -std=c99 -Wall -I$(INC_DIR)
+CFLAGS  = -ggdb -std=c99 -Wall -I$(INC_DIR)
 
 DEPS    = i$(INC_DIR)/helper.h \
                       ns.h     \

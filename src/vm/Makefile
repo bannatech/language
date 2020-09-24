@@ -1,6 +1,6 @@
 SRC_DIR = src
 INC_DIR = inc
-DST_DIR = /usr/bin/
+DST_DIR = /usr/local/bin/
 
 CC      = gcc
 CFLAGS  = -ggdb -std=c99 -Wall -I$(INC_DIR)
