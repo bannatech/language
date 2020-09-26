@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "var.h"
+#include "object.h"
 #include "bc.h"
 
 #include "helper.h"
@@ -59,20 +60,6 @@ void* var_data_alloc_OBJBLDR(void)
 	rv->size  = 0;
 	rv->instc = 0;
 	rv->param = NULL;
-
-	return rv;
-}
-
-void* var_data_alloc_OBJECT(void (*freefunc)(void*))
-{
-	N_ASSERT(freefunc, "var_data_alloc_OBJECT\n");
-
-	var_data_object* rv = (var_data_object*)malloc(sizeof(var_data_object));
-	M_ASSERT(rv);
-
-	rv->id      = 0;
-	rv->ref     = NULL;
-	rv->objfree = freefunc;
 
 	return rv;
 }
@@ -152,32 +139,30 @@ void var_data_free(void* data, b_type type)
 {
 	N_ASSERT(data, "var_data_free\n");
 
-	if (type == FUNC)
+	switch (type)
 	{
+	case FUNC:
 		var_data_free_FUNC(data);
-	}
-
-	if (type == OBJBLDR)
-	{
+		break;
+	case OBJBLDR:
 		var_data_free_OBJBLDR(data);
-	}
-
-	if (type == OBJECT)
-	{
-		var_data_free_OBJECT(data);
-	}
-
-	if (type == G_STR)
-	{
+		break;
+	case G_STR:
 		var_data_free_G_STR(data);
-	}
-
-	if (type == PLIST)
-	{
+		break;
+	case PLIST:
 		var_data_free_PLIST(data);
+		break;
+	case OBJECT:
+		object_del(data);
+		break;
+	default:
+		if (type != VOID)
+		{
+			free(data);
+		}
+		break;
 	}
-	if (type != VOID)
-		free(data);
 }
 
 void var_data_free_PLIST(void* data)
@@ -194,11 +179,6 @@ void var_data_free_OBJBLDR(void* data)
 {
 	var_data_objbldr* d = data;
 	free(d->param);
-}
-void var_data_free_OBJECT(void* data)
-{
-	var_data_object* d = data;
-	d->objfree(d->ref);
 }
 void var_data_free_G_STR(void* data)
 {
@@ -259,16 +239,6 @@ var_data_objbldr* var_data_get_OBJBLDR(var_cont* var)
 
 	var_data_objbldr* t = var->data;
 
-	return t;
-}
-
-var_data_object* var_data_get_OBJECT(var_cont* var)
-{
-	N_ASSERT(var, "var_data_get_OBJECT\n");
-	ASSERT( var->type == OBJECT, "TypeError" );
-
-	var_data_object* t = var->data;
-	
 	return t;
 }
 

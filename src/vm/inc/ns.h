@@ -12,14 +12,14 @@
 typedef unsigned int ns_addr;
 
 typedef struct ns_cont {
-	long       level;
+	unsigned long level;
 	ns_addr    size;
 	var_cont** names;
 	struct ns_cont* next;
 } ns_cont;
 
 typedef struct ns_t {
-	long id;
+	unsigned long id;
 	ns_cont* root;
 	ns_cont* last;
 } ns_t;

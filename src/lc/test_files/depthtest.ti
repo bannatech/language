@@ -1,12 +1,24 @@
 include fibb;
 
+func fibbioRecurse(int target, FullFibb obj) -> int:
+{
+	if target > 1:
+	{
+		return fibbioRecurse(target - 1, obj) + fibbioRecurse(target - 2, obj);
+	}
+	else:
+	{
+		return obj.do(2);
+	}
+}
+
 func fibbio(int target) -> int:
 {
-	FullFibb fibb = new FullFibb();
+	var fibb = new FullFibb();
 
 	if target > 1:
 	{
-		return fibbio(target - 1) + fibbio(target - 2);
+		return fibbioRecurse(target - 1, fibb) + fibbioRecurse(target - 2, fibb);
 	}
 	else:
 	{

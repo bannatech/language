@@ -155,10 +155,9 @@ void proc_setvar(rt_t* ctx, int scope, ns_addr name, var_cont* var)
 	} else
 	{
 		var_cont* ns_var = ns_get(ctx->names, 1, x);
-		var_data_object* var_d = var_data_get_OBJECT(ns_var);
-		ns_t* ns = (ns_t*) var_d->ref;
+		ns_t* object = object_get(ns_var);
 
-		ns_set(ns, s, name, var);
+		ns_set(object, s, name, var);
 	}
 }
 
@@ -181,10 +180,9 @@ var_cont* proc_getvar(rt_t* ctx, int scope, ns_addr name)
 	} else
 	{
 		var_cont* ns_var = ns_get(ctx->names, 1, x);
-		var_data_object* var_d = var_data_get_OBJECT(ns_var);
-		ns_t* ns = (ns_t*) var_d->ref;
+		ns_t* object = object_get(ns_var);
 
-		rv = ns_get(ns, s, name);
+		rv = ns_get(object, s, name);
 	}
 
 	return rv;
@@ -205,10 +203,9 @@ void proc_function_call(rt_t* ctx, int scope, ns_addr name)
 		ns_ctx_push(ctx->varctx, ctx->vars);
 
 		var_cont* ns_var = ns_get(ctx->names, 1, x);
-		var_data_object* var_d = var_data_get_OBJECT(ns_var);
-		ns_t* ns = (ns_t*) var_d->ref;
+		ns_t* object = object_get(ns_var);
 
-		ctx->vars = ns;
+		ctx->vars = object;
 	}
 
 	var_data_func* func = var_data_get_FUNC(var);

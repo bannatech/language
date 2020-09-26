@@ -17,6 +17,12 @@ class CompoundSymbol():
 
 		self.symbols = symbols
 
+	def add(self, symbol):
+		if type(symbol) is str:
+			symbol = AtomicSymbol(symbol)
+
+		self.symbols.append(symbol)
+
 	def match(self, tokenstring, index):
 		rv = []
 		for i in self.symbols:
@@ -107,9 +113,10 @@ class GroupingSymbol(PolySymbol):
 		return [index, rv] if found else [False, None]
 
 class Statement():
-	def __init__(self, name, expression=[], init=None):
+	def __init__(self, name, expression=[], onMatch=None, init=None):
 		self.name   = name
 		self.expr   = expression
+		self.onMatch= onMatch
 		self.action = init
 	
 	def match(self, tokenstring):
@@ -119,13 +126,18 @@ class Statement():
 			if index >= len(tokenstring):
 				return False
 			r = e.match(tokenstring, index)
+
 			if r[0]:
 				rv.append(r[1])
 				index = r[0]
 			else:
 				break
 
-		return rv if index == len(tokenstring) else False
+		matched = index == len(tokenstring)
+
+		return rv if matched else False
+
+
 
 class Tokenizer():
 	def __init__(self, symbol_delim, statement_delim):

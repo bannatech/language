@@ -12,6 +12,7 @@ class Namespace():
 		self.stack  = []
 
 		self.t = None
+		self.tShared = []
 
 	def name_dec(self, name):
 		if name in self.ns[self.sc].keys():
@@ -48,13 +49,23 @@ class Namespace():
 	# Releases target
 	def release(self):
 		tmp = self.ns[0]
+		for name in self.tShared:
+			self.ns[self.sc][name][1] = tmp
+
 		self.pop()
 		self.ns[0][self.t][1] = tmp
 		self.t = None
+		self.tShared = []
 	
 	def copy(self, new_name, name):
-		self.ns[self.sc][new_name][1] = self.obj_resolve(name)
-	
+		if self.t == name:
+			self.ns[self.sc][new_name][1] = self.ns[0]
+		else:
+			self.ns[self.sc][new_name][1] = self.obj_resolve(name)
+
+	def is_obj(self, name):
+		return False	
+
 	# Resolves name into object
 	def obj_resolve(self, name):
 		rv = None

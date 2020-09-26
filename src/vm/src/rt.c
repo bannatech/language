@@ -26,15 +26,12 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 	ctx->pc     = pc_new(fname);
 	ctx->stack  = stk_new();
 	ctx->argstk = args;
-	ctx->vars   = ns_init(0xFFFF);
+	ctx->vars   = ns_init(MAXIMUM_TRACKING_VARS);
 	ctx->names  = ns_init(0x7F);
 	ctx->varctx = ns_ctx_init();
 
-	var_data_object* namespace = var_data_alloc_OBJECT(rt_ns_del);
-	namespace->ref = (void*)ctx->vars;
-
 	var_cont* ns_var = var_new(OBJECT);
-	var_set(ns_var, namespace, OBJECT);
+	var_set(ns_var, ctx->vars, OBJECT);
 
 	ns_dec(ctx->names, OBJECT, 1, 1);
 	ns_set(ctx->names, 1, 1, ns_var);

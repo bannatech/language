@@ -12,7 +12,7 @@ class Adder:
 
 class Counter:
 {
-	Adder add_machine = new Adder();
+	var add_machine = new Adder();
 
 	add_machine.operandA = 0;
 
@@ -35,7 +35,7 @@ class Counter:
 
 class ObjectFibb(Counter acc):
 {
-	Adder add_machine = new Adder();
+	var add_machine = new Adder();
 
 	add_machine.operandA  = 0;
 	add_machine.operandB = 1;
@@ -59,8 +59,8 @@ class ObjectFibb(Counter acc):
 
 class FullFibb:
 {
-	Counter the_counter = new Counter();
-	ObjectFibb fibb = new ObjectFibb(the_counter);
+	var the_counter = new Counter();
+	var fibb = new ObjectFibb(the_counter);
 
 	func do (int count) -> int:
 	{

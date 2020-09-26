@@ -1,0 +1,49 @@
+class SillyLinkedObject(int id):
+{
+	string value = "pineapple";
+
+	var next as SillyLinkedObject;
+
+	if (id - 1) > 0:
+	{
+		next = new SillyLinkedObject(id - 1);
+	}
+
+	func get_id(int target_id) -> SillyLinkedObject:
+	{
+		var rv as SillyLinkedObject;
+
+		if id == target_id:
+		{
+			rv = ref;
+		}
+		else:
+		{
+			if id > 0:
+			{
+				rv = next.get_id(target_id);
+			}
+		}
+
+		return rv;
+	}
+
+}
+
+func do_test -> SillyLinkedObject:
+{
+	var rv = new SillyLinkedObject(20);
+
+	return rv;
+}
+
+SillyLinkedObject root = do_test();
+
+SillyLinkedObject number_3 = root.get_id(3);
+
+number_3.value = "porcuepine";
+print number_3.id;
+print number_3.value;
+
+print root.id;
+print root.value;

@@ -32,14 +32,14 @@ typedef enum {
 } b_type;
 
 typedef struct var_cont {
-	long ownership;
+	unsigned long ownership;
 	b_type type;
 	void*  data;
 } var_cont;
 
 #define MAXIMUM_TRACKING_VARS 0xFFFF
 struct var_track {
-	int ptr;
+	unsigned int ptr;
 	var_cont* vars[MAXIMUM_TRACKING_VARS];
 };
 
@@ -71,12 +71,6 @@ typedef struct var_data_objbldr {
 	size_t paramlen;
 	b_type* param;
 } var_data_objbldr;
-
-typedef struct var_data_object {
-	ns_addr id;
-	void* ref;
-	void (*objfree)(void*);
-} var_data_object;
 
 typedef struct var_data_int {
 	int v;
@@ -116,7 +110,7 @@ void* var_data_alloc_TYPE(b_type);
 void* var_data_alloc_PLIST(size_t);
 void* var_data_alloc_FUNC(b_type);
 void* var_data_alloc_OBJBLDR(void);
-void* var_data_alloc_OBJECT(void (*freefunc)(void*));
+void* var_data_alloc_OBJECT();
 void* var_data_alloc_G_INT(int);
 void* var_data_alloc_G_FLOAT(double);
 void* var_data_alloc_G_CHAR(char);
@@ -141,8 +135,7 @@ void var_set(var_cont*, void*, b_type);
 
 b_type           var_data_get_TYPE(var_cont*);
 var_data_func*   var_data_get_FUNC(var_cont*);
-var_data_objbldr*var_data_get_OBJBLDR(var_cont*);
-var_data_object* var_data_get_OBJECT(var_cont*);
+var_data_objbldr* var_data_get_OBJBLDR(var_cont*);
 int              var_data_get_G_INT(var_cont*);
 double           var_data_get_G_FLOAT(var_cont*);
 char             var_data_get_G_CHAR(var_cont*);

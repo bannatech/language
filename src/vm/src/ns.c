@@ -84,7 +84,7 @@ ns_t* ns_init(ns_addr size)
 	ns_t* ns = (ns_t*)malloc(sizeof(ns_t));
 	M_ASSERT(ns);
 
-	static int inc = 0;
+	static unsigned int inc = 0;
 
 	ns->id = inc;
 
@@ -105,25 +105,23 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 
 	var_cont* rv = NULL;
 
+	if (container->names[to_return] != NULL)
+	{
+		rv = container->names[to_return];
+		if (rv->ownership == container->level)
+		{
+			rv->ownership = -1;
+		}
+	}
 
 	for (int i = 0; i < container->size; i++)
 	{
-		if (container->names[i] != NULL && i != to_return)
+		if (i != to_return && container->names[i] != NULL)
 		{
-			if (container->names[i]->ownership == container->level)
+			if (container->names[i]->ownership == container->level &&
+				container->names[i]->data != rv->data)
 			{
 				var_del(container->names[i]);
-			}
-		}
-		else if (i == to_return)
-		{
-			if (container->names[to_return] != NULL)
-			{
-				rv = container->names[to_return];
-				if (rv->ownership == container->level)
-				{
-					rv->ownership = -1;
-				}
 			}
 		}
 	}
@@ -292,6 +290,8 @@ void ns_cont_set(ns_cont* container, var_cont* var, ns_addr address)
 var_cont* ns_get(ns_t* ns, int scope, ns_addr address)
 {
 	N_ASSERT(ns, "ns_get\n");
+	N_ASSERT(ns->root, "ns_get\n");
+	N_ASSERT(ns->last, "ns_get\n");
 
 	ns_cont* scoped_ns = scope ? ns->root : ns->last;
 

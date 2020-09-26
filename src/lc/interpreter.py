@@ -48,13 +48,17 @@ class Label(AbstractToken):
 		else:
 			self.name = names[0]
 
-			t = self.i.ns.resolve(self.name)
-
-			if t == None:
-				fatal_error(self.i, "Cannot resolve name " + self.name)
+			if self.name == "ref":
+				self.scope = 1
+				self.expr = 0
 			else:
-				self.scope = t[0]
-				self.expr = t[1]
+				t = self.i.ns.resolve(self.name)
+
+				if t == None:
+					fatal_error(self.i, "Cannot resolve name " + self.name)
+				else:
+					self.scope = t[0]
+					self.expr = t[1]
 
 	def action(self, s=False):
 		if s:
@@ -89,7 +93,6 @@ class Type(AbstractToken):
 	type_string = ""
 	is_object = False
 	def update(self):
-
 		n = None
 		for x, t in enumerate(self.i.p.defined_types):
 			r = t.match(self.data, 0)
@@ -100,7 +103,7 @@ class Type(AbstractToken):
 		if n == None:
 			self.is_object = True
 			self.type_string = self.data[0]
-			n = 6
+			n = self.i.p.TYPE_OBJECT
 
 		self.expr = n
 
@@ -167,6 +170,7 @@ class Expression(AbstractToken):
 			init=(lambda x,y: FunctionCall(Label(x,y[0]),
 			                               Arguements(x,y[1:])))
 		)
+
 		self.subexpr = Statement(
 			"subexpr",
 			expression=[

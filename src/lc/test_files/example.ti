@@ -1,5 +1,3 @@
-DEBUG;
-
 class Bar:
 {
 	int lala = 2;
@@ -10,7 +8,7 @@ func main(Bar arg) -> void:
 	print arg.lala;
 }
 
-Bar foo = new Bar();
+var foo = new Bar();
 print "Calling main()";
 main(foo);
 print "Called main()";

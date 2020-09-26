@@ -36,7 +36,8 @@ class Parser():
 			"for",
 			"while",
 			"func",
-			"class"
+			"class",
+			"var"
 		]
 
 		self.TYPE_VOID = 0
@@ -72,6 +73,7 @@ class Parser():
 			"hashtable",
 			"stack"
 		]
+
 	# Defines what integers look like
 		self.int_def       = AtomicSymbol("^[0-9]+$")
 	# Regular expression for encapsulating text in `"`, simply
@@ -79,8 +81,7 @@ class Parser():
 	# Defines what type names exists
 		self.type_def      = InclusiveSymbol(self.defined_types)
 	# Defines what reserved names exists
-		self.label_def     = ExclusiveSymbol(self.defined_types +
-		                                     [self.int_def]     +
+		self.label_def     = ExclusiveSymbol([self.int_def]     +
 		                                     [self.str_def]     +
 		                                     self.known_tokens   )
 	# Defines the parameter list defintion
@@ -256,7 +257,7 @@ class Parser():
 				self.paramlist_def,
 				AtomicSymbol("-"),
 				AtomicSymbol(">"),
-				self.type_def,
+				self.label_def,
 				AtomicSymbol(":")
 			],
 			init=(
@@ -278,7 +279,7 @@ class Parser():
 				self.label_def,
 				AtomicSymbol("-"),
 				AtomicSymbol(">"),
-				self.type_def,
+				self.label_def,
 				AtomicSymbol(":")
 			],
 			init=(
@@ -301,6 +302,7 @@ class Parser():
 				self.paramlist_def,
 				AtomicSymbol(":")
 			],
+			onMatch=(lambda x, y: x.add_objectType(y[1])),
 			init=(lambda x: [
 			                 x.new_name(1),
 			                 x.ns_persist(1),
@@ -318,6 +320,7 @@ class Parser():
 				self.label_def,
 				AtomicSymbol(":")
 			],
+			onMatch=(lambda x, y: x.add_objectType(y[1])),
 			init=(lambda x: [
 			                 x.new_name(1),
 			                 x.ns_persist(1),
@@ -331,7 +334,7 @@ class Parser():
 		self.statement_new = Statement(
 			"new",
 			expression=[
-				self.label_def,
+				AtomicSymbol("var"),
 				self.label_def,
 				AtomicSymbol("="),
 				AtomicSymbol("new"),
@@ -341,17 +344,35 @@ class Parser():
 			],
 			init=(lambda x: [
 			                 x.new_name(1),
-			                 x.ns_copy(1, 0),
+			                 x.ns_copy(1, 4),
 			                 NewClass(x.eval_label(1),
 			                          x.eval_label(4),
 			                          x.eval_args(5))
 			                ])
 		)
 
+		self.statement_unbound_new = Statement(
+			"unbound_new",
+			expression=[
+				self.label_def,
+				AtomicSymbol("="),
+				AtomicSymbol("new"),
+				self.label_def,
+				self.paramlist_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.ns_copy(0, 3),
+			                 NewClass(x.eval_label(0),
+			                          x.eval_label(3),
+			                          x.eval_args(4))
+			                ])
+		)
+
 		self.statement_inst = Statement(
 			"instantiation",
 			expression=[
-				self.type_def,
+				self.label_def,
 				self.label_def,
 				AtomicSymbol("="),
 				self.expr_def,
@@ -359,10 +380,28 @@ class Parser():
 			],
 			init=(lambda x: [
 			                 x.new_name(1),
+			                 x.ns_copy(1, 0),
 			                 VariableNew(x.eval_label(1),
 			                             x.eval_type(0)),
 			                 VariableAssignment(x.eval_label(1),
 			                                    x.eval_expr(3))
+			                ])
+		)
+
+		self.statement_declare = Statement(
+			"declare",
+			expression=[
+				AtomicSymbol("var"),
+				self.label_def,
+				AtomicSymbol("as"),
+				self.label_def,
+				AtomicSymbol(";")
+			],
+			init=(lambda x: [
+			                 x.new_name(1),
+			                 x.ns_copy(1, 3),
+			                 VariableNew(x.eval_label(1),
+			                             x.eval_type(3))
 			                ])
 		)
 
@@ -379,6 +418,7 @@ class Parser():
 			                                    x.eval_expr(2))
 			                ])
 		)
+
 
 		self.statement_expression = Statement(
 			"expression",
@@ -405,7 +445,9 @@ class Parser():
 			self.statement_proc,
 			self.statement_pless_class,
 			self.statement_class,
+			self.statement_declare,
 			self.statement_new,
+			self.statement_unbound_new,
 			self.statement_inst,
 			self.statement_assign,
 			self.statement_expression
@@ -413,6 +455,8 @@ class Parser():
 
 		# This is the definition for what is a symbol
 		self.symbols = Tokenizer(self.splitters, self.end_statements)
+
+		self.currentObjectType = ""
 
 		# This holds the program.
 		data = ""
@@ -422,6 +466,10 @@ class Parser():
 
 		# Now, parse our program into statements
 		self.lines = self.symbols.generate_statements(data)
+
+	def add_objectType(self, name):
+		self.currentObjectType = name
+		pass	
 
 	def get_statements(self):
 		rv = []
@@ -437,7 +485,10 @@ class Parser():
 				r = a.match(l)
 				# If the line matches the token,
 				if r:
-					
+					if a.onMatch != None:
+						print("running on match thing")
+						a.onMatch(self, l)
+
 					fail = False
 					#   If the token is an "incude" token, include the file
 					#   specified by the "include" directive

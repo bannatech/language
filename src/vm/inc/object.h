@@ -7,26 +7,17 @@
 #include <stdlib.h>
 
 #include "ns.h"
-#include "var.h"
 
 #include "helper.h"
 
-typedef struct obj_t {
-	ns_t* names;
-} obj_t;
-
-/* Initalize an empty object of size
- */
-obj_t* object_init();
+ns_t* object_get(var_cont*);
 
 /* Deconstruct an object
  */
 void object_del(void*);
 
-var_cont* object_get_name(obj_t*, ns_addr);
+var_cont* object_get_name(ns_t*, ns_addr);
 
-void object_set_name(obj_t*, ns_addr, var_cont*);
-
-var_cont* object_call_method(obj_t*, ns_addr);
+void object_set_name(ns_t*, ns_addr, var_cont*);
 
 #endif // OBJECT_H

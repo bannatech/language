@@ -564,9 +564,7 @@ void _ins_def_GETN     (rt_t* ctx, bc_cont* line)
 
 	var_cont* obj = stk_pop(ctx->stack);
 
-	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
-
-	obj_t* object = (obj_t*)obj_var_data->ref;
+	ns_t* object = object_get(obj);
 
 	var_cont* var = object_get_name(object, name);
 
@@ -579,14 +577,12 @@ void _ins_def_SETN     (rt_t* ctx, bc_cont* line)
 	int name = var_data_get_G_INT(line->varg[0]);
 
 	var_cont* obj = stk_pop(ctx->stack);
-
 	var_cont* var = stk_pop(ctx->stack);
 
-	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
+	ns_t* object = object_get(obj);
+	var_cont* set = var_data_cpy(var);
 
-	obj_t* object = (obj_t*)obj_var_data->ref;
-
-	object_set_name(object, name, var);
+	object_set_name(object, name, set);
 
 	pc_inc(ctx->pc, 1);
 }
@@ -596,9 +592,7 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	// Pop the stack to get the object
 	var_cont* obj = stk_pop(ctx->stack);
 	// Get the objects variable data
-	var_data_object* obj_var_data = var_data_get_OBJECT(obj);
-	// Cast reference to object type
-	obj_t* object = (obj_t*)obj_var_data->ref;
+	ns_t* object = object_get(obj);
 	// Get the method to call
 	var_cont* var = object_get_name(object, name);
 	var_data_func* func = var_data_get_FUNC(var);
@@ -606,7 +600,7 @@ void _ins_def_CALLM    (rt_t* ctx, bc_cont* line)
 	ns_ctx_push(ctx->varctx, ctx->vars);
 
 	// Set current namespace to objects namespace
-	ctx->vars = object->names;
+	ctx->vars = object;
 	// Call the function
 	proc_function_call_handle(ctx, func);
 	// Update the program counter
@@ -636,8 +630,15 @@ void _ins_def_RETURN   (rt_t* ctx, bc_cont* line)
 	// Pop the namespace and get the return value
 	var_cont* return_value = ns_pop(ctx->vars);
 
-	// Push the return value to the stack
-	stk_push(ctx->stack, return_value);
+	if (return_value->type != VOID)
+	{
+		// Push the return value to the stack
+		stk_push(ctx->stack, return_value);
+	}
+	else
+	{
+		var_del(return_value);
+	}
 
 	// Return to the callee
 	pc_return(ctx->pc);
@@ -683,14 +684,11 @@ void _ins_def_NEW      (rt_t* ctx, bc_cont* line)
 void _ins_def_ENDCLASS (rt_t* ctx, bc_cont* line)
 {
 	var_cont* new = var_new(OBJECT);
-	var_data_object* data = var_data_alloc_OBJECT(object_del);
 
-	obj_t* obj = object_init();
-	obj->names = ctx->vars;
+	var_set(new, ctx->vars, OBJECT);
 
-	data->ref = (void*)obj;
-
-	var_set(new, data, OBJECT);
+	ns_dec(ctx->vars, OBJECT, 1, 0);
+	ns_set(ctx->vars, 1, 0, new);
 
 	stk_poplevel(&ctx->stack);
 	stk_poplevel(&ctx->argstk);
@@ -706,10 +704,7 @@ void _ins_def_DENS     (rt_t* ctx, bc_cont* line)
 {
 	int name = var_data_get_G_INT(line->varg[0]);
 
-	ns_t* ns = ns_init(0xFFFF);
-
-	var_data_object* namespace = var_data_alloc_OBJECT(rt_ns_del);
-	namespace->ref = (void*)ns;
+	ns_t* namespace = ns_init(MAXIMUM_TRACKING_VARS);
 
 	var_cont* ns_var = var_new(OBJECT);
 	var_set(ns_var, namespace, OBJECT);
@@ -717,7 +712,7 @@ void _ins_def_DENS     (rt_t* ctx, bc_cont* line)
 	ns_dec(ctx->names, OBJECT, 1, name);
 	ns_set(ctx->names, 1, name, ns_var);
 
-	ctx->vars = ns;
+	ctx->vars = namespace;
 }
 void _ins_def_DECLASS  (rt_t* ctx, bc_cont* line)
 {
