@@ -119,7 +119,7 @@ var_cont* ns_cont_del(ns_cont* container, ns_addr to_return)
 		if (i != to_return && container->names[i] != NULL)
 		{
 			if (container->names[i]->ownership == container->level &&
-				container->names[i]->data != rv->data)
+			   (rv == NULL || container->names[i]->data != rv->data))
 			{
 				var_del(container->names[i]);
 			}

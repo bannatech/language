@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 	while (pc_safe(pc))
 	{
-		printf("ADDR: %x, OP: %x\n", pc->address, pc->line->op);
+		printf("ADDR: %lx, OP: %x\n", pc->address, pc->line->op);
 		pc_inc(pc, 1);
 		pc_update(pc);
 	}
@@ -26,14 +26,14 @@ int main(int argc, char *argv[])
 
 	while (pc_safe(pc))
 	{
-		printf("ADDR: %x, OP: %x\n", pc->address, pc->line->op);
+		printf("ADDR: %lx, OP: %x\n", pc->address, pc->line->op);
 		pc_inc(pc, 1);
 		pc_update(pc);
 	}
 
 	pc_return(pc);
 	pc_update(pc);
-	printf("ADDR: %x, OP: %x\n", pc->address, pc->line->op);
+	printf("ADDR: %lx, OP: %x\n", pc->address, pc->line->op);
 
 	pc_del(pc);
 	return 0;

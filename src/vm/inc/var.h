@@ -32,7 +32,7 @@ typedef enum {
 } b_type;
 
 typedef struct var_cont {
-	unsigned long ownership;
+	long ownership;
 	b_type type;
 	void*  data;
 } var_cont;
