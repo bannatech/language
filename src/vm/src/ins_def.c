@@ -225,9 +225,9 @@ void _ins_def_CTV      (rt_t* ctx, bc_cont* line)
 }
 void _ins_def_CTS      (rt_t* ctx, bc_cont* line)
 {
-	var_cont* new = var_data_cpy(line->varg[0]);
+	//var_cont* new = var_data_cpy(line->varg[0]);
 
-	stk_push(ctx->stack, new);
+	stk_push(ctx->stack, line->varg[0]);
 
 	pc_inc(ctx->pc, 1);
 }

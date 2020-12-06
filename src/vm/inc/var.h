@@ -34,10 +34,11 @@ typedef enum {
 typedef struct var_cont {
 	long ownership;
 	b_type type;
+	unsigned int refstat;
 	void*  data;
 } var_cont;
 
-#define MAXIMUM_TRACKING_VARS 0xFFFF
+#define MAXIMUM_TRACKING_VARS 0xFFFFFF
 struct var_track {
 	unsigned int ptr;
 	var_cont* vars[MAXIMUM_TRACKING_VARS];
@@ -45,15 +46,22 @@ struct var_track {
 
 struct var_track VAR_TRACK;
 
+typedef struct var_data {
+	long ownership;
+} var_data;
+
 typedef struct var_data_type {
+	long ownership;
 	b_type v;
 } var_data_type;
 
 typedef struct var_data_plist {
+	long ownership;
 	b_type* v;
 } var_data_plist;
 
 typedef struct var_data_func {
+	long ownership;
 	bc_addr loc;
 	bc_addr end;
 	b_type  type;
@@ -63,6 +71,7 @@ typedef struct var_data_func {
 } var_data_func;
 
 typedef struct var_data_objbldr {
+	long ownership;
 	ns_addr id;
 	bc_addr loc;
 	bc_addr end;
@@ -73,34 +82,42 @@ typedef struct var_data_objbldr {
 } var_data_objbldr;
 
 typedef struct var_data_int {
+	long ownership;
 	int v;
 } var_data_int;
 
 typedef struct var_data_float {
+	long ownership;
 	double v;
 } var_data_float;
 
 typedef struct var_data_char {
+	long ownership;
 	char v;
 } var_data_char;
 
 typedef struct var_data_str {
+	long ownership;
 	size_t size;
 	char* v;
 } var_data_str;
 
 typedef struct var_data_array {
+	long ownership;
 	size_t size;
 	var_cont* v;
 } var_data_array;
 
 typedef struct var_data_ptr {
+	long ownership;
 	var_cont* v;
 } var_data_ptr;
 
 #include "bc.h"
 
 void init_var_track();
+
+void var_clean();
 
 /* Initialze variable with type
  */
@@ -155,32 +172,32 @@ var_cont* var_data_cpy(var_cont*);
  *  int     - offset
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_int(int, int, byte_t*);
+var_cont* raw_to_int(int, int, byte_t*, long);
 
 /* Byte to b_type.
  *  byte_t - value maps to enum b_type
  */
-var_cont* byte_to_type(byte_t);
+var_cont* byte_to_type(byte_t, long);
 
 /* Converts array of bytes of size n into parameter list
  *
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_plist(int, byte_t*);
+var_cont* raw_to_plist(int, byte_t*, long);
 
 /* Converts raw (ascii) string into normal string type
  * int     - sizeof(bytes)
  * int     - offset
  * byte_t* - array of bytes
  */
-var_cont* raw_to_str(int, int, byte_t*);
+var_cont* raw_to_str(int, int, byte_t*, long);
 
 /* Raw variable to var_cont
  *
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_var(int, byte_t*);
+var_cont* raw_to_var(int, byte_t*, long);
 
 #endif // var_H

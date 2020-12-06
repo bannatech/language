@@ -23,6 +23,7 @@ rt_t* rt_ctx_new(char* fname, stk_t* args)
 	rt_t* ctx = (rt_t*)malloc(sizeof(rt_t));
 	M_ASSERT(ctx);
 
+	ctx->db     = 0;
 	ctx->pc     = pc_new(fname);
 	ctx->stack  = stk_new();
 	ctx->argstk = args;

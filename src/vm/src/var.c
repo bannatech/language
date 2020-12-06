@@ -20,6 +20,7 @@ void* var_data_alloc_TYPE(b_type type)
 	var_data_type* rv = (var_data_type*)malloc(sizeof(var_data_type));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->v = type;
 
 	return rv;
@@ -30,6 +31,7 @@ void* var_data_alloc_PLIST(size_t size)
 	var_data_plist* rv = (var_data_plist*)malloc(sizeof(var_data_plist));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->v = (b_type*)malloc(sizeof(b_type)*size);
 
 	return rv;
@@ -40,6 +42,7 @@ void* var_data_alloc_FUNC(b_type type)
 	var_data_func* rv = (var_data_func*)malloc(sizeof(var_data_func));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->type  = type;
 	rv->loc   = 0;
 	rv->end   = 0;
@@ -54,6 +57,7 @@ void* var_data_alloc_OBJBLDR(void)
 	var_data_objbldr* rv = (var_data_objbldr*)malloc(sizeof(var_data_objbldr));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->id    = 0;
 	rv->loc   = 0;
 	rv->end   = 0;
@@ -69,6 +73,7 @@ void* var_data_alloc_G_INT(int value)
 	var_data_int* rv = (var_data_int*)malloc(sizeof(var_data_int));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->v = value;
 
 	return rv;
@@ -79,6 +84,7 @@ void* var_data_alloc_G_FLOAT(double value)
 	var_data_float* rv = (var_data_float*)malloc(sizeof(var_data_float));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->v = value;
 
 	return rv;
@@ -89,6 +95,7 @@ void* var_data_alloc_G_CHAR(char value)
 	var_data_char* rv = (var_data_char*)malloc(sizeof(var_data_char));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->v = value;
 
 	return rv;
@@ -99,6 +106,7 @@ void* var_data_alloc_G_STR(size_t size)
 	var_data_str* rv = (var_data_str*)malloc(sizeof(var_data_str));
 	M_ASSERT(rv);
 
+	rv->ownership = -1;
 	rv->size = size;
 	rv->v = (char*)malloc(sizeof(char)*size);
 
@@ -122,6 +130,7 @@ var_cont* var_new(b_type type)
 
 	new->type = type;
 
+	new->refstat = 0;
 	new->data = NULL;
 
 	return new;
@@ -130,9 +139,17 @@ var_cont* var_new(b_type type)
 void var_del(var_cont* var)
 {
 	if (var->data != NULL)
-		var_data_free(var->data, var->type);
+	{
+		var_data* base = (var_data*)var->data;
+		if (base->ownership == var->ownership)
+		{
+			var_data_free(var->data, var->type);
+		}
+	}
 
 	free(var);
+
+	var = NULL;
 }
 
 void var_data_free(void* data, b_type type)
@@ -157,33 +174,37 @@ void var_data_free(void* data, b_type type)
 		object_del(data);
 		break;
 	default:
-		if (type != VOID)
-		{
-			free(data);
-		}
 		break;
 	}
+	
+	free(data);
+
+	data = NULL;
 }
 
 void var_data_free_PLIST(void* data)
 {
 	var_data_plist* d = data;
 	free(d->v);
+	d->v = NULL;
 }
 void var_data_free_FUNC(void* data)
 {
 	var_data_func* d = data;
 	free(d->param);
+	d->param = NULL;
 }
 void var_data_free_OBJBLDR(void* data)
 {
 	var_data_objbldr* d = data;
 	free(d->param);
+	d->param = NULL;
 }
 void var_data_free_G_STR(void* data)
 {
 	var_data_str* d = data;
 	free(d->v);
+	d->v = NULL;
 }
 
 void var_set(var_cont* var, void* data, b_type type)
@@ -195,8 +216,25 @@ void var_set(var_cont* var, void* data, b_type type)
 		"Trying to set variable of different type without cast\n");
 	
 	if (var->data != NULL)
-		var_data_free(var->data, type);
-	
+	{
+		var_data* base = (var_data*)var->data;
+		if (base->ownership == var->ownership)
+		{
+			var_data_free(var->data, type);
+		}
+	}
+
+	if (data != NULL)
+	{
+		var_data* base = (var_data*)data;
+
+		if (base->ownership == -1)
+		{
+			base->ownership = var->ownership;
+		}
+	}
+
+
 	var->data = data;
 }
 
@@ -369,9 +407,11 @@ var_cont* var_data_cpy(var_cont* var)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_int(int size, int start, byte_t* bytes)
+var_cont* raw_to_int(int size, int start, byte_t* bytes, long ownership)
 {
 	var_cont* rv = var_new(G_INT);
+
+	rv->ownership = ownership;
 
 	int i,
 	    data;
@@ -389,9 +429,11 @@ var_cont* raw_to_int(int size, int start, byte_t* bytes)
 /* Byte to b_type.
  *  byte_t - value maps to enum b_type
  */
-var_cont* byte_to_type(byte_t byte)
+var_cont* byte_to_type(byte_t byte, long ownership)
 {
 	var_cont* rv = var_new(TYPE);
+
+	rv->ownership = ownership;
 
 	var_set(rv, var_data_alloc_TYPE((b_type)byte), TYPE);
 
@@ -403,9 +445,11 @@ var_cont* byte_to_type(byte_t byte)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_plist(int n, byte_t* bytes)
+var_cont* raw_to_plist(int n, byte_t* bytes, long ownership)
 {
 	var_cont* rv = var_new(PLIST);
+
+	rv->ownership = ownership;
 
 	var_set(rv, var_data_alloc_PLIST(n), PLIST);
 
@@ -426,9 +470,10 @@ var_cont* raw_to_plist(int n, byte_t* bytes)
  * int     - offset
  * byte_t* - array of bytes
  */
-var_cont* raw_to_str(int n, int offset, byte_t* bytes)
+var_cont* raw_to_str(int n, int offset, byte_t* bytes, long ownership)
 {
 	var_cont* rv = var_new(G_STR);
+	rv->ownership = ownership;
 	var_data_str* data = var_data_alloc_G_STR(n);
 	int i;
 	for (i = offset; n > i; i++)
@@ -446,7 +491,7 @@ var_cont* raw_to_str(int n, int offset, byte_t* bytes)
  *  int     - sizeof(bytes)
  *  byte_t* - array of bytes
  */
-var_cont* raw_to_var(int n, byte_t* bytes)
+var_cont* raw_to_var(int n, byte_t* bytes, long ownership)
 {
 	N_ASSERT(bytes, "raw_to_var\n");
 
@@ -456,11 +501,11 @@ var_cont* raw_to_var(int n, byte_t* bytes)
 
 	if (type == G_INT)
 	{
-		rv = raw_to_int(n, 1, bytes);
+		rv = raw_to_int(n, 1, bytes, ownership);
 	} else
 	if (type == G_STR)
 	{
-		rv = raw_to_str(n, 1, bytes);
+		rv = raw_to_str(n, 1, bytes, ownership);
 	} else
 	{
 		printf("Type {%x} is not a seralizeable type\n", type);
